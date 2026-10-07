@@ -3,10 +3,15 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { AsideItemPro } from "./AsideItemPro";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import SchoolIcon from "@mui/icons-material/School";
+import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import CommentIcon from "@mui/icons-material/Comment";
 import ArticleIcon from "@mui/icons-material/Article";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import SettingsIcon from "@mui/icons-material/Settings";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
+import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 
 export function AsideMenuPro({ titleMenu = "بخش‌های مدیریت" }) {
   const [open, setOpen] = useState(true);
@@ -15,7 +20,12 @@ export function AsideMenuPro({ titleMenu = "بخش‌های مدیریت" }) {
 
   const navigationItems = [
     { title: "داشبورد اصلی", path: "/", icon: <DashboardIcon fontSize="small" /> },
-    { title: "دوره‌ها", path: "/course", icon: <SchoolIcon fontSize="small" /> },
+    { title: "دوره‌های حضوری", path: "/in-person-courses", icon: <SchoolIcon fontSize="small" /> },
+    { title: "دوره‌های مجازی", path: "/virtual-courses", icon: <OndemandVideoIcon fontSize="small" /> },
+    { title: "ثبت‌نام‌ها", path: "/enrollment", icon: <ReceiptLongIcon fontSize="small" /> },
+    { title: "کیف‌پول‌ها و تراکنش‌ها", path: "/wallet", icon: <AccountBalanceWalletIcon fontSize="small" /> },
+    { title: "کاربران", path: "/user", icon: <GroupOutlinedIcon fontSize="small" /> },
+    { title: "معلمان", path: "/teacher", icon: <PersonOutlineIcon fontSize="small" /> },
     { title: "نظرات", path: "/comment", icon: <CommentIcon fontSize="small" /> },
     { title: "بلاگ‌ها", path: "/blog", icon: <ArticleIcon fontSize="small" /> },
     { title: "تنظیمات سئو", path: "/seo", icon: <SettingsIcon fontSize="small" /> },

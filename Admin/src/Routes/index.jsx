@@ -1,5 +1,5 @@
 import React from "react";
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 
 // Layout & Core Pages
 import Layout from "../Layout";
@@ -7,11 +7,21 @@ import Auth from "../Pages/Auth";
 import Home from "../Pages/Home";
 import NotFound from "../Pages/NotFound";
 
-// Course Module
-import Course from "../Pages/Course";
-import CoursePage from "../Pages/Course/CoursePage";
-import CreateCourse from "../Pages/Course/CreateCourse";
-import UpdateCourse from "../Pages/Course/UpdateCourse";
+// In-Person Course Module
+import InPersonCourseLayout, {
+  InPersonCourseListPage,
+  CreateInPersonCourse,
+  UpdateInPersonCourse,
+  SingleInPersonCourse,
+} from "../Pages/Course/InPerson";
+
+// Virtual Course Module
+import VirtualCourseLayout, {
+  VirtualCourseListPage,
+  CreateVirtualCourse,
+  UpdateVirtualCourse,
+  SingleVirtualCourse,
+} from "../Pages/Course/Virtual";
 
 // Comment Module
 import Comment from "../Pages/Comment";
@@ -25,8 +35,25 @@ import BlogPage from "../Pages/Blog/BlogPage";
 import CreateBlog from "../Pages/Blog/CreateBlog";
 import UpdateBlog from "../Pages/Blog/UpdateBlog";
 
+// Teacher Module
+import Teacher from "../Pages/Teacher";
+import TeacherPage from "../Pages/Teacher/TeacherPage";
+import CreateTeacher from "../Pages/Teacher/CreateTeacher";
+import UpdateTeacher from "../Pages/Teacher/UpdateTeacher";
+
+// User Module
+import User from "../Pages/User";
+import UserPage from "../Pages/User/UserPage";
+
+// Enrollment Module
+import Enrollment from "../Pages/Enrollment";
+import EnrollmentPage from "../Pages/Enrollment/EnrollmentPage";
+
 // Seo Module
 import SeoSettings from "../Pages/SeoSettings";
+
+// Wallet Module
+import WalletPage from "../Pages/Wallet";
 
 const router = createBrowserRouter([
   {
@@ -41,14 +68,32 @@ const router = createBrowserRouter([
         index: true,
         element: <Home />,
       },
+      // In-Person Courses
+      {
+        path: "in-person-courses",
+        element: <InPersonCourseLayout />,
+        children: [
+          { index: true, element: <InPersonCourseListPage /> },
+          { path: "create", element: <CreateInPersonCourse /> },
+          { path: "update/:id", element: <UpdateInPersonCourse /> },
+          { path: ":id", element: <SingleInPersonCourse /> },
+        ],
+      },
+      // Virtual Courses
+      {
+        path: "virtual-courses",
+        element: <VirtualCourseLayout />,
+        children: [
+          { index: true, element: <VirtualCourseListPage /> },
+          { path: "create", element: <CreateVirtualCourse /> },
+          { path: "update/:id", element: <UpdateVirtualCourse /> },
+          { path: ":id", element: <SingleVirtualCourse /> },
+        ],
+      },
+      // Redirect legacy /course path to /in-person-courses
       {
         path: "course",
-        element: <Course />,
-        children: [
-          { index: true, element: <CoursePage /> },
-          { path: "create", element: <CreateCourse /> },
-          { path: "update/:id", element: <UpdateCourse /> },
-        ],
+        element: <Navigate to="/in-person-courses" replace />,
       },
       {
         path: "comment",
@@ -69,8 +114,33 @@ const router = createBrowserRouter([
         ],
       },
       {
+        path: "teacher",
+        element: <Teacher />,
+        children: [
+          { index: true, element: <TeacherPage /> },
+          { path: "create", element: <CreateTeacher /> },
+          { path: "update/:id", element: <UpdateTeacher /> },
+        ],
+      },
+      {
+        path: "user",
+        element: <User />,
+        children: [
+          { index: true, element: <UserPage /> },
+        ],
+      },
+      {
         path: "seo",
         element: <SeoSettings />,
+      },
+      {
+        path: "enrollment",
+        element: <Enrollment />,
+        children: [{ index: true, element: <EnrollmentPage /> }],
+      },
+      {
+        path: "wallet",
+        element: <WalletPage />,
       },
     ],
   },
