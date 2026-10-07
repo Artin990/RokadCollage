@@ -7,3 +7,5 @@ export { Card } from "./Card";
 export { PageHeader } from "./PageHeader";
 export { ImageUpload } from "./ImageUpload";
 export { SvgIconInput } from "../SvgIconInput";
+export { JalaliDatePicker } from "./JalaliDatePicker";
+export { CourseIcon } from "./CourseIcon";

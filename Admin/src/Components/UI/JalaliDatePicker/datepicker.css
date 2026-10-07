@@ -1,0 +1,184 @@
+/* Custom Theme for react-multi-date-picker in RokadCollage Admin */
+.rokad-datepicker-theme.rmdp-wrapper {
+  border-radius: 1.25rem !important;
+  border: 1px solid var(--color-border) !important;
+  box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.06) !important;
+  font-family: inherit !important;
+  background-color: var(--color-surface) !important;
+  padding: 8px !important;
+  direction: rtl !important;
+  z-index: 9999 !important;
+}
+
+.rokad-datepicker-theme .rmdp-top-class {
+  font-family: inherit !important;
+}
+
+.rokad-datepicker-theme .rmdp-calendar {
+  font-family: inherit !important;
+  padding: 4px !important;
+}
+
+.rokad-datepicker-theme .rmdp-header-values {
+  font-weight: 800 !important;
+  color: var(--color-secondary) !important;
+  font-size: 0.95rem !important;
+  padding: 4px 8px !important;
+}
+
+.rokad-datepicker-theme .rmdp-arrow {
+  border: solid var(--color-secondary) !important;
+  border-width: 0 2px 2px 0 !important;
+}
+
+.rokad-datepicker-theme .rmdp-arrow-container {
+  border-radius: 0.75rem !important;
+  transition: all 0.2s ease !important;
+}
+
+.rokad-datepicker-theme .rmdp-arrow-container:hover {
+  background-color: var(--color-primary-subtle) !important;
+  box-shadow: none !important;
+}
+
+.rokad-datepicker-theme .rmdp-arrow-container:hover .rmdp-arrow {
+  border-color: var(--color-primary) !important;
+}
+
+.rokad-datepicker-theme .rmdp-week-day {
+  color: var(--color-text-muted) !important;
+  font-weight: 700 !important;
+  font-size: 0.75rem !important;
+  padding: 4px 0 !important;
+}
+
+.rokad-datepicker-theme .rmdp-day {
+  font-family: inherit !important;
+}
+
+.rokad-datepicker-theme .rmdp-day span {
+  border-radius: 0.75rem !important;
+  font-size: 0.825rem !important;
+  font-weight: 600 !important;
+  color: var(--color-secondary) !important;
+  transition: all 0.15s ease !important;
+}
+
+.rokad-datepicker-theme .rmdp-day:not(.rmdp-day-hidden) span:hover {
+  background-color: var(--color-primary-subtle) !important;
+  color: var(--color-primary) !important;
+}
+
+.rokad-datepicker-theme .rmdp-day.rmdp-selected span:not(.highlight) {
+  background-color: var(--color-primary) !important;
+  color: var(--color-white) !important;
+  box-shadow: 0 3px 10px var(--color-primary-subtle) !important;
+  font-weight: 700 !important;
+}
+
+.rokad-datepicker-theme .rmdp-day.rmdp-today span {
+  border: 1.5px solid var(--color-primary) !important;
+  color: var(--color-primary) !important;
+  background-color: transparent !important;
+  font-weight: 700 !important;
+}
+
+.rokad-datepicker-theme .rmdp-day.rmdp-today.rmdp-selected span {
+  background-color: var(--color-primary) !important;
+  color: var(--color-white) !important;
+}
+
+/* Time Picker Section */
+.rokad-datepicker-theme .rmdp-time-picker {
+  border-top: 1px solid var(--color-border) !important;
+  padding: 10px 4px 6px 4px !important;
+  margin-top: 6px !important;
+  direction: ltr !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.rokad-datepicker-theme .rmdp-time-picker div {
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.rokad-datepicker-theme .rmdp-time-picker input {
+  font-family: inherit !important;
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  width: 46px !important;
+  min-width: 46px !important;
+  height: 32px !important;
+  line-height: normal !important;
+  text-align: center !important;
+  box-sizing: border-box !important;
+  border-radius: 0.5rem !important;
+  background-color: var(--color-bg-subtle) !important;
+  border: 1px solid var(--color-border) !important;
+  color: var(--color-secondary) !important;
+  padding: 2px 4px !important;
+  margin: 3px 0 !important;
+  outline: none !important;
+  transition: all 0.15s ease !important;
+  -moz-appearance: textfield !important;
+}
+
+.rokad-datepicker-theme .rmdp-time-picker input::-webkit-inner-spin-button,
+.rokad-datepicker-theme .rmdp-time-picker input::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+
+.rokad-datepicker-theme .rmdp-time-picker input:hover {
+  background-color: var(--color-surface) !important;
+  border-color: var(--color-border-hover) !important;
+}
+
+.rokad-datepicker-theme .rmdp-time-picker input:focus {
+  background-color: var(--color-surface) !important;
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 2px var(--color-primary-subtle) !important;
+  outline: none !important;
+}
+
+.rokad-datepicker-theme .rmdp-time-picker .dvdr {
+  font-weight: 800 !important;
+  font-size: 1.1rem !important;
+  color: var(--color-text-muted) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 4px !important;
+  margin: 0 !important;
+  user-select: none !important;
+}
+
+/* Toolbar Buttons */
+.rokad-datepicker-theme .rmdp-toolbar {
+  border-top: 1px solid var(--color-border) !important;
+  padding: 8px 4px 4px 4px !important;
+  margin-top: 6px !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  direction: rtl !important;
+}
+
+.rokad-datepicker-theme .rmdp-toolbar div {
+  background-color: var(--color-primary) !important;
+  border-radius: 0.65rem !important;
+  color: var(--color-white) !important;
+  font-weight: 700 !important;
+  font-size: 0.75rem !important;
+  padding: 5px 12px !important;
+  text-align: center !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  flex: 1 !important;
+}
+
+.rokad-datepicker-theme .rmdp-toolbar div:hover {
+  background-color: var(--color-primary-hover) !important;
+  box-shadow: 0 2px 8px var(--color-primary-subtle) !important;
+}

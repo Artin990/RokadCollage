@@ -41,7 +41,7 @@ export const Input = forwardRef(
             name={name}
             dir={dir}
             className={`
-              w-full py-2.5 px-4 rounded-xl text-sm bg-surface text-text-primary placeholder:text-text-muted
+              w-full min-h-[42px] py-2.5 px-4 rounded-xl text-sm bg-white text-text-primary placeholder:text-text-muted
               border transition-all duration-200 outline-none
               disabled:bg-bg-subtle disabled:text-text-muted disabled:cursor-not-allowed
               ${icon ? "pr-10" : "pr-4"}

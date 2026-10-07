@@ -10,6 +10,7 @@ import CodeIcon from "@mui/icons-material/Code";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ImageUpload from "../UI/ImageUpload";
+import { CourseIcon } from "../UI";
 
 export function SvgIconInput({
   value,
@@ -136,9 +137,9 @@ export function SvgIconInput({
               {isValidSvg(svgCode) ? (
                 <div className="flex flex-col items-center gap-2">
                   <div className="w-14 h-14 rounded-2xl bg-primary-light border border-primary-border flex items-center justify-center p-2.5 text-primary shadow-xs">
-                    <div
-                      className="w-full h-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full [&>svg]:object-contain"
-                      dangerouslySetInnerHTML={{ __html: svgCode.trim() }}
+                    <CourseIcon
+                      icon={svgCode.trim()}
+                      className="w-full h-full object-contain"
                     />
                   </div>
                   <div className="inline-flex items-center gap-1 text-[11px] text-success font-bold">

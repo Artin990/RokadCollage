@@ -36,7 +36,7 @@ export const Select = forwardRef(
             id={selectId}
             name={name}
             className={`
-              w-full py-2.5 pl-9 pr-4 rounded-xl text-sm bg-surface text-text-primary
+              w-full min-h-[42px] py-2.5 pl-9 pr-4 rounded-xl text-sm bg-white text-text-primary
               border transition-all duration-200 outline-none appearance-none cursor-pointer
               disabled:bg-bg-subtle disabled:text-text-muted disabled:cursor-not-allowed
               ${

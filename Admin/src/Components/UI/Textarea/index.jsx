@@ -33,7 +33,7 @@ export const Textarea = forwardRef(
           name={name}
           rows={rows}
           className={`
-            w-full py-2.5 px-4 rounded-xl text-sm bg-surface text-text-primary placeholder:text-text-muted
+            w-full py-2.5 px-4 rounded-xl text-sm bg-white text-text-primary placeholder:text-text-muted
             border transition-all duration-200 outline-none resize-y
             disabled:bg-bg-subtle disabled:text-text-muted disabled:cursor-not-allowed
             ${

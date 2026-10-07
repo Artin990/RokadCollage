@@ -108,7 +108,7 @@ export function ImageUpload({
               {placeholder}
             </p>
             <p className="text-[11px] text-text-muted">
-              {isSvgOnly ? "فقط فایل وکتور با فرمت SVG" : "JPG, PNG, SVG یا WEBP (حداکثر ۵MB)"}
+              {isSvgOnly ? "فقط فایل وکتور با فرمت SVG (حداکثر ۵MB)" : "JPG, PNG, SVG یا WEBP (حداکثر ۵MB)"}
             </p>
           </div>
         )}
