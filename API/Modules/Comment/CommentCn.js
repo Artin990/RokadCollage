@@ -1,17 +1,31 @@
-import fs from "fs";
-import { fileURLToPath } from "url";
-import path from "path";
 import ApiFeatures, { catchAsync, HandleERROR } from "vanta-api";
 import Comment from "./CommentMd.js";
+import InPersonCourse from "../InPersonCourse/InPersonCourseMd.js";
+import VirtualCourse from "../VirtualCourse/VirtualCourseMd.js";
+import { removePublicFile } from "../../Utils/fileHelper.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+/**
+ * Resolves the courseModel if not provided in the request body.
+ */
+async function resolveCourseModel(courseId, specifiedModel) {
+  if (specifiedModel === "InPersonCourse" || specifiedModel === "VirtualCourse") {
+    return specifiedModel;
+  }
+  const inPerson = await InPersonCourse.findById(courseId);
+  if (inPerson) return "InPersonCourse";
+  const virtual = await VirtualCourse.findById(courseId);
+  if (virtual) return "VirtualCourse";
+  return "InPersonCourse";
+}
 
 export const create = catchAsync(async (req, res, next) => {
-  const { course, comment, name, role, job, img } = req.body;
+  const { course, courseModel, comment, name, role, job, img } = req.body;
+
+  const resolvedModel = await resolveCourseModel(course, courseModel);
 
   const newComment = await Comment.create({
     course,
+    courseModel: resolvedModel,
     comment,
     name,
     role,
@@ -19,7 +33,7 @@ export const create = catchAsync(async (req, res, next) => {
     img: img || "default-BoyStudent.png",
   });
 
-  const populatedComment = await newComment.populate("course", "title category");
+  const populatedComment = await newComment.populate("course", "title category type");
 
   return res.status(201).json({
     success: true,
@@ -34,37 +48,45 @@ export const getAll = catchAsync(async (req, res, next) => {
     .search(["name", "comment", "role", "job"])
     .sort()
     .limitFields()
-    .paginate()
-    .populate([
-      {
-        path: "course",
-        select: "title category",
-      },
-    ]);
+    .paginate();
 
   const result = await features.execute();
+  const docs = Array.isArray(result) ? result : result?.data ? result.data : [];
+
+  for (const doc of docs) {
+    if (!doc.courseModel && doc.course) {
+      doc.courseModel = "InPersonCourse";
+    }
+  }
+
+  await Comment.populate(docs, {
+    path: "course",
+    select: "title category type",
+  });
+
   return res.status(200).json(result);
 });
 
 export const getOne = catchAsync(async (req, res, next) => {
   const features = new ApiFeatures(Comment, req.query, req.role)
     .addManualFilters({ _id: req.params.id })
-    .filter()
-    .limitFields()
-    .populate([
-      {
-        path: "course",
-        select: "title category",
-      },
-    ]);
+    .limitFields();
 
   const result = await features.execute();
-
   const doc = Array.isArray(result) ? result[0] : result?.data ? result.data[0] : result;
 
   if (!doc) {
     return next(new HandleERROR("نظر مورد نظر یافت نشد", 404));
   }
+
+  if (!doc.courseModel && doc.course) {
+    doc.courseModel = "InPersonCourse";
+  }
+
+  await Comment.populate(doc, {
+    path: "course",
+    select: "title category type",
+  });
 
   return res.status(200).json({
     success: true,
@@ -73,7 +95,7 @@ export const getOne = catchAsync(async (req, res, next) => {
 });
 
 export const update = catchAsync(async (req, res, next) => {
-  const allowedUpdates = ["course", "comment", "name", "role", "job", "img"];
+  const allowedUpdates = ["course", "courseModel", "comment", "name", "role", "job", "img"];
   const updates = {};
 
   Object.keys(req.body).forEach((el) => {
@@ -85,26 +107,18 @@ export const update = catchAsync(async (req, res, next) => {
     return next(new HandleERROR("نظر مورد نظر یافت نشد", 404));
   }
 
-  if (
-    updates.img &&
-    updates.img !== oldComment.img &&
-    !oldComment.img.startsWith("default-") &&
-    !oldComment.img.startsWith("default")
-  ) {
-    const filePath = path.join(__dirname, "../../Public", oldComment.img);
-    if (fs.existsSync(filePath)) {
-      try {
-        fs.unlinkSync(filePath);
-      } catch (err) {
-        console.error("Error deleting old comment image:", err);
-      }
-    }
+  if (updates.course && !updates.courseModel) {
+    updates.courseModel = await resolveCourseModel(updates.course);
+  }
+
+  if (updates.img && updates.img !== oldComment.img) {
+    removePublicFile(oldComment.img);
   }
 
   const updatedComment = await Comment.findByIdAndUpdate(req.params.id, updates, {
     new: true,
     runValidators: true,
-  }).populate("course", "title category");
+  }).populate("course", "title category type");
 
   return res.status(200).json({
     success: true,
@@ -120,19 +134,8 @@ export const remove = catchAsync(async (req, res, next) => {
     return next(new HandleERROR("نظر مورد نظر یافت نشد", 404));
   }
 
-  if (
-    deleteComment.img &&
-    !deleteComment.img.startsWith("default-") &&
-    !deleteComment.img.startsWith("default")
-  ) {
-    const filePath = path.join(__dirname, "../../Public", deleteComment.img);
-    if (fs.existsSync(filePath)) {
-      try {
-        fs.unlinkSync(filePath);
-      } catch (err) {
-        console.error("Error deleting comment image:", err);
-      }
-    }
+  if (deleteComment.img) {
+    removePublicFile(deleteComment.img);
   }
 
   return res.status(200).json({

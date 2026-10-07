@@ -1,6 +1,5 @@
 import Joi from "joi";
-
-const safeTextRegex = /^[\u0600-\u06FF\sA-Za-z0-9\-\_،؛؟!.:«»",;?()\u200c\u200d]+$/;
+import { safeTextRegex } from "../../Utils/validateRequest.js";
 
 export const updateSeoValidator = Joi.object({
   title: Joi.string()

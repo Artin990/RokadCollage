@@ -1,7 +1,9 @@
 import Joi from "joi";
-
-const safeTextRegex = /^[\u0600-\u06FF\sA-Za-z0-9\-\_،؛؟!.:«»",;?()\u200c\u200d]+$/;
-const objectIdRegex = /^[0-9a-fA-F]{24}$/;
+import {
+  safeTextRegex,
+  objectIdRegex,
+  VALID_IMAGE_EXT_REGEX,
+} from "../../Utils/validateRequest.js";
 
 export const createCommentValidator = Joi.object({
   course: Joi.string()
@@ -11,6 +13,12 @@ export const createCommentValidator = Joi.object({
       "string.base": "شناسه دوره باید یک شناسه معتبر باشد",
       "string.pattern.base": "شناسه دوره ارسال‌شده نامعتبر است",
       "any.required": "انتخاب دوره مرتبط الزامی است",
+    }),
+  courseModel: Joi.string()
+    .valid("InPersonCourse", "VirtualCourse")
+    .optional()
+    .messages({
+      "any.only": "مدل دوره باید InPersonCourse یا VirtualCourse باشد",
     }),
   comment: Joi.string()
     .min(3)
@@ -50,11 +58,11 @@ export const createCommentValidator = Joi.object({
       "string.pattern.base": "شغل نباید شامل کاراکترهای خاص باشد",
     }),
   img: Joi.string()
-    .pattern(/\.(jpe?g|png|svg|webp)$/i)
-    .messages({ "string.pattern.base": "پسوند فایل باید یکی از موارد JPG, JPEG, PNG, SVG, WEBP باشد" })
+    .pattern(VALID_IMAGE_EXT_REGEX)
     .allow("", null)
     .optional()
     .messages({
+      "string.pattern.base": "پسوند فایل باید یکی از موارد JPG, JPEG, PNG, SVG, WEBP باشد",
       "string.base": "تصویر باید یک متن (نام فایل) باشد",
     }),
 });
@@ -66,6 +74,9 @@ export const updateCommentValidator = Joi.object({
       "string.base": "شناسه دوره باید یک شناسه معتبر باشد",
       "string.pattern.base": "شناسه دوره ارسال‌شده نامعتبر است",
     }),
+  courseModel: Joi.string()
+    .valid("InPersonCourse", "VirtualCourse")
+    .optional(),
   comment: Joi.string()
     .min(3)
     .pattern(safeTextRegex)
@@ -98,11 +109,11 @@ export const updateCommentValidator = Joi.object({
       "string.pattern.base": "شغل نباید شامل کاراکترهای خاص باشد",
     }),
   img: Joi.string()
-    .pattern(/\.(jpe?g|png|svg|webp)$/i)
-    .messages({ "string.pattern.base": "پسوند فایل باید یکی از موارد JPG, JPEG, PNG, SVG, WEBP باشد" })
+    .pattern(VALID_IMAGE_EXT_REGEX)
     .allow("", null)
     .optional()
     .messages({
+      "string.pattern.base": "پسوند فایل باید یکی از موارد JPG, JPEG, PNG, SVG, WEBP باشد",
       "string.base": "تصویر باید یک متن (نام فایل) باشد",
     }),
 });

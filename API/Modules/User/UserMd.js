@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { phoneRegex } from "../../Utils/validateRequest.js";
 
 const userSchema = new mongoose.Schema({
   fullName: {
@@ -12,13 +13,14 @@ const userSchema = new mongoose.Schema({
     trim: true,
     unique: true,
     match: [
-      /^(\+98|0)?9\d{9}$/,
+      phoneRegex,
       "فرمت شماره موبایل نامعتبر است",
     ],
   },
   password: {
     type: String,
     trim: true,
+    select: false,
   },
   birthDate: {
     type: String,
@@ -35,6 +37,18 @@ const userSchema = new mongoose.Schema({
   },
 }, {
   timestamps: true,
+  toJSON: {
+    transform: (doc, ret) => {
+      delete ret.password;
+      return ret;
+    },
+  },
+  toObject: {
+    transform: (doc, ret) => {
+      delete ret.password;
+      return ret;
+    },
+  },
 });
 
 const User = mongoose.model("User", userSchema);

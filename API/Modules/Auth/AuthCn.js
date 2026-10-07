@@ -16,9 +16,17 @@ const signToken = (id, role) => {
   });
 };
 
+const formatAuthUser = (user) => ({
+  id: user._id,
+  fullName: user.fullName,
+  phoneNumber: user.phoneNumber,
+  role: user.role,
+  birthDate: user.birthDate,
+});
+
 export const auth = catchAsync(async (req, res, next) => {
   const { phoneNumber } = req.body;
-  const user = await User.findOne({ phoneNumber });
+  const user = await User.findOne({ phoneNumber }).select("+password");
 
   if (!user || !user.password) {
     const resultSms = await sendAuthCode(phoneNumber);
@@ -53,7 +61,7 @@ export const auth = catchAsync(async (req, res, next) => {
 export const loginWithPassword = catchAsync(async (req, res, next) => {
   const { phoneNumber, password } = req.body;
 
-  const user = await User.findOne({ phoneNumber });
+  const user = await User.findOne({ phoneNumber }).select("+password");
 
   if (!user) {
     return next(new HandleERROR("شماره موبایل یا رمز عبور اشتباه است", 401));
@@ -76,13 +84,7 @@ export const loginWithPassword = catchAsync(async (req, res, next) => {
     message: "با موفقیت وارد شدید",
     data: {
       token,
-      user: {
-        id: user._id,
-        fullName: user.fullName,
-        phoneNumber: user.phoneNumber,
-        role: user.role,
-        birthDate: user.birthDate,
-      },
+      user: formatAuthUser(user),
     },
   });
 });
@@ -118,13 +120,7 @@ export const loginWithOtp = catchAsync(async (req, res, next) => {
     message: "با موفقیت وارد شدید",
     data: {
       token,
-      user: {
-        id: user._id,
-        fullName: user.fullName,
-        phoneNumber: user.phoneNumber,
-        role: user.role,
-        birthDate: user.birthDate,
-      },
+      user: formatAuthUser(user),
     },
   });
 });

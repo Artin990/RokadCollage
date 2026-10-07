@@ -20,6 +20,10 @@ const blogSchema = new mongoose.Schema(
       type: String,
       required: [true, "وارد کردن توضیحات بلاگ الزامی است"],
     },
+    content: {
+      type: String,
+      default: "",
+    },
     img: {
       type: String,
       required: [true, "ارسال تصویر شاخص بلاگ الزامی است"],
@@ -29,6 +33,9 @@ const blogSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+blogSchema.index({ category: 1, createdAt: -1 });
+blogSchema.index({ createdAt: -1 });
 
 const Blog = mongoose.model("Blog", blogSchema);
 export default Blog;

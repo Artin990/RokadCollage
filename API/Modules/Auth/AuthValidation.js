@@ -1,6 +1,5 @@
 import Joi from "joi";
-
-const phoneRegex = /^(\+98|0)?9\d{9}$/;
+import { phoneRegex } from "../../Utils/validateRequest.js";
 
 export const authValidator = Joi.object({
   phoneNumber: Joi.string().pattern(phoneRegex).required().messages({

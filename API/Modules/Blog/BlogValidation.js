@@ -1,8 +1,8 @@
 import Joi from "joi";
+import { safeTextRegex, VALID_IMAGE_EXT_REGEX } from "../../Utils/validateRequest.js";
+import { MAX_BLOG_CONTENT_LENGTH } from "../../Utils/htmlSanitizer.js";
 
-const safeTextRegex = /^[\u0600-\u06FF\sA-Za-z0-9\-\_،؛؟!.:«»",;?()\u200c\u200d]+$/;
-
-const blogCategoryEnum = ["گرافیک", "مسیر شغلی", "MBA", "زبان", "فرانتاند", "بکاند"];
+export const blogCategoryEnum = ["گرافیک", "مسیر شغلی", "MBA", "زبان", "فرانتاند", "بکاند"];
 
 export const createBlogValidator = Joi.object({
   category: Joi.string()
@@ -31,8 +31,17 @@ export const createBlogValidator = Joi.object({
       "string.min": "توضیحات باید حداقل ۱۰ کاراکتر باشد",
       "any.required": "وارد کردن توضیحات بلاگ الزامی است",
     }),
+  content: Joi.string()
+    .max(MAX_BLOG_CONTENT_LENGTH)
+    .required()
+    .messages({
+      "string.base": "محتوای مقاله باید متن معتبر باشد",
+      "string.empty": "محتوای مقاله نمی‌تواند خالی باشد",
+      "string.max": `حجم محتوای مقاله نمی‌تواند بیشتر از ${MAX_BLOG_CONTENT_LENGTH.toLocaleString("fa-IR")} کاراکتر باشد`,
+      "any.required": "وارد کردن محتوای مقاله الزامی است",
+    }),
   img: Joi.string()
-    .pattern(/\.(jpe?g|png|svg|webp)$/i)
+    .pattern(VALID_IMAGE_EXT_REGEX)
     .required()
     .messages({
       "string.base": "تصویر باید یک آدرس معتبر باشد",
@@ -63,11 +72,46 @@ export const updateBlogValidator = Joi.object({
       "string.empty": "توضیحات بلاگ نمی‌تواند خالی باشد",
       "string.min": "توضیحات باید حداقل ۱۰ کاراکتر باشد",
     }),
+  content: Joi.string()
+    .max(MAX_BLOG_CONTENT_LENGTH)
+    .messages({
+      "string.base": "محتوای مقاله باید متن معتبر باشد",
+      "string.empty": "محتوای مقاله نمی‌تواند خالی باشد",
+      "string.max": `حجم محتوای مقاله نمی‌تواند بیشتر از ${MAX_BLOG_CONTENT_LENGTH.toLocaleString("fa-IR")} کاراکتر باشد`,
+    }),
   img: Joi.string()
-    .pattern(/\.(jpe?g|png|svg|webp)$/i)
+    .pattern(VALID_IMAGE_EXT_REGEX)
     .messages({
       "string.base": "تصویر باید یک آدرس معتبر باشد",
       "string.empty": "تصویر نمی‌تواند خالی باشد",
       "string.pattern.base": "پسوند فایل باید یکی از موارد JPG, JPEG, PNG, SVG, WEBP باشد",
     }),
 });
+
+export const previewBlogValidator = Joi.object({
+  content: Joi.string()
+    .max(MAX_BLOG_CONTENT_LENGTH)
+    .allow("")
+    .required()
+    .messages({
+      "string.base": "محتوای پیش‌نمایش باید یک رشته متنی باشد",
+      "string.max": `حجم محتوای پیش‌نمایش نمی‌تواند بیشتر از ${MAX_BLOG_CONTENT_LENGTH.toLocaleString("fa-IR")} کاراکتر باشد`,
+      "any.required": "ارسال فیلد content برای پیش‌نمایش الزامی است",
+    }),
+});
+
+export const blogQueryValidator = Joi.object({
+  page: Joi.number().integer().min(1).default(1),
+  limit: Joi.number().integer().min(1).max(100).default(10),
+  sort: Joi.string().trim().max(100).allow(""),
+  category: Joi.string().valid(...blogCategoryEnum).allow("", null),
+  fields: Joi.string().trim().max(200).allow(""),
+  q: Joi.string().trim().max(100).allow("").pattern(/^[^\$]+$/).messages({
+    "string.pattern.base": "عبارت جستجو شامل کاراکترهای غیرمجاز است",
+  }),
+  populate: Joi.string().trim().max(100).allow(""),
+})
+  .unknown(true)
+  .messages({
+    "object.unknown": "پارامترهای ارسالی در کوئری نامعتبر هستند",
+  });
