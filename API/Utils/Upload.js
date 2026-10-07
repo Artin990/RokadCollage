@@ -1,27 +1,13 @@
 import multer from "multer";
-import { __dirname } from "../app.js";
 import path from "path";
 import { HandleERROR } from "vanta-api";
+import { ALLOWED_IMAGE_TYPES, MAX_FILE_SIZE, MAX_FIELD_SIZE } from "./uploadConfig.js";
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, `${__dirname}/Public`);
-  },
-  filename: (req, file, cb) => {
-    const cleanOriginalName = file.originalname
-      .replace(/[^a-zA-Z0-9.\-_]/g, "_")
-      .split(".")[0];
-    cb(
-      null,
-      `${cleanOriginalName}_${Date.now()}${path.extname(file.originalname).toLowerCase()}`
-    );
-  },
-});
+const storage = multer.memoryStorage();
 
-const allowedTypes = /jpeg|jpg|png|svg|webp/;
 function fileFilter(req, file, cb) {
-  const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-  const mimetype = allowedTypes.test(file.mimetype) || file.mimetype === "image/svg+xml";
+  const extname = ALLOWED_IMAGE_TYPES.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = ALLOWED_IMAGE_TYPES.test(file.mimetype) || file.mimetype === "image/svg+xml";
   if (extname && mimetype) {
     return cb(null, true);
   }
@@ -32,7 +18,8 @@ const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB max file size
+    fileSize: MAX_FILE_SIZE,
+    fieldSize: MAX_FIELD_SIZE,
   },
 });
 

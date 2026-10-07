@@ -1,23 +1,17 @@
-import fs from "fs";
+import path from "path";
 import { catchAsync, HandleERROR } from "vanta-api";
-import { __dirname } from "../../app.js";
+import { VALID_IMAGE_EXT_REGEX } from "../../Utils/uploadConfig.js";
+import { removePublicFile } from "../../Utils/fileHelper.js";
 
+/**
+ * Handle single file upload response.
+ * Pre-processed, resized, and converted to WebP by convertToWebp middleware.
+ */
 export const uploadSingle = catchAsync(async (req, res, next) => {
   const file = req.file;
 
   if (!file) {
     return next(new HandleERROR("هیچ فایلی آپلود نشده است", 400));
-  }
-
-  const validExtRegex = /\.(jpe?g|png|svg|webp)$/i;
-  if (!validExtRegex.test(file.originalname)) {
-    if (fs.existsSync(file.path)) fs.unlinkSync(file.path);
-    return next(new HandleERROR("پسوند فایل غیرمجاز است", 400));
-  }
-
-  if (file.originalname.toLowerCase().startsWith("default-")) {
-    if (fs.existsSync(file.path)) fs.unlinkSync(file.path);
-    return next(new HandleERROR("استفاده از نام‌های رزرو شده سیستم (مثل default-) مجاز نیست", 403));
   }
 
   return res.status(201).json({
@@ -27,6 +21,10 @@ export const uploadSingle = catchAsync(async (req, res, next) => {
   });
 });
 
+/**
+ * Handle multiple file uploads response.
+ * Pre-processed, resized, and converted to WebP by convertToWebp middleware.
+ */
 export const uploadMultiple = catchAsync(async (req, res, next) => {
   const files = req.files;
 
@@ -34,35 +32,16 @@ export const uploadMultiple = catchAsync(async (req, res, next) => {
     return next(new HandleERROR("هیچ فایلی آپلود نشده است", 400));
   }
 
-  const validExtRegex = /\.(jpe?g|png|svg|webp)$/i;
-  const hasInvalidExt = files.some(file => !validExtRegex.test(file.originalname));
-  if (hasInvalidExt) {
-    files.forEach(file => {
-      if (fs.existsSync(file.path)) fs.unlinkSync(file.path);
-    });
-    return next(new HandleERROR("پسوند برخی از فایل‌ها غیرمجاز است", 400));
-  }
-
-  const hasInvalidName = files.some(file =>
-    file.originalname.toLowerCase().startsWith("default-")
-  );
-
-  if (hasInvalidName) {
-    files.forEach(file => {
-      if (fs.existsSync(file.path)) fs.unlinkSync(file.path);
-    });
-    return next(new HandleERROR("استفاده از نام‌های رزرو شده سیستم (مثل default-) مجاز نیست", 403));
-  }
-
-  const data = files.map((file) => file.filename);
-
   return res.status(201).json({
     success: true,
     message: "فایل‌ها با موفقیت آپلود شدند",
-    data,
+    data: files.map((file) => file.filename),
   });
 });
 
+/**
+ * Safely removes an uploaded file from Public directory.
+ */
 export const removeData = catchAsync(async (req, res, next) => {
   const { filename } = req.body;
 
@@ -70,22 +49,18 @@ export const removeData = catchAsync(async (req, res, next) => {
     return next(new HandleERROR("ارسال نام فایل برای حذف الزامی است", 400));
   }
 
-  const removeDataFilename = filename.split("/").at(-1);
+  const baseFilename = path.basename(filename.trim());
 
-  const validExtRegex = /\.(jpe?g|png|svg|webp)$/i;
-  if (!validExtRegex.test(removeDataFilename)) {
+  if (!VALID_IMAGE_EXT_REGEX.test(baseFilename)) {
     return next(new HandleERROR("فقط حذف فایل‌های تصویری مجاز است", 400));
   }
 
-  if (removeDataFilename.toLowerCase().startsWith("default-")) {
+  if (baseFilename.toLowerCase().startsWith("default-") || baseFilename.toLowerCase().startsWith("default")) {
     return next(new HandleERROR("شما اجازه حذف فایل‌های پیش‌فرض و سیستمی را ندارید", 403));
   }
 
-  const filePath = `${__dirname}/Public/${removeDataFilename}`;
-
-  if (fs.existsSync(filePath)) {
-    fs.unlinkSync(filePath);
-  } else {
+  const isRemoved = removePublicFile(baseFilename);
+  if (!isRemoved) {
     return next(new HandleERROR("فایل مورد نظر یافت نشد", 404));
   }
 

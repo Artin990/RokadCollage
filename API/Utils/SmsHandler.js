@@ -1,3 +1,5 @@
+const SMS_TIMEOUT_MS = 10000;
+
 export const sendAuthCode = async (Mobile) => {
   try {
     const res = await fetch("https://api.limosms.com/api/sendcode", {
@@ -10,11 +12,12 @@ export const sendAuthCode = async (Mobile) => {
         Mobile,
         Footer: "RokadCollage",
       }),
+      signal: AbortSignal.timeout(SMS_TIMEOUT_MS),
     });
     const data = await res.json();
     return data;
   } catch (error) {
-    return { success: false, message: error.message };
+    return { success: false, message: error.name === "TimeoutError" ? "مهلت زمانی اتصال به سامانه پیامک به پایان رسید" : error.message };
   }
 };
 
@@ -30,6 +33,7 @@ export const verifyCode = async (Mobile, Code) => {
         Mobile,
         Code,
       }),
+      signal: AbortSignal.timeout(SMS_TIMEOUT_MS),
     });
     const data = await res.json();
     return data;
