@@ -1,0 +1,301 @@
+/**
+ * Scoped Article Content Stylesheet (.article-content)
+ * Self-contained typography and styling for blog articles.
+ * Compatible with iframe preview in Admin and client-facing pages.
+ */
+
+.article-content {
+  /* Design Tokens & Theme Defaults */
+  --article-primary: #F8A41D;
+  --article-primary-hover: #e08f12;
+  --article-primary-active: #c67c0c;
+  --article-bg-brand-soft: #fef7ec;
+  --article-text: #1E293B;
+  --article-text-secondary: #475569;
+  --article-text-muted: #64748B;
+  --article-border: #E2E8F0;
+  --article-bg-subtle: #F8FAFC;
+  --article-code-bg: #F1F5F9;
+  --article-radius: 0.75rem;
+  --article-font-family: inherit;
+  --article-line-height: 1.95;
+
+  /* Container & RTL Base */
+  direction: rtl;
+  text-align: right;
+  font-family: var(--article-font-family);
+  color: var(--article-text);
+  line-height: var(--article-line-height);
+  font-size: 1.05rem;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+/* First & Last child spacing normalization */
+.article-content > :first-child {
+  margin-top: 0 !important;
+}
+
+.article-content > :last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Paragraphs */
+.article-content p {
+  margin-top: 0;
+  margin-bottom: 1.35rem;
+  color: var(--article-text);
+}
+
+/* Headings (h2 - h6) */
+.article-content h2,
+.article-content h3,
+.article-content h4,
+.article-content h5,
+.article-content h6 {
+  color: #0F172A;
+  font-weight: 700;
+  line-height: 1.45;
+  margin-bottom: 0.75rem;
+}
+
+.article-content h2 {
+  font-size: 1.7rem;
+  margin-top: 2.4rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--article-border);
+}
+
+.article-content h3 {
+  font-size: 1.35rem;
+  margin-top: 1.9rem;
+}
+
+.article-content h4 {
+  font-size: 1.18rem;
+  margin-top: 1.5rem;
+  font-weight: 600;
+}
+
+.article-content h5 {
+  font-size: 1.05rem;
+  margin-top: 1.25rem;
+  font-weight: 600;
+}
+
+.article-content h6 {
+  font-size: 0.95rem;
+  margin-top: 1.1rem;
+  font-weight: 600;
+  color: var(--article-text-muted);
+}
+
+/* Hyperlinks */
+.article-content a {
+  color: var(--article-primary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  font-weight: 500;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.article-content a:hover,
+.article-content a:focus {
+  color: var(--article-primary-hover);
+  text-decoration-color: var(--article-primary-hover);
+}
+
+/* Lists */
+.article-content ul,
+.article-content ol {
+  margin-top: 0;
+  margin-bottom: 1.35rem;
+  padding-inline-start: 1.75rem;
+}
+
+.article-content ul {
+  list-style-type: disc;
+}
+
+.article-content ol {
+  list-style-type: decimal;
+}
+
+.article-content li {
+  margin-bottom: 0.45rem;
+  color: var(--article-text);
+}
+
+.article-content li::marker {
+  color: var(--article-primary);
+}
+
+/* Blockquote */
+.article-content blockquote {
+  margin: 1.6rem 0;
+  padding: 1rem 1.35rem;
+  border-inline-start: 4px solid var(--article-primary);
+  background-color: var(--article-bg-brand-soft);
+  border-radius: 0 var(--article-radius) var(--article-radius) 0;
+  color: var(--article-text-secondary);
+  font-style: normal;
+}
+
+.article-content blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* Horizontal Rule */
+.article-content hr {
+  border: 0;
+  border-top: 1px solid var(--article-border);
+  margin: 2.2rem 0;
+}
+
+/* Inline text marks */
+.article-content mark {
+  background-color: #fef08a;
+  color: #713f12;
+  padding: 0.15rem 0.35rem;
+  border-radius: 0.25rem;
+}
+
+.article-content small {
+  font-size: 0.85rem;
+  color: var(--article-text-muted);
+}
+
+.article-content strong,
+.article-content b {
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.article-content em,
+.article-content i {
+  font-style: italic;
+}
+
+/* Tables */
+.article-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.6rem 0;
+  font-size: 0.95rem;
+  display: block;
+  overflow-x: auto;
+  border: 1px solid var(--article-border);
+  border-radius: var(--article-radius);
+}
+
+.article-content th,
+.article-content td {
+  padding: 0.75rem 1rem;
+  text-align: right;
+  border-bottom: 1px solid var(--article-border);
+}
+
+.article-content th {
+  background-color: var(--article-bg-subtle);
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.article-content tbody tr:nth-child(even) {
+  background-color: var(--article-bg-subtle);
+}
+
+.article-content tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Images & Figures */
+.article-content figure {
+  margin: 1.8rem auto;
+  text-align: center;
+}
+
+.article-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--article-radius);
+  display: block;
+  margin: 1.5rem auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.article-content figcaption {
+  font-size: 0.85rem;
+  color: var(--article-text-muted);
+  margin-top: 0.6rem;
+  text-align: center;
+}
+
+/* Code & Pre */
+.article-content code {
+  direction: ltr;
+  display: inline-block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 0.88em;
+  background-color: var(--article-code-bg);
+  color: #0F172A;
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.35rem;
+  border: 1px solid var(--article-border);
+}
+
+.article-content pre {
+  direction: ltr;
+  text-align: left;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  background-color: #0F172A;
+  color: #F8FAFC;
+  padding: 1.1rem 1.35rem;
+  border-radius: var(--article-radius);
+  overflow-x: auto;
+  margin: 1.6rem 0;
+}
+
+.article-content pre code {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+  border: none;
+  font-size: inherit;
+  display: block;
+}
+
+/* Responsive adjustments (< 600px) */
+@media (max-width: 600px) {
+  .article-content {
+    font-size: 0.98rem;
+    line-height: 1.85;
+  }
+
+  .article-content h2 {
+    font-size: 1.45rem;
+    margin-top: 2rem;
+  }
+
+  .article-content h3 {
+    font-size: 1.22rem;
+    margin-top: 1.6rem;
+  }
+
+  .article-content h4 {
+    font-size: 1.1rem;
+    margin-top: 1.3rem;
+  }
+
+  .article-content th,
+  .article-content td {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.88rem;
+  }
+
+  .article-content blockquote {
+    padding: 0.85rem 1rem;
+  }
+}

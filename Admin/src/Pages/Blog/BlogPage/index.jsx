@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
-import axiosInstance from "../../../Utils/axiosInstance";
-import BlogCard from "../BlogCard";
+import BlogCard from "../components/BlogCard";
 import Notify from "../../../Utils/notify";
 import confirm from "../../../Utils/confirm";
 import Search from "../../../Components/Search";
 import Filter from "../../../Components/Filter";
 import Loading from "../../../Components/Loading";
 import { Button, PageHeader, Card } from "../../../Components/UI";
+import { fetchBlogs, deleteBlog } from "../api/blogApi";
+import { BLOG_CATEGORY_OPTIONS } from "../constants/blogConstants";
 
 export default function BlogPage() {
   const navigate = useNavigate();
@@ -27,31 +28,27 @@ export default function BlogPage() {
     {
       field: "category",
       label: "دسته‌بندی بلاگ",
-      options: [
-        { label: "گرافیک", value: "گرافیک" },
-        { label: "مسیر شغلی", value: "مسیر شغلی" },
-        { label: "MBA", value: "MBA" },
-        { label: "زبان", value: "زبان" },
-        { label: "فرانتاند", value: "فرانتاند" },
-        { label: "بکاند", value: "بکاند" },
-      ],
+      options: BLOG_CATEGORY_OPTIONS,
     },
   ];
 
-  const fetchBlogs = async (pageNumber, query, filters) => {
+  const loadBlogs = async (pageNumber, query, filters) => {
     if (pageNumber === 1) setLoading(true);
     else setLoadingMore(true);
 
     try {
-      let filterParams = "";
-      if (filters.category) filterParams += `&category=${encodeURIComponent(filters.category)}`;
+      const response = await fetchBlogs({
+        page: pageNumber,
+        limit: LIMIT,
+        sort: "-_id",
+        q: query || undefined,
+        category: filters.category || undefined,
+      });
 
-      const data = await axiosInstance.get(
-        `blog?limit=${LIMIT}&page=${pageNumber}&sort=-_id${query ? `&q=${encodeURIComponent(query)}` : ""}${filterParams}`
-      );
-
-      if (data && data.success !== false) {
-        const fetchedBlogs = Array.isArray(data) ? data : data.data || [];
+      if (response && response.success !== false) {
+        const fetchedBlogs = Array.isArray(response)
+          ? response
+          : response.data || [];
 
         if (fetchedBlogs.length < LIMIT) {
           setHasMore(false);
@@ -71,7 +68,7 @@ export default function BlogPage() {
           });
         }
       } else {
-        Notify.error(data?.message || "خطا در دریافت اطلاعات مقالات");
+        Notify.error(response?.message || "خطا در دریافت اطلاعات مقالات");
       }
     } catch (error) {
       Notify.error(error.message || "خطا در دریافت اطلاعات مقالات");
@@ -82,7 +79,7 @@ export default function BlogPage() {
   };
 
   useEffect(() => {
-    fetchBlogs(page, searchQuery, activeFilters);
+    loadBlogs(page, searchQuery, activeFilters);
   }, [page, searchQuery, activeFilters]);
 
   useEffect(() => {
@@ -114,13 +111,16 @@ export default function BlogPage() {
     setHasMore(true);
   };
 
-  const handleEditBlog = (id) => {
-    if (id) navigate(`update/${id}`);
+  const handleEditBlog = (blog) => {
+    if (blog?._id) navigate(`update/${blog._id}`);
   };
 
   const handleAddBlog = () => navigate("create");
 
-  const handleDeleteBlog = async (id) => {
+  const handleDeleteBlog = async (blog) => {
+    const id = blog?._id;
+    if (!id) return;
+
     const isConfirmed = await confirm(
       "آیا از حذف این بلاگ اطمینان دارید؟",
       "این عمل غیرقابل بازگشت است و تصویر آن نیز حذف خواهد شد.",
@@ -130,7 +130,7 @@ export default function BlogPage() {
     if (!isConfirmed) return;
 
     try {
-      const deleteData = await axiosInstance.delete(`blog/${id}`);
+      const deleteData = await deleteBlog(id);
 
       if (deleteData && deleteData.success !== false) {
         setBlogs((prev) => prev.filter((b) => b._id !== id));
