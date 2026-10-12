@@ -13,7 +13,7 @@ const descriptionMd = `
 - **جستجوی متنی (\`q\`):** جستجوی واژه در فیلدهای متنی مانند \`?q=برنامه‌نویسی\`
 - **صفحه‌بندی (\`page\` و \`limit\`):** مانند \`?page=1&limit=10\`
 - **مرتب‌سازی (\`sort\`):** مرتب‌سازی نزولی یا صعودی فیلدها مانند \`?sort=-createdAt\`
-- **انتخاب فیلدها (\`fields\`):** دریافت فیلدهای دلخواه مانند \`?fields=title,category,icon\`
+- **انتخاب فیلدها (\`fields\`):** دریافت فیلدهای دلخواه مانند \`?fields=title,category,img\`
 - **پیوند مراجع و فیلدهای مجازی (\`populate\`):**
   - در متدهای ماژول‌های ساده (\`User\`, \`Teacher\`, \`Blog\`) استفاده از کوئری پارامتر \`?populate=...\` مطابق \`vanta-api\` پشتیبانی می‌شود.
   - در متدهایی که دارای فیلدهای چندریختی یا مجازی هستند (\`InPersonCourse\`, \`VirtualCourse\`, \`Comment\`, \`Enrollment\`, \`Wallet\`)، به دلیل عدم پشتیبانی متغیرهای مجازی در \`ApiFeatures\`، مراجع مرتبط (نظیر \`teachers\`، \`course\`، \`session\` و \`user\`) مستقیماً و خودکار توسط کنترلرهای سرور پر (Populate) و بازگردانده می‌شوند.
@@ -30,8 +30,12 @@ const options = {
     },
     servers: [
       {
+        url: "/",
+        description: "سرور جاری (تشخیص خودکار آدرس، هاست و پورت)",
+      },
+      {
         url: "http://localhost:5000",
-        description: "Development Server",
+        description: "سرور محلی توسعه (پورت ۵۰۰۰)",
       },
     ],
     components: {
@@ -40,6 +44,7 @@ const options = {
           type: "http",
           scheme: "bearer",
           bearerFormat: "JWT",
+          description: "توکن احراز هویت JWT کاربر یا مدیر. نمونه: eyJhbGciOi...",
         },
       },
     },
@@ -49,7 +54,14 @@ const options = {
       },
     ],
   },
-  apis: [modulesGlob, "./Modules/**/*.js", "./API/Modules/**/*.js"],
+  apis: [
+    modulesGlob,
+    "./Modules/**/*.js",
+    "./API/Modules/**/*.js",
+    path.join(__dirname, "../app.js").replace(/\\/g, "/"),
+    "./app.js",
+    "./API/app.js",
+  ],
 };
 
 const swaggerSpec = swaggerJSDoc(options);

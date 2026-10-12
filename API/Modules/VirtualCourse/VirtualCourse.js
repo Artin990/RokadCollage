@@ -99,7 +99,7 @@ export default virtualCourseRouter;
  *         duration:
  *           type: string
  *           example: "۴۰ ساعت ویدیو"
- *         icon:
+ *         img:
  *           type: string
  *         price:
  *           type: number
@@ -145,7 +145,7 @@ export default virtualCourseRouter;
  *         - title
  *         - description
  *         - duration
- *         - icon
+ *         - img
  *         - spotplayerCourseId
  *       properties:
  *         category:
@@ -161,7 +161,7 @@ export default virtualCourseRouter;
  *           type: string
  *         duration:
  *           type: string
- *         icon:
+ *         img:
  *           type: string
  *         price:
  *           type: number
@@ -201,7 +201,7 @@ export default virtualCourseRouter;
  *           type: string
  *         duration:
  *           type: string
- *         icon:
+ *         img:
  *           type: string
  *         price:
  *           type: number

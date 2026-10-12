@@ -30,9 +30,9 @@ export const commonCourseFields = {
         required: [true, "وارد کردن مدت دوره الزامی است"],
         trim: true,
     },
-    icon: {
+    img: {
         type: String,
-        required: [true, "آپلود فایل آیکون (SVG) دوره الزامی است"],
+        required: [true, "آپلود تصویر دوره الزامی است"],
     },
     price: {
         type: Number,

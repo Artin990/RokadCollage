@@ -5,6 +5,8 @@ import User from "../User/UserMd.js";
 import InPersonCourse from "../InPersonCourse/InPersonCourseMd.js";
 import VirtualCourse from "../VirtualCourse/VirtualCourseMd.js";
 import CourseSession from "../InPersonCourse/CourseSession/CourseSessionMd.js";
+import Wallet from "../Wallet/WalletMd.js";
+import Transaction from "../Wallet/TransactionMd.js";
 import { purchaseCourseService } from "../CourseCore/purchaseCore.js";
 import { issueEnrollmentLicense, buildDownloadUrl } from "../../Utils/spotplayer.js";
 
@@ -46,7 +48,7 @@ export const retryLicense = catchAsync(async (req, res, next) => {
   const enrollmentId = req.params.id;
   const userId = req.userId;
   const userRole = req.role;
-  const isAdmin = userRole === "admin";
+  const isAdmin = userRole === "admin" || userRole === "superAdmin";
 
   const enrollment = await Enrollment.findById(enrollmentId);
   if (!enrollment) {
@@ -82,7 +84,7 @@ export const retryLicense = catchAsync(async (req, res, next) => {
 
   const updatedEnrollment = await Enrollment.findById(enrollmentId)
     .select("+spotplayer.key")
-    .populate("course", "title type category price icon duration spotplayerCourseId")
+    .populate("course", "title type category price img duration spotplayerCourseId")
     .populate("user", "fullName phoneNumber role")
     .lean();
 
@@ -154,7 +156,7 @@ export const getAllEnrollments = catchAsync(async (req, res, next) => {
 
   await Enrollment.populate(docs, {
     path: "course",
-    select: "title type category price icon duration spotplayerCourseId",
+    select: "title type category price img duration spotplayerCourseId",
   });
 
   const enrichEnrollment = (doc) => {
@@ -183,7 +185,7 @@ export const getOneEnrollment = catchAsync(async (req, res, next) => {
   const enrollment = await Enrollment.findById(req.params.id)
     .select("+spotplayer.key")
     .populate("user", "fullName phoneNumber role")
-    .populate("course", "title type category price icon duration spotplayerCourseId")
+    .populate("course", "title type category price img duration spotplayerCourseId")
     .populate("session", "code scheduleDays scheduleHours capacity enrolledCount")
     .lean();
 
@@ -192,7 +194,7 @@ export const getOneEnrollment = catchAsync(async (req, res, next) => {
   }
 
   const isOwner = enrollment.user?._id?.toString() === req.userId?.toString();
-  const isAdmin = req.role === "admin";
+  const isAdmin = req.role === "admin" || req.role === "superAdmin";
   if (!isOwner && !isAdmin) {
     return next(new HandleERROR("شما دسترسی لازم برای این عملیات را ندارید", 403));
   }
@@ -215,7 +217,7 @@ export const getMyEnrollments = catchAsync(async (req, res, next) => {
   const enrollments = await Enrollment.find({ user: req.userId })
     .select("+spotplayer.key")
     .sort({ createdAt: -1 })
-    .populate("course", "title type category price duration icon sprints location spotplayerCourseId")
+    .populate("course", "title type category price duration img sprints location spotplayerCourseId")
     .populate("session", "code scheduleDays scheduleHours capacity")
     .lean();
 
@@ -244,7 +246,7 @@ export const checkEnrollmentStatus = catchAsync(async (req, res, next) => {
     course: courseId,
   })
     .select("+spotplayer.key")
-    .populate("course", "title type category price icon duration spotplayerCourseId")
+    .populate("course", "title type category price img duration spotplayerCourseId")
     .populate("session", "code scheduleDays scheduleHours")
     .lean();
 
@@ -324,7 +326,7 @@ export const adminManualEnroll = catchAsync(async (req, res, next) => {
 
     const populated = await Enrollment.findById(enrollment._id)
       .populate("user", "fullName phoneNumber role")
-      .populate("course", "title type category price icon duration spotplayerCourseId");
+      .populate("course", "title type category price img duration spotplayerCourseId");
 
     return res.status(201).json({
       success: true,
@@ -354,39 +356,131 @@ export const adminManualEnroll = catchAsync(async (req, res, next) => {
     return next(new HandleERROR("این کاربر قبلاً در این دوره ثبت‌نام کرده است", 400));
   }
 
-  if (
-    targetSession.capacity != null &&
-    targetSession.capacity > 0 &&
-    (targetSession.enrolledCount || 0) >= targetSession.capacity
-  ) {
+  // Atomic seat reservation to prevent race conditions & overbooking
+  const sessionQuery = { _id: sessionId };
+  if (targetSession.capacity != null && targetSession.capacity > 0) {
+    sessionQuery.enrolledCount = { $lt: targetSession.capacity };
+  }
+
+  const updatedSession = await CourseSession.findOneAndUpdate(
+    sessionQuery,
+    { $inc: { enrolledCount: 1 } },
+    { new: true }
+  );
+
+  if (!updatedSession) {
     return next(new HandleERROR("ظرفیت این کد کلاس تکمیل شده است", 400));
   }
 
-  await CourseSession.findByIdAndUpdate(sessionId, {
-    $inc: { enrolledCount: 1 },
-  });
-
-  const [enrollment] = await Enrollment.create([
-    {
-      user: userId,
-      course: courseId,
-      courseModel: "InPersonCourse",
-      session: sessionId,
-      pricePaid: 0,
-      discountAmount: 0,
-      couponCode: "ثبت‌نام دستی ادمین",
-      transactionId: null,
-    },
-  ]);
+  let enrollment;
+  try {
+    const createdList = await Enrollment.create([
+      {
+        user: userId,
+        course: courseId,
+        courseModel: "InPersonCourse",
+        session: sessionId,
+        pricePaid: 0,
+        discountAmount: 0,
+        couponCode: "ثبت‌نام دستی ادمین",
+        transactionId: null,
+      },
+    ]);
+    enrollment = createdList[0];
+  } catch (err) {
+    // Compensating rollback if creation fails
+    await CourseSession.findByIdAndUpdate(sessionId, {
+      $inc: { enrolledCount: -1 },
+    });
+    throw err;
+  }
 
   const populatedEnrollment = await Enrollment.findById(enrollment._id)
     .populate("user", "fullName phoneNumber role")
-    .populate("course", "title type category price icon duration")
+    .populate("course", "title type category price img duration")
     .populate("session", "code scheduleDays scheduleHours capacity enrolledCount");
 
   return res.status(201).json({
     success: true,
     message: "کاربر با موفقیت در این کد کلاس ثبت‌نام شد",
     data: populatedEnrollment,
+  });
+});
+
+/**
+ * Cancel and delete an enrollment (Admin only).
+ * If the enrollment was purchased by the user (pricePaid > 0),
+ * refunds the paid amount back to the user's wallet and records a refund transaction.
+ * If in-person session exists, decrements session enrolledCount.
+ * DELETE /api/enrollment/:id
+ * POST /api/enrollment/:id/cancel
+ */
+export const cancelEnrollment = catchAsync(async (req, res, next) => {
+  const enrollmentId = req.params.id || req.params.enrollmentId;
+
+  const enrollment = await Enrollment.findById(enrollmentId)
+    .populate("course", "title")
+    .populate("session", "code enrolledCount");
+
+  if (!enrollment) {
+    return next(new HandleERROR("ثبت‌نام مورد نظر یافت نشد", 404));
+  }
+
+  const userId = enrollment.user;
+  const refundAmount = Number(enrollment.pricePaid) || 0;
+  const sessionId = enrollment.session?._id || enrollment.session;
+  const isVirtual = enrollment.courseModel === "VirtualCourse";
+  const courseTitle = enrollment.course?.title || (isVirtual ? "دوره مجازی" : "دوره حضوری");
+  const sessionCode = enrollment.session?.code ? ` (کلاس ${enrollment.session.code})` : "";
+
+  // 1. Decrement enrolledCount if in-person course with a session
+  if (sessionId) {
+    await CourseSession.findOneAndUpdate(
+      { _id: sessionId, enrolledCount: { $gt: 0 } },
+      { $inc: { enrolledCount: -1 } }
+    );
+  }
+
+  // 2. Refund wallet if user purchased with a non-zero price (not manual/free)
+  let updatedWallet = null;
+  let refundTransaction = null;
+
+  if (refundAmount > 0) {
+    let wallet = await Wallet.findOne({ ownerId: userId });
+    if (!wallet) {
+      wallet = await Wallet.create({ ownerId: userId, balance: 0 });
+    }
+
+    updatedWallet = await Wallet.findByIdAndUpdate(
+      wallet._id,
+      { $inc: { balance: refundAmount } },
+      { new: true }
+    );
+
+    refundTransaction = await Transaction.create({
+      walletId: wallet._id,
+      userId,
+      type: "refund",
+      amount: refundAmount,
+      status: "success",
+      description: `استرداد وجه لغو ثبت‌نام دوره «${courseTitle}»${sessionCode} توسط مدیر سیستم`,
+    });
+  }
+
+  // 3. Delete the enrollment record completely from database
+  await Enrollment.findByIdAndDelete(enrollment._id);
+
+  return res.status(200).json({
+    success: true,
+    message:
+      refundAmount > 0
+        ? `ثبت‌نام با موفقیت لغو شد و مبلغ ${refundAmount.toLocaleString("fa-IR")} تومان به کیف پول کاربر بازگردانده شد`
+        : "ثبت‌نام کاربر با موفقیت لغو و از دوره حذف شد",
+    data: {
+      enrollmentId: enrollment._id,
+      refundAmount,
+      walletBalance: updatedWallet ? updatedWallet.balance : undefined,
+      transactionId: refundTransaction ? refundTransaction._id : null,
+    },
   });
 });

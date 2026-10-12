@@ -113,24 +113,26 @@ export const update = catchAsync(async (req, res, next) => {
     }
   });
 
+  const oldBlog = await Blog.findById(req.params.id);
+  if (!oldBlog) {
+    return next(new HandleERROR("مقاله مورد نظر یافت نشد", 404));
+  }
+
   if (updates.title && typeof updates.title === "string") {
     updates.title = updates.title.trim();
-    const duplicate = await Blog.findOne({
-      title: updates.title,
-      _id: { $ne: req.params.id },
-    });
-    if (duplicate) {
-      return next(new HandleERROR("مقاله‌ای با این عنوان قبلاً ثبت شده است", 400));
+    if (updates.title !== oldBlog.title) {
+      const duplicate = await Blog.findOne({
+        title: updates.title,
+        _id: { $ne: req.params.id },
+      });
+      if (duplicate) {
+        return next(new HandleERROR("مقاله‌ای با این عنوان قبلاً ثبت شده است", 400));
+      }
     }
   }
 
   if (updates.content !== undefined) {
     updates.content = sanitizeBlogHtml(updates.content);
-  }
-
-  const oldBlog = await Blog.findById(req.params.id);
-  if (!oldBlog) {
-    return next(new HandleERROR("مقاله مورد نظر یافت نشد", 404));
   }
 
   // If image changed, safely unlink previous image file from Public

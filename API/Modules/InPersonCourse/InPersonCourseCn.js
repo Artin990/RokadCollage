@@ -1,6 +1,7 @@
 import ApiFeatures, { catchAsync, HandleERROR } from "vanta-api";
 import InPersonCourse from "./InPersonCourseMd.js";
 import CourseSession from "./CourseSession/CourseSessionMd.js";
+import Comment from "../Comment/CommentMd.js";
 import { purchaseCourseService } from "../CourseCore/purchaseCore.js";
 import { attachSessionCapacity } from "../../Utils/sessionHelper.js";
 import { attachDynamicPricing } from "../../Utils/discountHelper.js";
@@ -137,7 +138,7 @@ export const update = catchAsync(async (req, res, next) => {
         "title",
         "description",
         "duration",
-        "icon",
+        "img",
         "price",
         "timedDiscount",
         "discountCodes",
@@ -162,8 +163,8 @@ export const update = catchAsync(async (req, res, next) => {
         return next(new HandleERROR("دوره حضوری مورد نظر یافت نشد", 404));
     }
 
-    if (updates.icon && updates.icon !== oldCourse.icon) {
-        removePublicFile(oldCourse.icon);
+    if (updates.img && updates.img !== oldCourse.img) {
+        removePublicFile(oldCourse.img);
     }
 
     const updatedCourse = await InPersonCourse.findByIdAndUpdate(req.params.id, updates, {
@@ -191,12 +192,15 @@ export const remove = catchAsync(async (req, res, next) => {
         return next(new HandleERROR("دوره حضوری مورد نظر یافت نشد", 404));
     }
 
-    if (deletedCourse.icon) {
-        removePublicFile(deletedCourse.icon);
+    if (deletedCourse.img) {
+        removePublicFile(deletedCourse.img);
     }
 
-    // Cascade delete related sessions
-    await CourseSession.deleteMany({ course: deletedCourse._id });
+    // Cascade delete related sessions and testimonials
+    await Promise.all([
+        CourseSession.deleteMany({ course: deletedCourse._id }),
+        Comment.deleteMany({ course: deletedCourse._id }),
+    ]);
 
     return res.status(200).json({
         success: true,

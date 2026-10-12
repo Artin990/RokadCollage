@@ -3,6 +3,7 @@ import {
     safeTextRegex,
     objectIdRegex,
     hex24Regex,
+    VALID_IMAGE_EXT_REGEX,
 } from "../../Utils/validateRequest.js";
 
 export { safeTextRegex, objectIdRegex, hex24Regex };
@@ -49,21 +50,6 @@ export const sprintItemSchema = Joi.object({
     }),
 });
 
-export const iconValidator = (value, helpers) => {
-    if (typeof value !== "string" || !value.trim()) {
-        return helpers.message("آیکون دوره الزامی است");
-    }
-    const val = value.trim();
-    const isSvgFile = /\.svg$/i.test(val);
-    const isSvgCode = val.startsWith("<svg") || /<svg[\s\S]*<\/svg>/i.test(val);
-    if (!isSvgFile && !isSvgCode) {
-        return helpers.message("آیکون باید فایل با پسوند SVG (.svg) یا کُد معتبر تگ <svg> باشد");
-    }
-    if (isSvgCode && /<script\b|javascript:|on\w+\s*=/i.test(val)) {
-        return helpers.message("کُد SVG ارسالی حاوی تگ‌های اسکریپت یا رویدادهای غیرمجاز است");
-    }
-    return value;
-};
 
 /**
  * Common Joi fields for course creation.
@@ -110,13 +96,14 @@ export const baseCourseCreateFields = {
             "string.pattern.base": "مدت دوره نباید شامل کاراکترهای غیرمجاز باشد",
             "any.required": "وارد کردن مدت دوره الزامی است",
         }),
-    icon: Joi.string()
-        .custom(iconValidator)
+    img: Joi.string()
+        .pattern(VALID_IMAGE_EXT_REGEX)
         .required()
         .messages({
-            "string.base": "آیکون باید یک متن یا کُد SVG معتبر باشد",
-            "string.empty": "آیکون نمی‌تواند خالی باشد",
-            "any.required": "ارسال آیکون SVG الزامی است",
+            "string.base": "تصویر دوره باید یک آدرس معتبر باشد",
+            "string.empty": "تصویر دوره نمی‌تواند خالی باشد",
+            "string.pattern.base": "پسوند فایل تصویر باید یکی از موارد JPG, JPEG, PNG, SVG, WEBP باشد",
+            "any.required": "ارسال تصویر دوره الزامی است",
         }),
     price: Joi.number().min(0).optional().default(0),
     timedDiscount: timedDiscountSchema.optional(),
@@ -161,16 +148,12 @@ export const baseCourseUpdateFields = {
             "string.empty": "مدت دوره نمی‌تواند خالی باشد",
             "string.pattern.base": "مدت دوره نباید شامل کاراکترهای غیرمجاز باشد",
         }),
-    icon: Joi.string()
-        .custom((value, helpers) => {
-            if (typeof value !== "string" || !value.trim()) {
-                return helpers.message("آیکون دوره نمی‌تواند خالی باشد");
-            }
-            return iconValidator(value, helpers);
-        })
+    img: Joi.string()
+        .pattern(VALID_IMAGE_EXT_REGEX)
         .messages({
-            "string.base": "آیکون باید یک متن یا کُد SVG معتبر باشد",
-            "string.empty": "آیکون نمی‌تواند خالی باشد",
+            "string.base": "تصویر دوره باید یک آدرس معتبر باشد",
+            "string.empty": "تصویر دوره نمی‌تواند خالی باشد",
+            "string.pattern.base": "پسوند فایل تصویر باید یکی از موارد JPG, JPEG, PNG, SVG, WEBP باشد",
         }),
     price: Joi.number().min(0).optional(),
     timedDiscount: timedDiscountSchema.optional(),

@@ -14,6 +14,7 @@ commentRouter.route("/")
 commentRouter.route("/:id")
   .get(validateParams(objectIdParamValidator), getOne)
   .patch(IsLogin, IsAdmin, validateParams(objectIdParamValidator), validateRequest(updateCommentValidator), update)
+  .put(IsLogin, IsAdmin, validateParams(objectIdParamValidator), validateRequest(updateCommentValidator), update)
   .delete(IsLogin, IsAdmin, validateParams(objectIdParamValidator), remove);
 
 export default commentRouter;

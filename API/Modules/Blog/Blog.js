@@ -51,6 +51,7 @@ blogRouter.route("/")
 blogRouter.route("/:id")
   .get(validateParams(objectIdParamValidator), getOne)
   .patch(IsLogin, IsAdmin, validateParams(objectIdParamValidator), validateRequest(updateBlogValidator), update)
+  .put(IsLogin, IsAdmin, validateParams(objectIdParamValidator), validateRequest(updateBlogValidator), update)
   .delete(IsLogin, IsAdmin, validateParams(objectIdParamValidator), remove);
 
 export default blogRouter;
@@ -277,6 +278,29 @@ export default blogRouter;
  *
  *   patch:
  *     summary: ویرایش مقاله (مدیر سیستم)
+ *     tags: [Blog]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateBlogInput'
+ *     responses:
+ *       200:
+ *         description: مقاله با موفقیت بروزرسانی شد
+ *       400:
+ *         description: خطای اعتبارسنجی
+ *
+ *   put:
+ *     summary: جایگزینی / ویرایش کامل مقاله (مدیر سیستم)
  *     tags: [Blog]
  *     security:
  *       - bearerAuth: []

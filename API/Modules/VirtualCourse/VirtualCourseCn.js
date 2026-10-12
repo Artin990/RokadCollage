@@ -3,6 +3,8 @@ import VirtualCourse from "./VirtualCourseMd.js";
 import { purchaseCourseService } from "../CourseCore/purchaseCore.js";
 import { attachDynamicPricing } from "../../Utils/discountHelper.js";
 import { adminManualEnroll } from "../Enrollment/EnrollmentCn.js";
+import CourseComment from "../CourseComment/CourseCommentMd.js";
+import Comment from "../Comment/CommentMd.js";
 import { removePublicFile } from "../../Utils/fileHelper.js";
 
 /**
@@ -71,7 +73,7 @@ export const update = catchAsync(async (req, res, next) => {
         "title",
         "description",
         "duration",
-        "icon",
+        "img",
         "price",
         "timedDiscount",
         "discountCodes",
@@ -92,8 +94,8 @@ export const update = catchAsync(async (req, res, next) => {
         return next(new HandleERROR("دوره مجازی مورد نظر یافت نشد", 404));
     }
 
-    if (updates.icon && updates.icon !== oldCourse.icon) {
-        removePublicFile(oldCourse.icon);
+    if (updates.img && updates.img !== oldCourse.img) {
+        removePublicFile(oldCourse.img);
     }
 
     const updatedCourse = await VirtualCourse.findByIdAndUpdate(req.params.id, updates, {
@@ -118,9 +120,15 @@ export const remove = catchAsync(async (req, res, next) => {
         return next(new HandleERROR("دوره مجازی مورد نظر یافت نشد", 404));
     }
 
-    if (deletedCourse.icon) {
-        removePublicFile(deletedCourse.icon);
+    if (deletedCourse.img) {
+        removePublicFile(deletedCourse.img);
     }
+
+    // Cascade delete associated comments and course discussions
+    await Promise.all([
+        CourseComment.deleteMany({ course: deletedCourse._id }),
+        Comment.deleteMany({ course: deletedCourse._id }),
+    ]);
 
     return res.status(200).json({
         success: true,

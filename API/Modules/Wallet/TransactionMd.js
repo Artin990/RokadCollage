@@ -17,8 +17,8 @@ const transactionSchema = new mongoose.Schema(
     type: {
       type: String,
       enum: {
-        values: ["charge", "payout", "purchase"],
-        message: "نوع تراکنش نامعتبر است (باید charge، payout یا purchase باشد)",
+        values: ["charge", "payout", "purchase", "refund"],
+        message: "نوع تراکنش نامعتبر است (باید charge، payout، purchase یا refund باشد)",
       },
       required: [true, "نوع تراکنش الزامی است"],
     },

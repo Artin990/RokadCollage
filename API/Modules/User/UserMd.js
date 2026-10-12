@@ -51,5 +51,24 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+userSchema.index({ role: 1, createdAt: -1 });
+userSchema.index({ createdAt: -1 });
+
+// Automatically ensure a default Wallet exists for every created user
+userSchema.post("save", async function (doc) {
+  try {
+    const Wallet = mongoose.models.Wallet || mongoose.model("Wallet");
+    if (Wallet) {
+      await Wallet.findOneAndUpdate(
+        { ownerId: doc._id },
+        { $setOnInsert: { ownerId: doc._id, balance: 0 } },
+        { upsert: true }
+      );
+    }
+  } catch (err) {
+    // Non-blocking catch to prevent interrupting the user save lifecycle
+  }
+});
+
 const User = mongoose.model("User", userSchema);
 export default User;

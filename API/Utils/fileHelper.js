@@ -13,7 +13,7 @@ const publicDir = path.resolve(utilsDir, "../Public");
  * @param {string} filename - The file name or path relative to Public
  * @returns {boolean} True if deleted, false otherwise
  */
-export const removePublicFile = (filename) => {
+export const removePublicFile = async (filename) => {
   if (!filename || typeof filename !== "string") return false;
 
   const trimmed = filename.trim();
@@ -28,17 +28,16 @@ export const removePublicFile = (filename) => {
   const baseFilename = path.basename(trimmed);
   const targetPath = path.join(publicDir, baseFilename);
 
-  if (fs.existsSync(targetPath)) {
-    try {
-      fs.unlinkSync(targetPath);
-      return true;
-    } catch (err) {
+  try {
+    await fs.promises.access(targetPath, fs.constants.F_OK);
+    await fs.promises.unlink(targetPath);
+    return true;
+  } catch (err) {
+    if (err.code !== "ENOENT") {
       console.error(`Error deleting file (${baseFilename}):`, err.message);
-      return false;
     }
+    return false;
   }
-
-  return false;
 };
 
 export default removePublicFile;

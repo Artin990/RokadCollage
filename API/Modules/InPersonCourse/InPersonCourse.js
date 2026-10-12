@@ -177,9 +177,9 @@ export default inPersonCourseRouter;
  *         duration:
  *           type: string
  *           example: "۱۰ هفته"
- *         icon:
+ *         img:
  *           type: string
- *           description: نام فایل آیکون SVG یا کد SVG
+ *           description: نام فایل تصویر دوره
  *         price:
  *           type: number
  *           example: 4500000
@@ -226,7 +226,7 @@ export default inPersonCourseRouter;
  *         - title
  *         - description
  *         - duration
- *         - icon
+ *         - img
  *         - sessions
  *       properties:
  *         category:
@@ -242,7 +242,7 @@ export default inPersonCourseRouter;
  *           type: string
  *         duration:
  *           type: string
- *         icon:
+ *         img:
  *           type: string
  *         price:
  *           type: number
@@ -285,7 +285,7 @@ export default inPersonCourseRouter;
  *           type: string
  *         duration:
  *           type: string
- *         icon:
+ *         img:
  *           type: string
  *         price:
  *           type: number

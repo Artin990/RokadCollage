@@ -28,7 +28,7 @@ export const loginWithOtpValidator = Joi.object({
     "string.pattern.base": "فرمت شماره موبایل نامعتبر است",
     "any.required": "وارد کردن شماره موبایل الزامی است",
   }),
-  code: Joi.string().min(5).max(6).pattern(/^[0-9]+$/).required().messages({
+  code: Joi.string().min(5).max(6).pattern(/^[\d\u06F0-\u06F9]{5,6}$/).required().messages({
     "string.empty": "کد تایید نمی‌تواند خالی باشد",
     "string.min": "کد تایید نامعتبر است",
     "string.max": "کد تایید نامعتبر است",
@@ -54,7 +54,7 @@ export const forgetPasswordValidator = Joi.object({
     "string.pattern.base": "فرمت شماره موبایل نامعتبر است",
     "any.required": "وارد کردن شماره موبایل الزامی است",
   }),
-  code: Joi.string().min(5).max(6).pattern(/^[0-9]+$/).required().messages({
+  code: Joi.string().min(5).max(6).pattern(/^[\d\u06F0-\u06F9]{5,6}$/).required().messages({
     "string.empty": "کد تایید نمی‌تواند خالی باشد",
     "string.min": "کد تایید نامعتبر است",
     "string.max": "کد تایید نامعتبر است",

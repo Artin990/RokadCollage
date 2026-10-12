@@ -1,6 +1,7 @@
 import ApiFeatures, { catchAsync, HandleERROR } from "vanta-api";
 import Wallet from "./WalletMd.js";
 import Transaction from "./TransactionMd.js";
+import User from "../User/UserMd.js";
 
 /**
  * Retrieves Zarinpal payment gateway configurations from environment variables.
@@ -292,7 +293,18 @@ export const requestPayout = catchAsync(async (req, res, next) => {
  * Fetch all user wallets with pagination, filter, and user population (Admin only).
  */
 export const getAllWallets = catchAsync(async (req, res, next) => {
-  const features = new ApiFeatures(Wallet, req.query, req.role)
+  const queryCopy = { ...req.query };
+  const manualFilters = {};
+  const rawOwner = queryCopy.ownerId || queryCopy.owner || queryCopy.userId;
+  if (rawOwner) {
+    manualFilters.ownerId = rawOwner;
+    delete queryCopy.ownerId;
+    delete queryCopy.owner;
+    delete queryCopy.userId;
+  }
+
+  const features = new ApiFeatures(Wallet, queryCopy, req.role)
+    .addManualFilters(manualFilters)
     .filter()
     .sort()
     .limitFields()
@@ -309,10 +321,42 @@ export const getAllWallets = catchAsync(async (req, res, next) => {
 });
 
 /**
+ * Fetch wallet of a specific user by userId (Admin only).
+ * If wallet does not exist, returns a virtual 0 balance object.
+ */
+export const getUserWallet = catchAsync(async (req, res, next) => {
+  const { userId } = req.params;
+  let wallet = await Wallet.findOne({ ownerId: userId }).populate([
+    {
+      path: "ownerId",
+      select: "fullName phoneNumber role birthDate",
+    },
+  ]);
+
+  if (!wallet) {
+    const user = await User.findById(userId);
+    if (!user) {
+      return next(new HandleERROR("کاربر مورد نظر یافت نشد", 404));
+    }
+    wallet = await Wallet.create({ ownerId: userId, balance: 0 });
+    wallet = await wallet.populate({
+      path: "ownerId",
+      select: "fullName phoneNumber role birthDate",
+    });
+  }
+
+  return res.status(200).json({
+    success: true,
+    data: wallet,
+  });
+});
+
+/**
  * Fetch transaction history for currently authenticated user.
  */
 export const getMyTransactions = catchAsync(async (req, res, next) => {
-  const features = new ApiFeatures(Transaction, req.query, req.role)
+  const query = { sort: "-createdAt,-_id", ...req.query };
+  const features = new ApiFeatures(Transaction, query, req.role)
     .addManualFilters({ userId: req.userId })
     .filter()
     .sort()
@@ -327,7 +371,8 @@ export const getMyTransactions = catchAsync(async (req, res, next) => {
  * Fetch all transaction records across system (Admin only).
  */
 export const getAllTransactions = catchAsync(async (req, res, next) => {
-  const features = new ApiFeatures(Transaction, req.query, req.role)
+  const query = { sort: "-createdAt,-_id", ...req.query };
+  const features = new ApiFeatures(Transaction, query, req.role)
     .filter()
     .sort()
     .limitFields()

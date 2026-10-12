@@ -6,6 +6,7 @@ import {
 } from "../../Utils/SmsHandler.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { normalizePersianDigits } from "../../Utils/validateRequest.js";
 
 const signToken = (id, role) => {
   if (!process.env.JWT_SECRET) {
@@ -26,10 +27,11 @@ const formatAuthUser = (user) => ({
 
 export const auth = catchAsync(async (req, res, next) => {
   const { phoneNumber } = req.body;
-  const user = await User.findOne({ phoneNumber }).select("+password");
+  const cleanPhone = normalizePersianDigits(phoneNumber).trim();
+  const user = await User.findOne({ phoneNumber: cleanPhone }).select("+password");
 
   if (!user || !user.password) {
-    const resultSms = await sendAuthCode(phoneNumber);
+    const resultSms = await sendAuthCode(cleanPhone);
 
     if (!resultSms.success) {
       return res.status(500).json({
@@ -60,8 +62,9 @@ export const auth = catchAsync(async (req, res, next) => {
 
 export const loginWithPassword = catchAsync(async (req, res, next) => {
   const { phoneNumber, password } = req.body;
+  const cleanPhone = normalizePersianDigits(phoneNumber).trim();
 
-  const user = await User.findOne({ phoneNumber }).select("+password");
+  const user = await User.findOne({ phoneNumber: cleanPhone }).select("+password");
 
   if (!user) {
     return next(new HandleERROR("شماره موبایل یا رمز عبور اشتباه است", 401));
@@ -91,17 +94,19 @@ export const loginWithPassword = catchAsync(async (req, res, next) => {
 
 export const loginWithOtp = catchAsync(async (req, res, next) => {
   const { phoneNumber, code, password } = req.body;
+  const cleanPhone = normalizePersianDigits(phoneNumber).trim();
+  const cleanCode = normalizePersianDigits(code).trim();
 
-  const verification = await verifySmsCode(phoneNumber, code);
+  const verification = await verifySmsCode(cleanPhone, cleanCode);
 
   if (!verification.success) {
     return next(new HandleERROR("کد تایید اشتباه یا منقضی شده است", 400));
   }
 
-  let user = await User.findOne({ phoneNumber });
+  let user = await User.findOne({ phoneNumber: cleanPhone });
 
   if (!user) {
-    let userData = { phoneNumber };
+    let userData = { phoneNumber: cleanPhone };
     if (password) {
       userData.password = await bcryptjs.hash(password, 12);
     }
@@ -127,8 +132,9 @@ export const loginWithOtp = catchAsync(async (req, res, next) => {
 
 export const resendCode = catchAsync(async (req, res, next) => {
   const { phoneNumber } = req.body;
+  const cleanPhone = normalizePersianDigits(phoneNumber).trim();
 
-  const resultSms = await sendAuthCode(phoneNumber);
+  const resultSms = await sendAuthCode(cleanPhone);
 
   if (!resultSms.success) {
     return res.status(500).json({
@@ -145,14 +151,16 @@ export const resendCode = catchAsync(async (req, res, next) => {
 
 export const forgetPassword = catchAsync(async (req, res, next) => {
   const { code, phoneNumber, newPassword } = req.body;
+  const cleanPhone = normalizePersianDigits(phoneNumber).trim();
+  const cleanCode = normalizePersianDigits(code).trim();
 
-  const verification = await verifySmsCode(phoneNumber, code);
+  const verification = await verifySmsCode(cleanPhone, cleanCode);
 
   if (!verification.success) {
     return next(new HandleERROR("کد تایید اشتباه است", 400));
   }
 
-  const user = await User.findOne({ phoneNumber });
+  const user = await User.findOne({ phoneNumber: cleanPhone });
 
   if (!user) return next(new HandleERROR("کاربری با این شماره یافت نشد", 404));
 

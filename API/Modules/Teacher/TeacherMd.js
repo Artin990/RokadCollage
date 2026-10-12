@@ -23,5 +23,8 @@ const teacherSchema = new mongoose.Schema(
   }
 );
 
+teacherSchema.index({ createdAt: -1 });
+teacherSchema.index({ name: 1, specialization: 1 });
+
 const Teacher = mongoose.model("Teacher", teacherSchema);
 export default Teacher;

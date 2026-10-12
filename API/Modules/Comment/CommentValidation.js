@@ -4,6 +4,17 @@ import {
   objectIdRegex,
   VALID_IMAGE_EXT_REGEX,
 } from "../../Utils/validateRequest.js";
+import { containsProfanity } from "../../Utils/profanityFilter.js";
+
+const profanityJoiValidator = (value, helpers) => {
+  const { hasProfanity, matchedWords } = containsProfanity(value);
+  if (hasProfanity) {
+    return helpers.message(
+      `متن نظر شامل کلمات نامناسب یا غیرمجاز است (${matchedWords.join("، ")})`
+    );
+  }
+  return value;
+};
 
 export const createCommentValidator = Joi.object({
   course: Joi.string()
@@ -22,13 +33,14 @@ export const createCommentValidator = Joi.object({
     }),
   comment: Joi.string()
     .min(3)
-    .pattern(safeTextRegex)
+    .max(3000)
     .required()
+    .custom(profanityJoiValidator, "Profanity Check")
     .messages({
       "string.base": "متن کامنت باید یک متن باشد",
       "string.empty": "متن کامنت نمی‌تواند خالی باشد",
       "string.min": "متن کامنت باید حداقل ۳ کاراکتر باشد",
-      "string.pattern.base": "متن کامنت نباید شامل کاراکترهای غیرمجاز باشد",
+      "string.max": "متن کامنت نمی‌تواند بیشتر از ۳۰۰۰ کاراکتر باشد",
       "any.required": "وارد کردن متن نظر الزامی است",
     }),
   name: Joi.string()
@@ -79,12 +91,13 @@ export const updateCommentValidator = Joi.object({
     .optional(),
   comment: Joi.string()
     .min(3)
-    .pattern(safeTextRegex)
+    .max(3000)
+    .custom(profanityJoiValidator, "Profanity Check")
     .messages({
       "string.base": "متن کامنت باید یک متن باشد",
       "string.empty": "متن کامنت نمی‌تواند خالی باشد",
       "string.min": "متن کامنت باید حداقل ۳ کاراکتر باشد",
-      "string.pattern.base": "متن کامنت نباید شامل کاراکترهای غیرمجاز باشد",
+      "string.max": "متن کامنت نمی‌تواند بیشتر از ۳۰۰۰ کاراکتر باشد",
     }),
   name: Joi.string()
     .pattern(safeTextRegex)

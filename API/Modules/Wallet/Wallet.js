@@ -5,12 +5,17 @@ import {
   verifyCharge,
   requestPayout,
   getAllWallets,
+  getUserWallet,
   getMyTransactions,
   getAllTransactions,
 } from "./WalletCn.js";
 import IsLogin from "../../Middleware/IsLogin.js";
 import IsAdmin from "../../Middleware/IsAdmin.js";
-import { validateRequest } from "../../Utils/validateRequest.js";
+import {
+  validateRequest,
+  validateParams,
+  createObjectIdParamsValidator,
+} from "../../Utils/validateRequest.js";
 import {
   requestChargeValidator,
   verifyChargeValidator,
@@ -32,15 +37,34 @@ const chargeLimiter = rateLimit({
   legacyHeaders: false,
 });
 
+const payoutLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 10,
+  message: {
+    success: false,
+    message: "تعداد درخواست‌های تسویه بیش از حد مجاز است. لطفاً پس از ۱۰ دقیقه مجدداً تلاش کنید",
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 // User wallet routes (Authenticated users)
 walletRouter.route("/my").get(IsLogin, getMyWallet);
 walletRouter.route("/charge/request").post(IsLogin, chargeLimiter, validateRequest(requestChargeValidator), requestCharge);
 walletRouter.route("/charge/verify").post(IsLogin, validateRequest(verifyChargeValidator), verifyCharge);
-walletRouter.route("/payout/request").post(IsLogin, validateRequest(requestPayoutValidator), requestPayout);
+walletRouter.route("/payout/request").post(IsLogin, payoutLimiter, validateRequest(requestPayoutValidator), requestPayout);
 walletRouter.route("/transactions/my").get(IsLogin, getMyTransactions);
 
 // Management routes (Admin and superAdmin only)
 walletRouter.route("/all").get(IsLogin, IsAdmin, getAllWallets);
+walletRouter
+  .route("/user/:userId")
+  .get(
+    IsLogin,
+    IsAdmin,
+    validateParams(createObjectIdParamsValidator("userId")),
+    getUserWallet
+  );
 walletRouter.route("/transactions/all").get(IsLogin, IsAdmin, getAllTransactions);
 
 export default walletRouter;
@@ -281,5 +305,29 @@ export default walletRouter;
  *         description: لیست تمام تراکنش‌ها
  *       403:
  *         description: عدم دسترسی
+ *
+ * /api/wallet/user/{userId}:
+ *   get:
+ *     summary: دریافت مشخصات و موجودی کیف پول کاربر با شناسه کاربری (مدیر سیستم)
+ *     description: دریافت کیف پول اختصاصی یک کاربر توسط شناسه او (در صورت عدم وجود کیف پول، به صورت خودکار ایجاد می‌شود)
+ *     tags: [Wallet]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: شناسه کاربر
+ *     responses:
+ *       200:
+ *         description: مشخصات و موجودی کیف پول کاربر با موفقیت بازگردانده شد
+ *       400:
+ *         description: شناسه کاربر نامعتبر است
+ *       403:
+ *         description: عدم دسترسی
+ *       404:
+ *         description: کاربر یافت نشد
  */
 

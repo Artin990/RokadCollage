@@ -3,6 +3,7 @@ import Comment from "./CommentMd.js";
 import InPersonCourse from "../InPersonCourse/InPersonCourseMd.js";
 import VirtualCourse from "../VirtualCourse/VirtualCourseMd.js";
 import { removePublicFile } from "../../Utils/fileHelper.js";
+import { containsProfanity } from "../../Utils/profanityFilter.js";
 
 /**
  * Resolves the courseModel if not provided in the request body.
@@ -20,6 +21,18 @@ async function resolveCourseModel(courseId, specifiedModel) {
 
 export const create = catchAsync(async (req, res, next) => {
   const { course, courseModel, comment, name, role, job, img } = req.body;
+
+  if (comment) {
+    const { hasProfanity, matchedWords } = containsProfanity(comment);
+    if (hasProfanity) {
+      return next(
+        new HandleERROR(
+          `متن نظر شامل کلمات نامناسب یا غیرمجاز است (${matchedWords.join("، ")})`,
+          400
+        )
+      );
+    }
+  }
 
   const resolvedModel = await resolveCourseModel(course, courseModel);
 
@@ -105,6 +118,18 @@ export const update = catchAsync(async (req, res, next) => {
   const oldComment = await Comment.findById(req.params.id);
   if (!oldComment) {
     return next(new HandleERROR("نظر مورد نظر یافت نشد", 404));
+  }
+
+  if (updates.comment) {
+    const { hasProfanity, matchedWords } = containsProfanity(updates.comment);
+    if (hasProfanity) {
+      return next(
+        new HandleERROR(
+          `متن نظر شامل کلمات نامناسب یا غیرمجاز است (${matchedWords.join("، ")})`,
+          400
+        )
+      );
+    }
   }
 
   if (updates.course && !updates.courseModel) {

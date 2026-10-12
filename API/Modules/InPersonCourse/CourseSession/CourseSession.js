@@ -16,17 +16,29 @@ import {
     createSessionValidator,
     updateSessionValidator,
 } from "./CourseSessionValidation.js";
-import { adminManualEnroll } from "../../Enrollment/EnrollmentCn.js";
+import { adminManualEnroll, cancelEnrollment } from "../../Enrollment/EnrollmentCn.js";
 import { adminManualEnrollValidator } from "../../Enrollment/EnrollmentValidation.js";
 
 const courseSessionRouter = Router({ mergeParams: true });
 
-const sessionIdValidator = createObjectIdParamsValidator("sessionId");
+const courseIdValidator = createObjectIdParamsValidator("courseId");
+const sessionIdValidator = createObjectIdParamsValidator("courseId", "sessionId");
+const sessionEnrollmentIdValidator = createObjectIdParamsValidator(
+    "courseId",
+    "sessionId",
+    "enrollmentId"
+);
 
 courseSessionRouter
     .route("/")
-    .get(getSessionsByCourse)
-    .post(IsLogin, IsAdmin, validateRequest(createSessionValidator), createSession);
+    .get(validateParams(courseIdValidator), getSessionsByCourse)
+    .post(
+        IsLogin,
+        IsAdmin,
+        validateParams(courseIdValidator),
+        validateRequest(createSessionValidator),
+        createSession
+    );
 
 courseSessionRouter
     .route("/:sessionId/enrollments")
@@ -36,6 +48,15 @@ courseSessionRouter
         validateParams(sessionIdValidator),
         validateRequest(adminManualEnrollValidator),
         adminManualEnroll
+    );
+
+courseSessionRouter
+    .route("/:sessionId/enrollments/:enrollmentId")
+    .delete(
+        IsLogin,
+        IsAdmin,
+        validateParams(sessionEnrollmentIdValidator),
+        cancelEnrollment
     );
 
 courseSessionRouter
@@ -275,5 +296,36 @@ export default courseSessionRouter;
  *         description: ظرفیت تکمیل است یا کاربر قبلاً ثبت‌نام کرده است
  *       404:
  *         description: کاربر، دوره یا کد کلاس یافت نشد
+ *
+ * /api/in-person-courses/{courseId}/sessions/{sessionId}/enrollments/{enrollmentId}:
+ *   delete:
+ *     summary: لغو ثبت‌نام دانش‌آموز از کد کلاس دوره حضوری (مدیر سیستم)
+ *     description: حذف رکورد ثبت‌نام دانش‌آموز از کد کلاس و بازگشت ۱ ظرفیت خالی به کلاس
+ *     tags: [CourseSession]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: courseId
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: sessionId
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: enrollmentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: ثبت‌نام با موفقیت لغو شد
+ *       403:
+ *         description: عدم دسترسی مدیر
+ *       404:
+ *         description: ثبت‌نام، جلسه یا دوره یافت نشد
  */
 

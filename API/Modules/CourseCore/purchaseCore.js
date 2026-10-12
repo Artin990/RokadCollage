@@ -236,7 +236,7 @@ export async function purchaseCourseService({
         }
 
         const populatedEnrollment = await Enrollment.findById(createdEnrollment._id)
-            .populate("course", "title type category price icon duration spotplayerCourseId")
+            .populate("course", "title type category price img duration spotplayerCourseId")
             .populate("session", "code scheduleDays scheduleHours capacity enrolledCount");
 
         return {

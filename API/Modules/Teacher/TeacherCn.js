@@ -1,5 +1,7 @@
 import ApiFeatures, { catchAsync, HandleERROR } from "vanta-api";
 import Teacher from "./TeacherMd.js";
+import InPersonCourse from "../InPersonCourse/InPersonCourseMd.js";
+import VirtualCourse from "../VirtualCourse/VirtualCourseMd.js";
 import { removePublicFile } from "../../Utils/fileHelper.js";
 
 export const create = catchAsync(async (req, res, next) => {
@@ -91,6 +93,12 @@ export const remove = catchAsync(async (req, res, next) => {
   if (deletedTeacher.photo) {
     removePublicFile(deletedTeacher.photo);
   }
+
+  // Pull deleted teacher reference from all associated courses to maintain referential integrity
+  await Promise.all([
+    InPersonCourse.updateMany({ teachers: req.params.id }, { $pull: { teachers: req.params.id } }),
+    VirtualCourse.updateMany({ teachers: req.params.id }, { $pull: { teachers: req.params.id } }),
+  ]);
 
   return res.status(200).json({
     success: true,

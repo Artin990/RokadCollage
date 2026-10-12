@@ -8,6 +8,7 @@ import {
   checkEnrollmentStatus,
   adminManualEnroll,
   retryLicense,
+  cancelEnrollment,
 } from "./EnrollmentCn.js";
 import IsLogin from "../../Middleware/IsLogin.js";
 import IsAdmin from "../../Middleware/IsAdmin.js";
@@ -81,6 +82,23 @@ enrollmentRouter.get(
   IsLogin,
   validateParams(objectIdParamValidator),
   getOneEnrollment
+);
+
+// Cancel and revoke enrollment (Admin only) - refunds wallet if user paid
+enrollmentRouter.delete(
+  "/:id",
+  IsLogin,
+  IsAdmin,
+  validateParams(objectIdParamValidator),
+  cancelEnrollment
+);
+
+enrollmentRouter.post(
+  "/:id/cancel",
+  IsLogin,
+  IsAdmin,
+  validateParams(objectIdParamValidator),
+  cancelEnrollment
 );
 
 export default enrollmentRouter;
@@ -358,5 +376,26 @@ export default enrollmentRouter;
  *         description: ثبت‌نام یافت نشد
  *       429:
  *         description: تعداد درخواست‌های مجدد بیش از حد مجاز است
+ *
+ *   delete:
+ *     summary: لغو ثبت‌نام و بازگشت خودکار وجه به کیف پول کاربر (مدیر سیستم)
+ *     description: لغو کامل ثبت‌نام؛ در صورتی که کاربر مبلغی پرداخت کرده باشد، وجه به کیف پول او بازگردانده شده و ۱ ظرفیت به دوره یا کد کلاس اضافه می‌گردد.
+ *     tags: [Enrollment]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: شناسه ثبت‌نام
+ *     responses:
+ *       200:
+ *         description: ثبت‌نام با موفقیت لغو و وجه مسترد گردید
+ *       403:
+ *         description: عدم دسترسی مدیر
+ *       404:
+ *         description: ثبت‌نام یافت نشد
  */
 

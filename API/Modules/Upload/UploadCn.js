@@ -59,7 +59,7 @@ export const removeData = catchAsync(async (req, res, next) => {
     return next(new HandleERROR("شما اجازه حذف فایل‌های پیش‌فرض و سیستمی را ندارید", 403));
   }
 
-  const isRemoved = removePublicFile(baseFilename);
+  const isRemoved = await removePublicFile(baseFilename);
   if (!isRemoved) {
     return next(new HandleERROR("فایل مورد نظر یافت نشد", 404));
   }

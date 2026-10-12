@@ -1,6 +1,8 @@
 import ApiFeatures, { catchAsync, HandleERROR } from "vanta-api";
 import User from "./UserMd.js";
+import Wallet from "../Wallet/WalletMd.js";
 import bcryptjs from "bcryptjs";
+import { normalizeBirthDate, normalizePersianDigits } from "../../Utils/validateRequest.js";
 
 export const getAll = catchAsync(async (req, res, next) => {
   const features = new ApiFeatures(User, req.query, req.role)
@@ -44,15 +46,16 @@ export const create = catchAsync(async (req, res, next) => {
     return next(new HandleERROR("وارد کردن شماره موبایل الزامی است", 400));
   }
 
-  const existingUser = await User.findOne({ phoneNumber });
+  const cleanPhone = normalizePersianDigits(phoneNumber).trim();
+  const existingUser = await User.findOne({ phoneNumber: cleanPhone });
   if (existingUser) {
     return next(new HandleERROR("کاربری با این شماره موبایل از قبل وجود دارد", 400));
   }
 
   const userData = {
     fullName: fullName ? fullName.trim() : "",
-    phoneNumber: phoneNumber.trim(),
-    birthDate: birthDate || "",
+    phoneNumber: cleanPhone,
+    birthDate: birthDate ? normalizeBirthDate(birthDate) : "",
     role: role || "user",
   };
 
@@ -84,19 +87,22 @@ export const update = catchAsync(async (req, res, next) => {
     return next(new HandleERROR("کاربر یافت نشد", 404));
   }
 
-  if (phoneNumber && phoneNumber.trim() !== user.phoneNumber) {
-    const existing = await User.findOne({
-      phoneNumber: phoneNumber.trim(),
-      _id: { $ne: req.params.id },
-    });
-    if (existing) {
-      return next(new HandleERROR("این شماره موبایل توسط کاربر دیگری استفاده شده است", 400));
+  if (phoneNumber) {
+    const cleanPhone = normalizePersianDigits(phoneNumber).trim();
+    if (cleanPhone !== user.phoneNumber) {
+      const existing = await User.findOne({
+        phoneNumber: cleanPhone,
+        _id: { $ne: req.params.id },
+      });
+      if (existing) {
+        return next(new HandleERROR("این شماره موبایل توسط کاربر دیگری استفاده شده است", 400));
+      }
+      user.phoneNumber = cleanPhone;
     }
-    user.phoneNumber = phoneNumber.trim();
   }
 
-  if (fullName !== undefined) user.fullName = fullName.trim();
-  if (birthDate !== undefined) user.birthDate = birthDate;
+  if (fullName !== undefined) user.fullName = fullName ? fullName.trim() : "";
+  if (birthDate !== undefined) user.birthDate = birthDate ? normalizeBirthDate(birthDate) : "";
   if (password && password.trim()) {
     user.password = await bcryptjs.hash(password.trim(), 12);
   }
@@ -125,6 +131,9 @@ export const remove = catchAsync(async (req, res, next) => {
   if (!user) {
     return next(new HandleERROR("کاربر یافت نشد", 404));
   }
+
+  // Clean up user wallet upon account deletion to prevent orphaned records
+  await Wallet.findOneAndDelete({ ownerId: req.params.id });
 
   return res.status(200).json({
     success: true,
