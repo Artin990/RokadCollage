@@ -185,7 +185,7 @@ function SuggestedDeptGroup({ group, store, isMobile }) {
                   </span>
                 </div>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>
