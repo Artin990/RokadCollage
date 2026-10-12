@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import Notify from "../../Utils/notify";
-import { Button, PageHeader, Card, LoadingState } from "../../Components/UI";
+import { Button, PageHeader, Card, LoadingState, FormSkeleton } from "../../Components/UI";
 import BasicMetaSection from "./components/BasicMetaSection";
 import OpenGraphSection from "./components/OpenGraphSection";
 import TwitterCardSection from "./components/TwitterCardSection";
@@ -95,8 +95,12 @@ export default function SeoSettings() {
 
   if (loading) {
     return (
-      <div dir="rtl" className="p-3.5 sm:p-5 md:p-6 lg:p-8 pb-4 sm:pb-6 lg:pb-8 w-full bg-background min-h-full flex flex-col justify-center">
-        <LoadingState text="در حال دریافت تنظیمات سئو..." minHeight="min-h-[440px]" />
+      <div dir="rtl" className="p-3.5 sm:p-5 md:p-6 lg:p-8 pb-4 sm:pb-6 lg:pb-8 w-full bg-background min-h-full flex flex-col">
+        <PageHeader
+          title="تنظیمات سئو (SEO)"
+          subtitle="در حال دریافت تنظیمات سئو وب‌سایت..."
+        />
+        <FormSkeleton />
       </div>
     );
   }

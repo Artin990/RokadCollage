@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import { useNavigate, useParams } from "react-router-dom";
 import Notify from "../../../../Utils/notify";
-import { PageHeader, LoadingState } from "../../../../Components/UI";
+import { PageHeader, LoadingState, FormSkeleton } from "../../../../Components/UI";
 import { virtualCourseUpdateSchema } from "../schemas/virtualCourseSchema";
 import {
   fetchVirtualCourseById,
@@ -134,7 +134,7 @@ export default function UpdateVirtualCourse() {
       />
 
       {loading ? (
-        <LoadingState text="در حال دریافت اطلاعات دوره مجازی..." minHeight="min-h-[440px]" />
+        <FormSkeleton />
       ) : (
         <VirtualCourseForm
           formik={formik}

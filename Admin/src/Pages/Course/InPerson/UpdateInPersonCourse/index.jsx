@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import { useNavigate, useParams } from "react-router-dom";
 import Notify from "../../../../Utils/notify";
-import { PageHeader, LoadingState } from "../../../../Components/UI";
+import { PageHeader, LoadingState, FormSkeleton } from "../../../../Components/UI";
 import { inPersonCourseUpdateSchema } from "../schemas/inPersonCourseSchema";
 import {
   fetchInPersonCourseById,
@@ -146,7 +146,7 @@ export default function UpdateInPersonCourse() {
       />
 
       {loading ? (
-        <LoadingState text="در حال دریافت اطلاعات دوره حضوری..." minHeight="min-h-[440px]" />
+        <FormSkeleton />
       ) : (
         <InPersonCourseForm
           formik={formik}

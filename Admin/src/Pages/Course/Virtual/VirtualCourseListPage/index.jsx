@@ -168,7 +168,7 @@ export default function VirtualCourseListPage() {
       {/* Courses Grid */}
       <div className="flex flex-col flex-1">
         {loading && page === 1 ? (
-          <CardGridSkeleton count={6} />
+          <CardGridSkeleton count={8} />
         ) : courses.length === 0 ? (
           <EmptyState
             title="دوره مجازی یافت نشد"

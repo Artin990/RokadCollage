@@ -4,7 +4,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import ForumOutlinedIcon from "@mui/icons-material/ForumOutlined";
 import Notify from "../../../../Utils/notify";
-import { Button, PageHeader, LoadingState } from "../../../../Components/UI";
+import { Button, PageHeader, LoadingState, FormSkeleton } from "../../../../Components/UI";
 import { fetchVirtualCourseById } from "../api/virtualApi";
 import SingleCourseHero from "../../components/SingleCourseHero";
 import SingleCourseDiscounts from "../../components/SingleCourseDiscounts";
@@ -56,7 +56,7 @@ export default function SingleVirtualCourse() {
           subtitle="در حال بارگذاری اطلاعات دوره..."
           backTo="/virtual-courses"
         />
-        <LoadingState text="در حال دریافت اطلاعات دوره مجازی..." minHeight="min-h-[440px]" />
+        <FormSkeleton />
       </div>
     );
   }

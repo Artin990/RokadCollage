@@ -5,7 +5,7 @@ import DesktopWindowsOutlinedIcon from "@mui/icons-material/DesktopWindowsOutlin
 import PhoneIphoneOutlinedIcon from "@mui/icons-material/PhoneIphoneOutlined";
 
 import Notify from "../../../Utils/notify";
-import { Button, Card, PageHeader, SegmentedControl, LoadingState } from "../../../Components/UI";
+import { Button, Card, PageHeader, SegmentedControl, LoadingState, FormSkeleton } from "../../../Components/UI";
 import { fetchBlogById } from "../api/blogApi";
 import ClientBlogArticleView from "../components/ClientBlogArticleView";
 
@@ -65,7 +65,7 @@ export default function SingleBlog() {
           subtitle="در حال دریافت محتوای مقاله..."
           backTo="/blog"
         />
-        <LoadingState text="در حال دریافت اطلاعات و متن مقاله..." minHeight="min-h-[440px]" />
+        <FormSkeleton />
       </div>
     );
   }

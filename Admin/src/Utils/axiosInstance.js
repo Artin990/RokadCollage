@@ -74,9 +74,22 @@ export function normalizeApiError(error) {
   }
 }
 
-// Request Interceptor: Attach JWT Bearer token and enforce 5MB file upload limit
+// Request Interceptor: Attach JWT Bearer token, enforce 5MB file upload limit, and inject 2-second delay for skeleton testing
 axiosInstance.interceptors.request.use(
-  (config) => {
+  async (config) => {
+    // Artificial 2-second delay to preview skeleton screens and loading states
+    if (config.skipDelay !== true) {
+      await new Promise((resolve, reject) => {
+        const timer = setTimeout(resolve, 2000);
+        if (config.signal) {
+          config.signal.addEventListener("abort", () => {
+            clearTimeout(timer);
+            reject(new axios.CanceledError("درخواست در طول مدت تاخیر ۲ ثانیه‌ای لغو شد."));
+          });
+        }
+      });
+    }
+
     const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

@@ -19,6 +19,7 @@ import {
   Badge,
   PageHeader,
   LoadingState,
+  FormSkeleton,
 } from "../../../Components/UI";
 import { getImageUrl } from "../../../Utils/getImageUrl";
 import { formatJalaliDate, toPersianDigits } from "../../../Utils/jalaliDate";
@@ -102,7 +103,7 @@ export default function SingleComment() {
           subtitle="در حال دریافت اطلاعات نظر..."
           backTo="/comment"
         />
-        <LoadingState text="در حال بارگذاری اطلاعات نظر..." minHeight="min-h-[440px]" />
+        <FormSkeleton />
       </div>
     );
   }

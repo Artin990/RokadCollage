@@ -183,7 +183,7 @@ export default function VirtualEnrollmentsTab() {
       {/* Courses Accordion List */}
       <div className="flex flex-col flex-1">
         {loading ? (
-          <CardGridSkeleton count={4} cols="grid-cols-1" />
+          <CardGridSkeleton count={4} cols="grid-cols-1" gap="gap-4" variant="accordion" />
         ) : courses.length === 0 ? (
           <div className="text-center py-12 bg-surface rounded-2xl border border-dashed border-border text-text-muted text-sm">
             دوره‌ای یافت نشد.

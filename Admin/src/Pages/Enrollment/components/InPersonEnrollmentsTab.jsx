@@ -125,7 +125,7 @@ export default function InPersonEnrollmentsTab() {
       {/* Courses Accordion List */}
       <div className="flex flex-col flex-1">
         {loading ? (
-          <CardGridSkeleton count={4} cols="grid-cols-1" />
+          <CardGridSkeleton count={4} cols="grid-cols-1" gap="gap-4" variant="accordion" />
         ) : courses.length === 0 ? (
           <Card className="p-12 text-center text-text-secondary">
             دوره حضوری یافت نشد.

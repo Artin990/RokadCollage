@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import { useNavigate, useParams } from "react-router-dom";
 import Notify from "../../../Utils/notify";
 import { getImageUrl } from "../../../Utils/getImageUrl";
-import { PageHeader, LoadingState } from "../../../Components/UI";
+import { PageHeader, LoadingState, FormSkeleton } from "../../../Components/UI";
 import { teacherUpdateSchema } from "../schemas/teacherSchema";
 import {
   fetchTeacherById,
@@ -108,7 +108,7 @@ export default function UpdateTeacher() {
       />
 
       {loading ? (
-        <LoadingState text="در حال بارگذاری اطلاعات استاد..." minHeight="min-h-[440px]" />
+        <FormSkeleton />
       ) : (
         <TeacherForm
           formik={formik}

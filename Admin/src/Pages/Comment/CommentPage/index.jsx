@@ -150,7 +150,7 @@ export default function CommentPage() {
             {/* Main Content Area */}
             <div className="flex flex-col flex-1">
                 {loading && page === 1 ? (
-                    <CardGridSkeleton count={6} />
+                    <CardGridSkeleton count={6} cols="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" variant="comment" />
                 ) : comments.length === 0 ? (
                     <EmptyState
                         title="نظری یافت نشد"

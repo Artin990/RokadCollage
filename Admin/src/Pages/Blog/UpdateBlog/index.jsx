@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import { useNavigate, useParams } from "react-router-dom";
 import Notify from "../../../Utils/notify";
 import { getImageUrl } from "../../../Utils/getImageUrl";
-import { PageHeader, LoadingState } from "../../../Components/UI";
+import { PageHeader, LoadingState, FormSkeleton } from "../../../Components/UI";
 import BlogForm from "../components/BlogForm";
 import { fetchBlogById, updateBlog, uploadBlogCover } from "../api/blogApi";
 import { blogUpdateSchema } from "../schemas/blogSchema";
@@ -110,8 +110,13 @@ export default function UpdateBlog() {
 
   if (loading) {
     return (
-      <div dir="rtl" className="p-3.5 sm:p-5 md:p-6 lg:p-8 pb-4 sm:pb-6 lg:pb-8 w-full bg-background min-h-full flex flex-col justify-center">
-        <LoadingState text="در حال دریافت اطلاعات مقاله..." minHeight="min-h-[440px]" />
+      <div dir="rtl" className="p-3.5 sm:p-5 md:p-6 lg:p-8 pb-4 sm:pb-6 lg:pb-8 w-full bg-background min-h-full flex flex-col">
+        <PageHeader
+          title="ویرایش مقاله"
+          subtitle="در حال بارگذاری اطلاعات مقاله..."
+          backTo="/blog"
+        />
+        <FormSkeleton />
       </div>
     );
   }

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import { useNavigate, useParams } from "react-router-dom";
 import Notify from "../../../Utils/notify";
-import { PageHeader, LoadingState } from "../../../Components/UI";
+import { PageHeader, LoadingState, FormSkeleton } from "../../../Components/UI";
 import { commentValidationSchema } from "../schemas/commentSchema";
 import {
   fetchCommentById,
@@ -116,7 +116,7 @@ export default function UpdateComment() {
       />
 
       {loading ? (
-        <LoadingState text="در حال بارگذاری اطلاعات نظر..." minHeight="min-h-[440px]" />
+        <FormSkeleton />
       ) : (
         <CommentForm
           formik={formik}

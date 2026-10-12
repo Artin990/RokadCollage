@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import Notify from "../../../../Utils/notify";
-import { Button, Card, PageHeader, LoadingState } from "../../../../Components/UI";
+import { Button, Card, PageHeader, LoadingState, FormSkeleton } from "../../../../Components/UI";
 import { fetchInPersonCourseById } from "../api/inPersonApi";
 import SingleCourseHero from "../../components/SingleCourseHero";
 import SingleCourseDiscounts from "../../components/SingleCourseDiscounts";
@@ -54,7 +54,7 @@ export default function SingleInPersonCourse() {
           subtitle="در حال بارگذاری اطلاعات دوره..."
           backTo="/in-person-courses"
         />
-        <LoadingState text="در حال دریافت اطلاعات دوره حضوری..." minHeight="min-h-[440px]" />
+        <FormSkeleton />
       </div>
     );
   }

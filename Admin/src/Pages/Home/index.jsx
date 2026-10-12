@@ -18,6 +18,7 @@ import {
   Button,
   Badge,
   LoadingState,
+  DashboardSkeleton,
   ErrorState,
   EmptyState,
   Table,
@@ -172,7 +173,7 @@ export default function Home() {
       </div>
 
       {loading ? (
-        <LoadingState text="در حال بارگذاری اطلاعات داشبورد..." />
+        <DashboardSkeleton />
       ) : error ? (
         <ErrorState
           title="خطا در دریافت آمار"

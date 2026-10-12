@@ -152,7 +152,7 @@ export default function TeacherPage() {
             {/* Main Content Area */}
             <div className="flex flex-col flex-1">
                 {loading && page === 1 ? (
-                <CardGridSkeleton count={6} />
+                <CardGridSkeleton count={8} />
             ) : teachers.length === 0 ? (
                 <EmptyState
                     title="استادی یافت نشد"

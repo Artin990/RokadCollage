@@ -15,6 +15,7 @@ import {
   Select,
   Toolbar,
   LoadingState,
+  CommentListSkeleton,
 } from "../../Components/UI";
 import UserProfileModal from "../../Components/UserProfileModal";
 import { fetchVirtualCourses, fetchVirtualCourseById } from "../Course/Virtual/api/virtualApi";
@@ -369,10 +370,7 @@ export default function CourseCommentsPage() {
         {/* Comments List Area */}
         <div className="flex flex-col flex-1">
           {loadingComments ? (
-            <LoadingState
-              text="در حال دریافت دیدگاه‌های دوره..."
-              minHeight="min-h-[380px]"
-            />
+            <CommentListSkeleton count={4} />
           ) : comments.length === 0 ? (
           <Card className="p-12 text-center flex flex-col items-center justify-center gap-3">
             <div className="w-14 h-14 rounded-3xl bg-primary-soft text-primary flex items-center justify-center">
