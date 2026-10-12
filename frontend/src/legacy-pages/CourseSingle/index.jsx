@@ -173,7 +173,7 @@ export default function CourseSingle({ slug, initialCourse }) {
               <span style={{ display: "inline-block", transform: "rotate(-0.5deg)" }}>{course.title}</span>
             </h1>
             <div className="cs-meta">
-              {course.meta.map((m) => (
+              {(course.meta || course.tags || []).map((m) => (
                 <span className="m" key={m}>{m}</span>
               ))}
             </div>
