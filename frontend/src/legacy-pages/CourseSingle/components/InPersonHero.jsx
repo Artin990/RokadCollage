@@ -15,6 +15,22 @@ export default function InPersonHero({
   onBookmarkClick,
   onCheckoutOpen,
 }) {
+  const numPrice = course.finalPrice !== undefined ? course.finalPrice : course.price;
+  const isFree = !numPrice || numPrice === 0 || numPrice === "رایگان";
+  const displayPrice = isFree
+    ? "رایگان"
+    : (typeof numPrice === "number"
+      ? Number(numPrice).toLocaleString("fa-IR")
+      : String(numPrice).replace(/تومان/g, "").trim());
+
+  const hasDiscount = Boolean(course.isDiscountActive && course.price && course.finalPrice && course.finalPrice < course.price);
+  const oldPriceDisplay = hasDiscount
+    ? Number(course.price).toLocaleString("fa-IR")
+    : (course.oldPrice ? String(course.oldPrice).replace(/تومان/g, "").trim() : null);
+  const discountTag = hasDiscount
+    ? `%${toFa(course.activeDiscountPercentage || course.timedDiscount?.percentage)} تخفیف`
+    : course.discount;
+
   return (
     <>
       <div className="cs-topbar container">
@@ -87,10 +103,10 @@ export default function InPersonHero({
               <div className="cs-ip-hero-actions-bar">
                 <div className="cs-ip-price-col">
                   <div className="cs-ip-price-row">
-                    {course.oldPrice && <span className="old-price">{course.oldPrice}</span>}
-                    <b className="main-price">{course.price}</b>
-                    <span className="cur">تومان</span>
-                    {course.discount && <span className="cs-discount-tag">{course.discount}</span>}
+                    {oldPriceDisplay && <span className="old-price">{oldPriceDisplay}</span>}
+                    <b className="main-price">{displayPrice}</b>
+                    {!isFree && <span className="cur">تومان</span>}
+                    {discountTag && <span className="cs-discount-tag">{discountTag}</span>}
                   </div>
 
                   <div className="cs-ip-seat-alert">
@@ -101,21 +117,20 @@ export default function InPersonHero({
 
                 <div className="cs-ip-btns-row">
                   {isEnrolled ? (
-                    <button
-                      type="button"
+                    <Link
+                      href="/panel"
                       className="cs-ip-btn-main enrolled"
-                      onClick={() => { window.location.hash = "panel/courses"; }}
                     >
                       <CheckCircle2 size={16} />
-                      <span>ورود به کلاس (ثبت‌نام شده)</span>
-                    </button>
+                      <span>مشاهده در پنل</span>
+                    </Link>
                   ) : (
                     <button
                       type="button"
                       className="cs-ip-btn-main"
                       onClick={onCheckoutOpen}
                     >
-                      <span>ثبت‌نام و رزرو صندلی</span>
+                      <span>ثبت‌نام دوره</span>
                       <ArrowLeft size={16} />
                     </button>
                   )}
@@ -123,10 +138,12 @@ export default function InPersonHero({
                   <button
                     type="button"
                     className="cs-ip-btn-sub"
-                    onClick={() => { window.location.hash = "consult"; }}
+                    onClick={() => {
+                      window.dispatchEvent(new CustomEvent("rokad_open_consultation"));
+                    }}
                   >
                     <Phone size={14} />
-                    <span>مشاوره تلفنی رایگان</span>
+                    <span>درخواست مشاوره</span>
                   </button>
                 </div>
               </div>

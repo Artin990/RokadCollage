@@ -30,10 +30,13 @@ export default function CourseSingleInPerson({ course, slug }) {
 
   const venue = {
     name: course.location?.name || "کمپوس مرکزی کالج رکاد",
-    address: course.location?.address || "تهران، میدان آزادی، بلوار اکبری، جنب ایستگاه مترو، پلاک ۲۴",
+    address: course.location?.address || "تهران، میدان آزادی، بلوار اکبری، کالج رکاد",
     metro: "۲ دقیقه پیاده‌روی از ایستگاه مترو میدان آزادی",
     parking: "دارای پارکینگ اختصاصی برای هنرجویان",
-    room: course.location?.room || "سالن کارگاهی آلفا",
+    room: course.location?.room || "سالن کارگاهی تخصصی",
+    neshanUrl: course.location?.neshanEmbedUrl || "https://nshn.ir",
+    baladUrl: course.location?.baladEmbedUrl || "https://balad.ir",
+    googleMapUrl: course.location?.googleMapEmbedUrl || "https://maps.google.com",
   };
 
   const schedule = {
@@ -149,9 +152,9 @@ export default function CourseSingleInPerson({ course, slug }) {
           />
           <InPersonVenue
             venue={venue}
-            cleanDays={cleanDays}
-            cleanHours={cleanHours}
-            cleanRoom={cleanRoom}
+            cleanDays={schedule.days}
+            cleanHours={schedule.hours}
+            cleanRoom={venue.room}
           />
           <InPersonTeacher teacher={teacher} />
         </div>

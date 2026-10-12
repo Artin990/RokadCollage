@@ -67,15 +67,15 @@ export default function InPersonVenue({ venue, cleanDays, cleanHours, cleanRoom 
           </div>
 
           <div className="cs-inperson-map-actions">
-            <a href="https://nshn.ir" target="_blank" rel="noreferrer" className="map-link-btn">
+            <a href={venue.neshanUrl || "https://nshn.ir"} target="_blank" rel="noreferrer" className="map-link-btn">
               <span>مسیریابی با نشان</span>
               <ExternalLink size={13} />
             </a>
-            <a href="https://balad.ir" target="_blank" rel="noreferrer" className="map-link-btn">
+            <a href={venue.baladUrl || "https://balad.ir"} target="_blank" rel="noreferrer" className="map-link-btn">
               <span>مسیریابی با بلد</span>
               <ExternalLink size={13} />
             </a>
-            <a href="https://maps.google.com" target="_blank" rel="noreferrer" className="map-link-btn">
+            <a href={venue.googleMapUrl || "https://maps.google.com"} target="_blank" rel="noreferrer" className="map-link-btn">
               <span>گوگل‌مپ</span>
               <ExternalLink size={13} />
             </a>
