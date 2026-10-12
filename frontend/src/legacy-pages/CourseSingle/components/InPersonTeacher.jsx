@@ -21,15 +21,21 @@ export function InPersonAbout({ course }) {
       <div className="cs-ip-sec-body">
         <div className="cs-inperson-desc-panel">
           <div className="cs-desc-intro-card">
-            <p className="cs-desc-lede-text">{course.lede}</p>
+            <p className="cs-desc-lede-text">
+              {course.lede || (typeof course.description === "string" ? course.description : "کارگاه تخصصی و پروژه‌محور کالج رکاد")}
+            </p>
           </div>
-          {Array.isArray(course.description) && course.description.length > 0 && (
+          {Array.isArray(course.description) && course.description.length > 0 ? (
             <div className="cs-desc-paragraphs">
               {course.description.map((p, idx) => (
                 <p key={idx}>{p}</p>
               ))}
             </div>
-          )}
+          ) : typeof course.description === "string" && course.lede ? (
+            <div className="cs-desc-paragraphs">
+              <p>{course.description}</p>
+            </div>
+          ) : null}
         </div>
       </div>
     </section>

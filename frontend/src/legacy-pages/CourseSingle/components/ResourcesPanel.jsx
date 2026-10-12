@@ -56,6 +56,26 @@ export default function ResourcesPanel({ course, isEnrolled, onEnrollClick }) {
     );
   };
 
+  const resources = Array.isArray(course?.resources) && course.resources.length > 0
+    ? course.resources
+    : [
+        {
+          title: "فایل‌های تمرینی و کدهای دوره",
+          type: "ZIP",
+          size: "۳۵ مگابایت",
+        },
+        {
+          title: "جزوه و اسلایدهای آموزشی",
+          type: "PDF",
+          size: "۱۲ مگابایت",
+        },
+        {
+          title: "مخزن سورس‌کد در گیت‌هاب",
+          type: "لینک",
+          size: "آنلاین",
+        },
+      ];
+
   return (
     <div className="cs-panel-body">
       {downloadMsg && (
@@ -71,7 +91,7 @@ export default function ResourcesPanel({ course, isEnrolled, onEnrollClick }) {
         </div>
       )}
       <div className="cs-resources">
-        {course.resources.map((res) => (
+        {resources.map((res) => (
           <div
             className={`cs-resource${!isEnrolled ? " locked-res" : ""}`}
             key={res.title}
