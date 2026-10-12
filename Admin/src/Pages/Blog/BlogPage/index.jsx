@@ -1,15 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
-import BlogCard from "../components/BlogCard";
 import Notify from "../../../Utils/notify";
 import confirm from "../../../Utils/confirm";
-import Search from "../../../Components/Search";
 import Filter from "../../../Components/Filter";
 import Loading from "../../../Components/Loading";
-import { Button, PageHeader, Card } from "../../../Components/UI";
+import {
+  Button,
+  PageHeader,
+  Card,
+  Toolbar,
+  EmptyState,
+  LoadingState,
+  CardGridSkeleton,
+} from "../../../Components/UI";
+import BlogCard from "../components/BlogCard";
 import { fetchBlogs, deleteBlog } from "../api/blogApi";
 import { BLOG_CATEGORY_OPTIONS } from "../constants/blogConstants";
+import useInfiniteScroll from "../../../Utils/useInfiniteScroll";
 
 export default function BlogPage() {
   const navigate = useNavigate();
@@ -50,11 +58,7 @@ export default function BlogPage() {
           ? response
           : response.data || [];
 
-        if (fetchedBlogs.length < LIMIT) {
-          setHasMore(false);
-        } else {
-          setHasMore(true);
-        }
+        setHasMore(fetchedBlogs.length >= LIMIT);
 
         if (pageNumber === 1) {
           setBlogs(fetchedBlogs);
@@ -82,22 +86,11 @@ export default function BlogPage() {
     loadBlogs(page, searchQuery, activeFilters);
   }, [page, searchQuery, activeFilters]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollHeight = document.documentElement.scrollHeight;
-      const scrollTop = document.documentElement.scrollTop;
-      const clientHeight = window.innerHeight;
-
-      if (scrollTop + clientHeight >= scrollHeight - 100) {
-        if (hasMore && !loading && !loadingMore) {
-          setPage((prevPage) => prevPage + 1);
-        }
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [hasMore, loading, loadingMore]);
+  useInfiniteScroll({
+    onReachBottom: () => setPage((prevPage) => prevPage + 1),
+    hasMore,
+    isLoading: loading || loadingMore,
+  });
 
   const handleSearch = (query) => {
     setSearchQuery(query);
@@ -111,11 +104,15 @@ export default function BlogPage() {
     setHasMore(true);
   };
 
-  const handleEditBlog = (blog) => {
-    if (blog?._id) navigate(`update/${blog._id}`);
+  const handleViewBlog = (blog) => {
+    if (blog?._id) navigate(`/blog/${blog._id}`);
   };
 
-  const handleAddBlog = () => navigate("create");
+  const handleEditBlog = (blog) => {
+    if (blog?._id) navigate(`/blog/update/${blog._id}`);
+  };
+
+  const handleAddBlog = () => navigate("/blog/create");
 
   const handleDeleteBlog = async (blog) => {
     const id = blog?._id;
@@ -123,7 +120,7 @@ export default function BlogPage() {
 
     const isConfirmed = await confirm(
       "آیا از حذف این بلاگ اطمینان دارید؟",
-      "این عمل غیرقابل بازگشت است و تصویر آن نیز حذف خواهد شد.",
+      "این عمل غیرقابل بازگشت است و تصویر کاور و متن مقاله حذف خواهد شد.",
       "بله، حذف کن"
     );
 
@@ -144,10 +141,10 @@ export default function BlogPage() {
   };
 
   return (
-    <div dir="rtl" className="p-6 md:p-8 w-full bg-background min-h-screen">
+    <div dir="rtl" className="p-3.5 sm:p-5 md:p-6 lg:p-8 pb-4 sm:pb-6 lg:pb-8 w-full bg-background min-h-full flex flex-col">
       <PageHeader
-        title="مدیریت بلاگ‌ها و مقالات"
-        subtitle="نگارش، انتشار و دسته‌بندی مقالات آموزشی و مسیرهای شغلی"
+        title="مدیریت بلاگ‌ها"
+        subtitle="مشاهده، جستجو، ایجاد و ویرایش مقالات وبلاگ و آموزش‌ها"
         action={
           <Button
             variant="primary"
@@ -155,47 +152,67 @@ export default function BlogPage() {
             icon={<AddIcon fontSize="small" />}
             onClick={handleAddBlog}
           >
-            افزودن بلاگ جدید
+            افزودن مقاله
           </Button>
         }
-      >
-        <Card className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 p-4 shadow-xs">
-          <Filter filterConfig={filterConfig} onFilterChange={handleFilterChange} />
-          <Search onSearch={handleSearch} placeholder="جستجوی مقاله..." />
-        </Card>
-      </PageHeader>
+      />
+
+      {/* Unified Toolbar */}
+      <Toolbar
+        className="mb-6"
+        searchPlaceholder="جستجو در مقالات..."
+        onSearch={handleSearch}
+        filters={
+          <Filter
+            filterConfig={filterConfig}
+            onFilterChange={handleFilterChange}
+          />
+        }
+        onRefresh={() => loadBlogs(1, searchQuery, activeFilters)}
+        isRefreshing={loading && page === 1}
+      />
 
       {/* Main Content Area */}
-      {loading && page === 1 ? (
-        <div className="flex justify-center mt-20">
-          <Loading size={12} />
-        </div>
-      ) : (
-        <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
-            {blogs.map((blog) => (
-              <BlogCard
-                key={blog._id}
-                blog={blog}
-                onEdit={handleEditBlog}
-                onDelete={handleDeleteBlog}
-              />
-            ))}
-          </div>
-
-          {blogs.length === 0 && !loading && (
-            <div className="col-span-full text-center text-text-secondary py-16 bg-surface rounded-2xl border border-border/60">
-              هیچ مقاله‌ای یافت نشد.
+      <div className="flex flex-col flex-1">
+        {loading && page === 1 ? (
+          <CardGridSkeleton count={6} />
+        ) : blogs.length === 0 ? (
+          <EmptyState
+            title="هیچ مقاله‌ای یافت نشد"
+            description="هیچ مقاله‌ای مطابق جستجو یا دسته‌بندی انتخابی پیدا نشد."
+            action={
+              <Button
+                variant="primary"
+                size="sm"
+                icon={<AddIcon fontSize="small" />}
+                onClick={handleAddBlog}
+              >
+                افزودن مقاله
+              </Button>
+            }
+          />
+        ) : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 items-stretch">
+              {blogs.map((blog) => (
+                <BlogCard
+                  key={blog._id}
+                  blog={blog}
+                  onView={handleViewBlog}
+                  onEdit={handleEditBlog}
+                  onDelete={handleDeleteBlog}
+                />
+              ))}
             </div>
-          )}
 
-          {loadingMore && (
-            <div className="flex justify-center mt-8 py-4 pb-10">
-              <Loading size={10} />
-            </div>
-          )}
-        </>
-      )}
+            {loadingMore && (
+              <div className="flex justify-center mt-8">
+                <Loading size={8} />
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 }

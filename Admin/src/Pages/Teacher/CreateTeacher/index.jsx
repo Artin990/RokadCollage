@@ -1,16 +1,11 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../../../Utils/axiosInstance";
 import Notify from "../../../Utils/notify";
-import {
-  Button,
-  Input,
-  PageHeader,
-  Card,
-  ImageUpload,
-} from "../../../Components/UI";
+import { PageHeader } from "../../../Components/UI";
 import { teacherValidationSchema } from "../schemas/teacherSchema";
+import { createTeacher, uploadTeacherPhoto } from "../api/teacherApi";
+import TeacherForm from "../components/TeacherForm";
 
 export default function CreateTeacher() {
   const navigate = useNavigate();
@@ -27,22 +22,15 @@ export default function CreateTeacher() {
     onSubmit: async (values) => {
       setIsSubmitting(true);
       try {
-        const formData = new FormData();
-        formData.append("file", values.photo);
-
-        const uploadData = await axiosInstance.post("upload", formData);
-
-        if (!uploadData || !uploadData.success) {
-          throw new Error(uploadData?.message || "آپلود تصویر با خطا مواجه شد");
-        }
+        const photoFileName = await uploadTeacherPhoto(values.photo);
 
         const payload = {
           name: values.name.trim(),
           specialization: values.specialization.trim(),
-          photo: uploadData.data,
+          photo: photoFileName,
         };
 
-        const response = await axiosInstance.post("teacher", payload);
+        const response = await createTeacher(payload);
 
         if (response && response.success !== false) {
           Notify.success("استاد با موفقیت ایجاد شد.");
@@ -60,65 +48,29 @@ export default function CreateTeacher() {
 
   const handleImageSelect = (file) => {
     formik.setFieldValue("photo", file);
-    setImagePreview(URL.createObjectURL(file));
+    if (file) {
+      setImagePreview(URL.createObjectURL(file));
+    } else {
+      setImagePreview(null);
+    }
   };
 
   return (
-    <div dir="rtl" className="p-6 md:p-8 w-full bg-background min-h-screen">
+    <div dir="rtl" className="p-3.5 sm:p-5 md:p-6 lg:p-8 pb-4 sm:pb-6 lg:pb-8 w-full bg-background min-h-full flex flex-col">
       <PageHeader
         title="افزودن استاد جدید"
         subtitle="ثبت مشخصات و تصویر مدرس دوره"
         backTo="/teacher"
       />
 
-      <Card className="p-6 md:p-8 max-w-2xl mx-auto shadow-xs">
-        <form onSubmit={formik.handleSubmit} className="flex flex-col gap-6">
-          <Input
-            label="نام و نام خانوادگی استاد *"
-            placeholder="مثال: دکتر علی رضایی"
-            error={formik.touched.name && formik.errors.name}
-            {...formik.getFieldProps("name")}
-          />
-
-          <Input
-            label="حوزه تخصص و تدریس *"
-            placeholder="مثال: متخصص طراحی رابط کاربری و تجربه کاربری"
-            error={formik.touched.specialization && formik.errors.specialization}
-            {...formik.getFieldProps("specialization")}
-          />
-
-          <div className="pt-2 border-t border-border/80">
-            <ImageUpload
-              label="تصویر پرسنلی استاد *"
-              imagePreview={imagePreview}
-              onChange={handleImageSelect}
-              error={formik.touched.photo && formik.errors.photo}
-              placeholder="برای آپلود تصویر پرسنلی استاد کلیک کنید"
-            />
-          </div>
-
-          <div className="flex justify-end pt-4 border-t border-border/80 gap-3">
-            <Button
-              type="button"
-              variant="outline"
-              size="md"
-              onClick={() => navigate("/teacher")}
-              disabled={isSubmitting}
-            >
-              انصراف
-            </Button>
-
-            <Button
-              type="submit"
-              variant="primary"
-              size="md"
-              isLoading={isSubmitting}
-            >
-              ثبت استاد
-            </Button>
-          </div>
-        </form>
-      </Card>
+      <TeacherForm
+        formik={formik}
+        imagePreview={imagePreview}
+        onImageSelect={handleImageSelect}
+        isSubmitting={isSubmitting}
+        submitLabel="ثبت استاد"
+        onCancel={() => navigate("/teacher")}
+      />
     </div>
   );
 }

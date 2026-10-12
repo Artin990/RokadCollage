@@ -23,7 +23,7 @@ export default function CommentForm({
 
   return (
     <form onSubmit={formik.handleSubmit} className="w-full max-w-4xl mx-auto">
-      <Card className="p-6 md:p-8 flex flex-col gap-6 shadow-xs">
+      <Card className="p-4 sm:p-6 md:p-8 flex flex-col gap-6 shadow-xs">
         {/* Course selection */}
         <div>
           {loadingCourses ? (
@@ -38,7 +38,7 @@ export default function CommentForm({
               options={courseOptions}
               value={formik.values.course}
               onChange={(e) => {
-                const selectedId = e.target.value;
+                const selectedId = e?.target?.value !== undefined ? e.target.value : e;
                 formik.setFieldValue("course", selectedId);
                 const matched = courses.find((c) => c._id === selectedId);
                 if (matched?.courseModel) {
@@ -113,6 +113,7 @@ export default function CommentForm({
             size="lg"
             loading={isSubmitting}
             disabled={isSubmitting}
+            className="w-full sm:w-auto"
           >
             {submitLabel}
           </Button>

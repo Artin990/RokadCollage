@@ -2,11 +2,12 @@ import React from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
+import Visibility from "@mui/icons-material/Visibility";
 import { getImageUrl } from "../../../Utils/getImageUrl";
 import { formatJalaliDate } from "../../../Utils/jalaliDate";
-import { Card, Badge, Button } from "../../../Components/UI";
+import { Card, Badge, Button, IconButton } from "../../../Components/UI";
 
-export default function BlogCard({ blog, onEdit, onDelete }) {
+export default function BlogCard({ blog, onEdit, onDelete, onView }) {
   const getCategoryVariant = (cat) => {
     switch (cat) {
       case "گرافیک":
@@ -35,7 +36,11 @@ export default function BlogCard({ blog, onEdit, onDelete }) {
     <Card hoverable className="overflow-hidden flex flex-col justify-between h-full group">
       <div>
         {/* Blog Image */}
-        <div className="w-full h-44 bg-surface-hover relative overflow-hidden">
+        <div
+          className="w-full h-44 bg-surface-hover relative overflow-hidden cursor-pointer"
+          onClick={() => (onView ? onView(blog) : onEdit?.(blog))}
+          title="مشاهده مقاله"
+        >
           {imageUrl ? (
             <img
               src={imageUrl}
@@ -49,7 +54,7 @@ export default function BlogCard({ blog, onEdit, onDelete }) {
           )}
 
           {/* Category Badge overlay */}
-          <div className="absolute top-3 right-3">
+          <div className="absolute top-3 start-3">
             <Badge variant={getCategoryVariant(blog.category)} size="sm">
               {blog.category}
             </Badge>
@@ -67,7 +72,7 @@ export default function BlogCard({ blog, onEdit, onDelete }) {
 
           <h3
             className="font-bold text-secondary text-base mb-2 line-clamp-1 group-hover:text-primary transition-colors cursor-pointer"
-            onClick={() => onEdit(blog)}
+            onClick={() => (onView ? onView(blog) : onEdit?.(blog))}
             title={blog.title}
           >
             {blog.title}
@@ -80,24 +85,33 @@ export default function BlogCard({ blog, onEdit, onDelete }) {
       </div>
 
       {/* Footer Actions */}
-      <div className="px-5 pb-5 pt-3 border-t border-border flex items-center justify-end gap-2">
+      <div className="px-5 pb-5 pt-3 border-t border-border flex items-center gap-2">
         <Button
-          variant="outline"
+          variant="secondary"
           size="sm"
           className="flex-1"
-          icon={<EditIcon fontSize="small" />}
-          onClick={() => onEdit(blog)}
+          icon={<Visibility fontSize="small" />}
+          onClick={() => onView && onView(blog)}
         >
-          ویرایش
+          مشاهده
         </Button>
 
-        <Button
+        <IconButton
           variant="ghost"
           size="sm"
-          className="text-text-muted hover:text-danger hover:bg-danger-light"
+          icon={<EditIcon fontSize="small" />}
+          onClick={() => onEdit && onEdit(blog)}
+          aria-label="ویرایش مقاله"
+          title="ویرایش مقاله"
+        />
+
+        <IconButton
+          variant="danger"
+          size="sm"
           icon={<DeleteOutlineIcon fontSize="small" />}
-          onClick={() => onDelete(blog)}
-          title="حذف بلاگ"
+          onClick={() => onDelete && onDelete(blog)}
+          title="حذف مقاله"
+          aria-label="حذف مقاله"
         />
       </div>
     </Card>

@@ -2,7 +2,7 @@ import React from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { getImageUrl } from "../../../Utils/getImageUrl";
-import { Card, Badge, Button } from "../../../Components/UI";
+import { Card, Badge, Button, IconButton } from "../../../Components/UI";
 
 export default function TeacherCard({ teacher, onEdit, onDelete }) {
   const photoUrl = getImageUrl(teacher.photo);
@@ -39,7 +39,7 @@ export default function TeacherCard({ teacher, onEdit, onDelete }) {
       {/* Footer Actions */}
       <div className="px-5 pb-5 pt-3 border-t border-border flex items-center justify-end gap-2">
         <Button
-          variant="outline"
+          variant="secondary"
           size="sm"
           className="flex-1"
           icon={<EditIcon fontSize="small" />}
@@ -48,13 +48,13 @@ export default function TeacherCard({ teacher, onEdit, onDelete }) {
           ویرایش
         </Button>
 
-        <Button
-          variant="ghost"
+        <IconButton
+          variant="danger"
           size="sm"
-          className="text-text-muted hover:text-danger hover:bg-danger-light"
           icon={<DeleteOutlineIcon fontSize="small" />}
           onClick={() => onDelete(teacher)}
           title="حذف استاد"
+          aria-label="حذف استاد"
         />
       </div>
     </Card>

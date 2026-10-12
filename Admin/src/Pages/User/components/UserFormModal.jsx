@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import CloseIcon from "@mui/icons-material/Close";
 import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import axiosInstance from "../../../Utils/axiosInstance";
+import { createUser, updateUser } from "../api/userApi";
+import { userValidationSchema } from "../schemas/userSchema";
+import { normalizeBirthDate } from "../../../Constants/validationRules";
 import Notify from "../../../Utils/notify";
-import { Button, Input, Select } from "../../../Components/UI";
-
-const safeTextRegex = /^[\u0600-\u06FF\sA-Za-z0-9\-\_،؛؟!.:«»",;?()\u200c\u200d]+$/;
-const iranPhoneRegex = /^(\+98|0)?9\d{9}$/;
+import { Button, Input, Select, Modal } from "../../../Components/UI";
 
 export default function UserFormModal({
   isOpen,
@@ -20,29 +18,6 @@ export default function UserFormModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const isEdit = Boolean(user && user._id);
 
-  const validationSchema = Yup.object({
-    fullName: Yup.string()
-      .matches(safeTextRegex, "نام شامل کاراکترهای غیرمجاز است")
-      .nullable(),
-    phoneNumber: Yup.string()
-      .matches(iranPhoneRegex, "شماره موبایل نامعتبر است (مثال: ۰۹۱۲۳۴۵۶۷۸۹)")
-      .required("وارد کردن شماره موبایل الزامی است"),
-    password: Yup.string().test(
-      "password-validation",
-      "رمز عبور باید حداقل ۶ کاراکتر باشد",
-      (val) => {
-        if (!val || val.trim() === "") return true; // optional in edit, or empty
-        return val.length >= 6;
-      }
-    ),
-    birthDate: Yup.string()
-      .matches(safeTextRegex, "تاریخ تولد شامل کاراکترهای غیرمجاز است")
-      .nullable(),
-    role: Yup.string()
-      .oneOf(["user", "admin", "superAdmin"], "نقش کاربر نامعتبر است")
-      .required("انتخاب نقش کاربر الزامی است"),
-  });
-
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -52,14 +27,14 @@ export default function UserFormModal({
       birthDate: user?.birthDate || "",
       role: user?.role || "user",
     },
-    validationSchema,
+    validationSchema: userValidationSchema(isEdit),
     onSubmit: async (values) => {
       setIsSubmitting(true);
       try {
         const payload = {
           fullName: values.fullName ? values.fullName.trim() : "",
-          phoneNumber: values.phoneNumber.trim(),
-          birthDate: values.birthDate ? values.birthDate.trim() : "",
+          phoneNumber: normalizePersianDigits(values.phoneNumber.trim()),
+          birthDate: values.birthDate ? normalizeBirthDate(values.birthDate) : "",
           role: values.role,
         };
 
@@ -67,12 +42,9 @@ export default function UserFormModal({
           payload.password = values.password.trim();
         }
 
-        let res;
-        if (isEdit) {
-          res = await axiosInstance.patch(`user/${user._id}`, payload);
-        } else {
-          res = await axiosInstance.post("user", payload);
-        }
+        const res = isEdit
+          ? await updateUser(user._id, payload)
+          : await createUser(payload);
 
         if (res && res.success !== false) {
           Notify.success(
@@ -86,15 +58,12 @@ export default function UserFormModal({
           Notify.error(res?.message || "عملیات با خطا مواجه شد");
         }
       } catch (err) {
-        console.error("Error saving user:", err);
         Notify.error(err.response?.data?.message || err.message || "خطا در برقراری ارتباط");
       } finally {
         setIsSubmitting(false);
       }
     },
   });
-
-  if (!isOpen) return null;
 
   const roleOptions = [
     { value: "user", label: "دانش‌آموز / کاربر عادی" },
@@ -103,41 +72,13 @@ export default function UserFormModal({
   ];
 
   return (
-    <div
-      dir="rtl"
-      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-fadeIn"
-      onClick={onClose}
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={isEdit ? `ویرایش اطلاعات «${user.fullName || user.phoneNumber}»` : "ایجاد کاربر جدید"}
+      maxWidth="max-w-lg"
     >
-      <div
-        className="relative w-full max-w-lg bg-surface rounded-2xl border border-border/80 shadow-2xl overflow-hidden my-6 text-right"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-border/80 bg-surface">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-primary-light text-primary flex items-center justify-center">
-              {isEdit ? (
-                <EditOutlinedIcon fontSize="small" />
-              ) : (
-                <PersonAddOutlinedIcon fontSize="small" />
-              )}
-            </div>
-            <h3 className="text-sm md:text-base font-extrabold text-secondary">
-              {isEdit ? `ویرایش اطلاعات «${user.fullName || user.phoneNumber}»` : "ایجاد کاربر جدید"}
-            </h3>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-text-muted hover:text-text-primary p-1.5 rounded-xl hover:bg-surface-hover transition-colors cursor-pointer"
-            title="انصراف"
-          >
-            <CloseIcon fontSize="small" />
-          </button>
-        </div>
-
-        {/* Form Body */}
-        <form onSubmit={formik.handleSubmit} className="p-6 flex flex-col gap-4">
+      <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4">
           <Input
             label="نام و نام خانوادگی"
             name="fullName"
@@ -194,20 +135,22 @@ export default function UserFormModal({
           <Select
             label="نقش و سطح دسترسی کاربر"
             name="role"
-            value={formik.values.role}
-            onChange={(val) => formik.setFieldValue("role", val)}
+            value={formik.values.role || "user"}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             options={roleOptions}
             error={formik.touched.role && formik.errors.role}
           />
 
           {/* Footer Buttons */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-border/80 mt-2">
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2.5 sm:gap-3 pt-4 border-t border-border/80 mt-2">
             <Button
               type="button"
               variant="outline"
               size="md"
               onClick={onClose}
               disabled={isSubmitting}
+              className="w-full sm:w-auto"
             >
               انصراف
             </Button>
@@ -216,12 +159,12 @@ export default function UserFormModal({
               variant="primary"
               size="md"
               loading={isSubmitting}
+              className="w-full sm:w-auto"
             >
               {isEdit ? "ذخیره تغییرات" : "ایجاد کاربر"}
             </Button>
           </div>
         </form>
-      </div>
-    </div>
+    </Modal>
   );
 }

@@ -71,17 +71,3 @@ export const updateBlog = async (id, payload) => {
 export const deleteBlog = async (id) => {
   return axiosInstance.delete(`blog/${id}`);
 };
-
-/**
- * Request server-side sanitization and preview of raw HTML content.
- * @param {string} content - Raw HTML content
- * @param {AbortSignal} [signal] - Optional cancellation signal
- * @returns {Promise<{ success: boolean, data: { html: string } }>}
- */
-export const previewBlogContent = async (content, signal) => {
-  return axiosInstance.post(
-    "blog/preview",
-    { content: content || "" },
-    signal ? { signal } : undefined
-  );
-};

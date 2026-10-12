@@ -6,16 +6,16 @@
 
 .article-content {
   /* Design Tokens & Theme Defaults */
-  --article-primary: #F8A41D;
-  --article-primary-hover: #e08f12;
-  --article-primary-active: #c67c0c;
-  --article-bg-brand-soft: #fef7ec;
-  --article-text: #1E293B;
-  --article-text-secondary: #475569;
-  --article-text-muted: #64748B;
-  --article-border: #E2E8F0;
-  --article-bg-subtle: #F8FAFC;
-  --article-code-bg: #F1F5F9;
+  --article-primary: var(--color-primary, #F8A41D);
+  --article-primary-hover: var(--color-primary-hover, #e08f12);
+  --article-primary-active: var(--color-primary-active, #c67c0c);
+  --article-bg-brand-soft: var(--color-primary-soft, #fef7ec);
+  --article-text: var(--color-text-primary, #1E293B);
+  --article-text-secondary: var(--color-text-secondary, #475569);
+  --article-text-muted: var(--color-text-muted, #64748B);
+  --article-border: var(--color-border, #E2E8F0);
+  --article-bg-subtle: var(--color-bg-subtle, #F8FAFC);
+  --article-code-bg: var(--color-bg-light, #F1F5F9);
   --article-radius: 0.75rem;
   --article-font-family: inherit;
   --article-line-height: 1.95;
@@ -53,7 +53,7 @@
 .article-content h4,
 .article-content h5,
 .article-content h6 {
-  color: #0F172A;
+  color: var(--color-text-primary, #0F172A);
   font-weight: 700;
   line-height: 1.45;
   margin-bottom: 0.75rem;
@@ -168,7 +168,7 @@
 .article-content strong,
 .article-content b {
   font-weight: 700;
-  color: #0F172A;
+  color: var(--color-text-primary, #0F172A);
 }
 
 .article-content em,
@@ -198,7 +198,7 @@
 .article-content th {
   background-color: var(--article-bg-subtle);
   font-weight: 700;
-  color: #0F172A;
+  color: var(--color-text-primary, #0F172A);
 }
 
 .article-content tbody tr:nth-child(even) {

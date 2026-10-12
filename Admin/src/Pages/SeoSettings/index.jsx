@@ -1,49 +1,16 @@
-// ==========================================
-// Page Component: SeoSettings
-// Form management for global website SEO meta tags, Open Graph properties, and Twitter Cards
-// ==========================================
-
 import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
-import * as Yup from "yup";
-import axiosInstance from "../../Utils/axiosInstance";
 import Notify from "../../Utils/notify";
-import Loading from "../../Components/Loading";
-import { Button, Input, Textarea, PageHeader, Card } from "../../Components/UI";
+import { Button, PageHeader, Card, LoadingState } from "../../Components/UI";
+import BasicMetaSection from "./components/BasicMetaSection";
+import OpenGraphSection from "./components/OpenGraphSection";
+import TwitterCardSection from "./components/TwitterCardSection";
+import { seoSchema } from "./schemas/seoSchema";
+import { fetchSeo, updateSeo } from "./api/seoApi";
 
-// Regular expression to restrict input to safe alphanumeric characters and standard Persian/Latin punctuation
-const safeTextRegex = /^[\u0600-\u06FF\sA-Za-z0-9\-\_،؛؟!.:«»",;?()\u200c\u200d]+$/;
-
-/**
- * Yup validation schema for site-wide SEO metadata fields.
- */
-const SeoSchema = Yup.object({
-  title: Yup.string()
-    .matches(safeTextRegex, "استفاده از کاراکترهای خاص مجاز نیست")
-    .required("وارد کردن عنوان سایت الزامی است"),
-  description: Yup.string()
-    .matches(safeTextRegex, "استفاده از کاراکترهای خاص مجاز نیست")
-    .min(10, "توضیحات باید حداقل ۱۰ کاراکتر باشد")
-    .required("وارد کردن توضیحات سایت الزامی است"),
-  keywords: Yup.string().matches(safeTextRegex, "استفاده از کاراکترهای خاص مجاز نیست"),
-  robots: Yup.string(),
-  canonicalUrl: Yup.string(),
-  ogTitle: Yup.string().matches(safeTextRegex, "استفاده از کاراکترهای خاص مجاز نیست"),
-  ogDescription: Yup.string().matches(safeTextRegex, "استفاده از کاراکترهای خاص مجاز نیست"),
-  ogImage: Yup.string(),
-  ogType: Yup.string(),
-  twitterCard: Yup.string(),
-  twitterTitle: Yup.string().matches(safeTextRegex, "استفاده از کاراکترهای خاص مجاز نیست"),
-  twitterDescription: Yup.string().matches(safeTextRegex, "استفاده از کاراکترهای خاص مجاز نیست"),
-  twitterImage: Yup.string(),
-});
-
-/**
- * SeoSettings page component for configuring site-wide metadata.
- */
 export default function SeoSettings() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [initialValues, setInitialValues] = useState({
     title: "",
@@ -62,23 +29,19 @@ export default function SeoSettings() {
   });
 
   useEffect(() => {
-    const getSeoData = async () => {
+    const loadSeo = async () => {
       setLoading(true);
       try {
-        const response = await axiosInstance.get("seo");
-
-        let data = null;
-        if (response && response.data) {
-          data = Array.isArray(response.data) ? response.data[0] : response.data;
-        } else if (Array.isArray(response)) {
-          data = response[0];
-        }
+        const response = await fetchSeo();
+        const data = response?.data || response;
 
         if (data) {
           setInitialValues({
             title: data.title || "",
             description: data.description || "",
-            keywords: data.keywords || "",
+            keywords: Array.isArray(data.keywords)
+              ? data.keywords.join(", ")
+              : data.keywords || "",
             robots: data.robots || "index, follow",
             canonicalUrl: data.canonicalUrl || "",
             ogTitle: data.ogTitle || "",
@@ -92,31 +55,38 @@ export default function SeoSettings() {
           });
         }
       } catch (error) {
-        console.error("Fetch SEO Error:", error);
-        Notify.error(error.message || "خطا در ارتباط با سرور");
+        Notify.error(error.message || "خطا در دریافت اطلاعات سئو");
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
-    getSeoData();
+    loadSeo();
   }, []);
 
   const formik = useFormik({
     enableReinitialize: true,
-    initialValues: initialValues,
-    validationSchema: SeoSchema,
+    initialValues,
+    validationSchema: seoSchema,
     onSubmit: async (values) => {
       setIsSubmitting(true);
       try {
-        const response = await axiosInstance.patch("seo", values);
+        const payload = {
+          ...values,
+          keywords: values.keywords
+            ? values.keywords.split(",").map((k) => k.trim()).filter(Boolean)
+            : [],
+        };
 
-        if (response && (response.success || response.status === "success")) {
-          Notify.success("تنظیمات سئو با موفقیت بروزرسانی شد.");
+        const response = await updateSeo(payload);
+
+        if (response && response.success !== false) {
+          Notify.success("تنظیمات سئو با موفقیت به‌روزرسانی شد.");
         } else {
-          throw new Error(response?.message || "ویرایش با خطا مواجه شد");
+          Notify.error(response?.message || "خطا در به‌روزرسانی تنظیمات سئو");
         }
       } catch (error) {
-        Notify.error(error.message || "خطا در بروزرسانی تنظیمات سئو");
+        Notify.error(error.message || "خطا در برقراری ارتباط با سرور");
       } finally {
         setIsSubmitting(false);
       }
@@ -125,170 +95,33 @@ export default function SeoSettings() {
 
   if (loading) {
     return (
-      <div dir="rtl" className="flex justify-center items-center min-h-[70vh]">
-        <Loading size={12} />
+      <div dir="rtl" className="p-3.5 sm:p-5 md:p-6 lg:p-8 pb-4 sm:pb-6 lg:pb-8 w-full bg-background min-h-full flex flex-col justify-center">
+        <LoadingState text="در حال دریافت تنظیمات سئو..." minHeight="min-h-[440px]" />
       </div>
     );
   }
 
   return (
-    <div dir="rtl" className="p-6 md:p-8 w-full bg-background min-h-screen">
+    <div dir="rtl" className="p-3.5 sm:p-5 md:p-6 lg:p-8 pb-4 sm:pb-6 lg:pb-8 w-full bg-background min-h-full flex flex-col">
       <PageHeader
-        title="مدیریت سئو سایت (SEO)"
-        subtitle="تنظیم متاتگ‌ها، اپن گراف و کارت‌های توییتر وب‌سایت"
-        backTo="/"
-        backLabel="بازگشت به داشبورد"
+        title="تنظیمات سئو (SEO)"
+        subtitle="مدیریت متاتگ‌های عمومی وب‌سایت، تنظیمات شبکه‌های اجتماعی Open Graph و کارت‌های توییتر"
       />
 
-      <Card className="p-6 md:p-8 max-w-4xl mx-auto shadow-sm">
+      <Card className="p-4 sm:p-6 md:p-8 max-w-5xl mx-auto shadow-xs">
         <form onSubmit={formik.handleSubmit} className="flex flex-col gap-8">
-          {/* Basic SEO Section */}
-          <div className="flex flex-col gap-4">
-            <h2 className="text-base md:text-lg font-bold text-secondary border-b border-border/80 pb-2 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-primary inline-block"></span>
-              تنظیمات پایه (Basic SEO)
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-1">
-              <Input
-                label="عنوان سایت (Title)"
-                placeholder="مثال: کالج آموزشی و فناوری رکاد"
-                error={formik.touched.title && formik.errors.title}
-                {...formik.getFieldProps("title")}
-              />
+          <BasicMetaSection formik={formik} />
+          <OpenGraphSection formik={formik} />
+          <TwitterCardSection formik={formik} />
 
-              <Input
-                label="ربات‌ها (Robots)"
-                placeholder="مثال: index, follow"
-                error={formik.touched.robots && formik.errors.robots}
-                {...formik.getFieldProps("robots")}
-              />
-
-              <div className="col-span-1 md:col-span-2">
-                <Textarea
-                  label="توضیحات (Description)"
-                  rows={3}
-                  placeholder="توضیحات پیش‌فرض سایت برای موتورهای جستجو..."
-                  error={formik.touched.description && formik.errors.description}
-                  {...formik.getFieldProps("description")}
-                />
-              </div>
-
-              <div className="col-span-1 md:col-span-2">
-                <Input
-                  label="کلمات کلیدی (Keywords)"
-                  placeholder="کلمات را با کاما جدا کنید (مثال: رکاد, کالج آموزشی, برنامه نویسی, طراحی)"
-                  error={formik.touched.keywords && formik.errors.keywords}
-                  {...formik.getFieldProps("keywords")}
-                />
-              </div>
-
-              <div className="col-span-1 md:col-span-2">
-                <Input
-                  label="آدرس کنونیکال (Canonical URL)"
-                  placeholder="https://..."
-                  dir="ltr"
-                  error={formik.touched.canonicalUrl && formik.errors.canonicalUrl}
-                  {...formik.getFieldProps("canonicalUrl")}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Open Graph Section */}
-          <div className="flex flex-col gap-4 border-t border-border/80 pt-6">
-            <h2 className="text-base md:text-lg font-bold text-secondary border-b border-border/80 pb-2 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-primary inline-block"></span>
-              تنظیمات شبکه‌های اجتماعی (Open Graph)
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-1">
-              <Input
-                label="عنوان (OG Title)"
-                placeholder="عنوان اشتراک‌گذاری در شبکه‌های اجتماعی"
-                error={formik.touched.ogTitle && formik.errors.ogTitle}
-                {...formik.getFieldProps("ogTitle")}
-              />
-
-              <Input
-                label="نوع (OG Type)"
-                placeholder="مثال: website"
-                error={formik.touched.ogType && formik.errors.ogType}
-                {...formik.getFieldProps("ogType")}
-              />
-
-              <div className="col-span-1 md:col-span-2">
-                <Textarea
-                  label="توضیحات (OG Description)"
-                  rows={2}
-                  placeholder="توضیحات اشتراک‌گذاری در شبکه‌های اجتماعی..."
-                  error={formik.touched.ogDescription && formik.errors.ogDescription}
-                  {...formik.getFieldProps("ogDescription")}
-                />
-              </div>
-
-              <div className="col-span-1 md:col-span-2">
-                <Input
-                  label="لینک تصویر (OG Image)"
-                  placeholder="https://..."
-                  dir="ltr"
-                  error={formik.touched.ogImage && formik.errors.ogImage}
-                  {...formik.getFieldProps("ogImage")}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Twitter Cards Section */}
-          <div className="flex flex-col gap-4 border-t border-border/80 pt-6">
-            <h2 className="text-base md:text-lg font-bold text-secondary border-b border-border/80 pb-2 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-primary inline-block"></span>
-              تنظیمات توییتر (Twitter Cards)
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-1">
-              <Input
-                label="نوع کارت (Twitter Card)"
-                placeholder="مثال: summary_large_image"
-                error={formik.touched.twitterCard && formik.errors.twitterCard}
-                {...formik.getFieldProps("twitterCard")}
-              />
-
-              <Input
-                label="عنوان توییتر (Twitter Title)"
-                placeholder="عنوان برای کارت توییتر"
-                error={formik.touched.twitterTitle && formik.errors.twitterTitle}
-                {...formik.getFieldProps("twitterTitle")}
-              />
-
-              <div className="col-span-1 md:col-span-2">
-                <Textarea
-                  label="توضیحات توییتر (Twitter Description)"
-                  rows={2}
-                  placeholder="توضیحات برای کارت توییتر..."
-                  error={formik.touched.twitterDescription && formik.errors.twitterDescription}
-                  {...formik.getFieldProps("twitterDescription")}
-                />
-              </div>
-
-              <div className="col-span-1 md:col-span-2">
-                <Input
-                  label="لینک تصویر توییتر (Twitter Image)"
-                  placeholder="https://..."
-                  dir="ltr"
-                  error={formik.touched.twitterImage && formik.errors.twitterImage}
-                  {...formik.getFieldProps("twitterImage")}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Submit Button */}
-          <div className="flex justify-end pt-4 border-t border-border/80">
+          <div className="flex justify-end pt-5 border-t border-border/80">
             <Button
               type="submit"
               variant="primary"
-              size="lg"
-              isLoading={isSubmitting}
+              size="md"
+              loading={isSubmitting}
             >
-              ذخیره تغییرات سئو
+              ذخیره تنظیمات سئو
             </Button>
           </div>
         </form>
