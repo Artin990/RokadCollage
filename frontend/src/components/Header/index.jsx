@@ -116,9 +116,9 @@ export default function Header() {
   }, [mobileOpen]);
 
   const links = [
-    { t: "صفحهٔ اصلی", href: "#top" },
-    { t: "دوره‌ها", href: "#courses-index" },
-    { t: "مجله", href: "#blog-index" },
+    { t: "صفحهٔ اصلی", href: "/" },
+    { t: "دوره‌ها", href: "/courses" },
+    { t: "مجله", href: "/blog" },
   ];
 
 

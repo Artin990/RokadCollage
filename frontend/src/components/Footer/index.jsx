@@ -10,12 +10,12 @@ const departments = [
 ];
 
 const quickLinks = [
-  { label: "همهٔ دوره‌ها", href: "#courses-index" },
-  { label: "مجلهٔ کالج رکاد", href: "#blog-index" },
-  { label: "پنل هنرجو", href: "#panel" },
-  { label: "ورود / ثبت‌نام", href: "#auth" },
-  { label: "دربارهٔ ما", href: "#about" },
-  { label: "پرسش‌های متداول", href: "#faq" },
+  { label: "همهٔ دوره‌ها", href: "/courses" },
+  { label: "مجلهٔ کالج رکاد", href: "/blog" },
+  { label: "پنل هنرجو", href: "/panel" },
+  { label: "ورود / ثبت‌نام", href: "/auth" },
+  { label: "دربارهٔ ما", href: "/#about" },
+  { label: "پرسش‌های متداول", href: "/#faq" },
 ];
 
 const contacts = [

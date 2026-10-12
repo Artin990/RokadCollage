@@ -8,10 +8,13 @@ export const metadata = {
   },
 };
 
+import HashRouterListener from "@/components/HashRouterListener.jsx";
+
 export default function RootLayout({ children }) {
   return (
     <html lang="fa" dir="rtl">
       <body className="antialiased bg-[#fdfbf7] text-[#292827] font-['IRANSansX'] selection:bg-[#f8a41d]/20 selection:text-[#21295a]">
+        <HashRouterListener />
         {children}
       </body>
     </html>
