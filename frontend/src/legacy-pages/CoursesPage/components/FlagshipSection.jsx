@@ -120,7 +120,7 @@ export default function FlagshipSection({ flagshipCourses, store }) {
           {flagshipCourses.map((f) => {
             const FlagIcon = f.icon;
             return (
-              <article key={f.deptId} className={`ch-flag-card ${f.themeClass}`}>
+              <article key={f.id || f.slug} className={`ch-flag-card ${f.themeClass}`}>
                 <div className="ch-flag-visual">
                   <img src={f.pattern} alt="" className="ch-flag-pattern" aria-hidden="true" />
                   <CourseSaveButton slug={f.slug} store={store} className="ch-flag-save-btn" />

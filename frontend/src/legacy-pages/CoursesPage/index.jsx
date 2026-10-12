@@ -75,6 +75,7 @@ export default function CoursesPage() {
   const flagshipCourses = courses.slice(0, 3).map((c, i) => {
     const deptInfo = DEPT_CONFIG[c.category] || DEPT_CONFIG["فناوری اطلاعات"];
     return {
+      id: c._id || c.id || `flag-${i}`,
       deptId: deptInfo.deptId,
       deptName: c.category || deptInfo.deptName,
       themeClass: deptInfo.themeClass,
