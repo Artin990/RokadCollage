@@ -47,7 +47,16 @@ export function matchesTopic(course, topic) {
 }
 
 export function filterCourses({ dept, selectedTopic, modeF, ratingSet, durSet, typeF, sort }) {
-  let list = [...dept.popular, ...dept.newest];
+  const combined = [...(dept.popular || []), ...(dept.newest || [])];
+  const seen = new Set();
+  let list = [];
+  for (const item of combined) {
+    const key = item._id || item.id || item.slug || item.title;
+    if (!seen.has(key)) {
+      seen.add(key);
+      list.push(item);
+    }
+  }
   if (selectedTopic) {
     list = list.filter((c) => matchesTopic(c, selectedTopic));
   }

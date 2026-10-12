@@ -1,4 +1,4 @@
-import React from "react";
+import Link from "next/link";
 import { Bookmark, MapPin, Monitor } from "lucide-react";
 import { DEPT_PERSONA } from "@/data/departments.js";
 import { toggleWishlist } from "@/data/panelStore.js";
@@ -6,35 +6,10 @@ import { isWishlisted } from "@/data/selectors.js";
 import { CourseIcon, StarIcon, ClockIcon, UsersIcon } from "./DepartmentIcons.jsx";
 
 export const getSlugForDeptCourse = (c) => {
-  const t = `${c?.title || ""} ${c?.cat || ""}`.toLowerCase();
-  const isInPerson = c?.mode === "in-person" || c?.mode === "حضوری";
-
-  if (isInPerson) {
-    if (t.includes("react") || t.includes("next.js") || t.includes("فرانت") || t.includes("html") || t.includes("کدنویسی")) return "react-bootcamp";
-    if (t.includes("ux") || t.includes("ui") || t.includes("فیگما")) return "ux-bootcamp";
-    if (t.includes("فتوشاپ") || t.includes("گرافیک") || t.includes("illustrator")) return "graphic-bootcamp";
-    if (t.includes("mba") || t.includes("کارآفرینی") || t.includes("کسب‌وکار") || t.includes("استارتاپ")) return "mba-bootcamp";
-    if (t.includes("رهبری") || t.includes("مدیریت تیم") || t.includes("برندینگ")) return "leadership-bootcamp";
-    if (t.includes("فروش") || t.includes("مذاکره")) return "sales-bootcamp";
-    if (t.includes("ielts") || t.includes("آیلتس") || t.includes("speaking") || t.includes("مکالمه") || t.includes("پزشکان")) return "ielts-bootcamp";
-    if (t.includes("فرانسه")) return "french-bootcamp";
-    if (t.includes("آلمانی") || t.includes("اسپانیایی") || t.includes("زبان دوم")) return "french-bootcamp";
-    if (t.includes("devops") || t.includes("docker") || t.includes("داکر") || t.includes("ci/cd")) return "devops-bootcamp";
-    if (t.includes("laravel") || t.includes("php") || t.includes("flutter") || t.includes("موبایل")) return "react-bootcamp";
-    return "react-bootcamp";
-  }
-
-  // دوره‌های آنلاین
-  if (t.includes("ielts") || t.includes("آیلتس") || t.includes("مکالمه") || t.includes("انگلیسی") || t.includes("فرانسه") || t.includes("آلمانی")) return "ielts-mastery";
-  if (t.includes("react") || t.includes("next.js") || t.includes("فرانت‌") || t.includes("html") || t.includes("typescript")) return "frontend-react";
-  if (t.includes("python") || t.includes("ai") || t.includes("ماشین") || t.includes("داده") || t.includes("sql")) return "python-ai";
-  if (t.includes("mba") || t.includes("کارآفرینی") || t.includes("کسب‌وکار") || t.includes("رهبری") || t.includes("فروش") || t.includes("مالی") || t.includes("حسابداری") || t.includes("مدیریت") || t.includes("مذاکره") || t.includes("okr") || t.includes("استارتاپ")) return "mba-business";
-  if (t.includes("مارکتینگ") || t.includes("سئو") || t.includes("برندینگ") || t.includes("بازاریابی") || t.includes("تبلیغات")) return "seo-pro";
-  if (t.includes("ui") || t.includes("ux") || t.includes("فیگما")) return "ui-ux";
-  if (t.includes("فتوشاپ") || t.includes("گرافیک") || t.includes("illustrator") || t.includes("عکاسی")) return "graphic-photoshop";
-  if (t.includes("موشن") || t.includes("تدوین") || t.includes("premiere") || t.includes("after effects")) return "video-motion";
-  if (t.includes("وردپرس") || t.includes("وب")) return "wordpress-pro";
-  return "mba-business";
+  if (c?.slug) return c.slug;
+  if (c?._id) return c._id;
+  if (c?.id && !String(c.id).startsWith("dept-c-")) return c.id;
+  return c?._id || c?.id || "";
 };
 
 export default function DepartmentCourseCard({ c, rot, persona: cardPersona, store }) {
@@ -44,26 +19,17 @@ export default function DepartmentCourseCard({ c, rot, persona: cardPersona, sto
   const isSaved = isLoggedIn && isWishlisted(slug, store);
   const isOnline = c.mode === "online" || c.mode === "غیرحضوری" || c.mode === "غیر حضوری";
 
-  const goToCourse = (e) => {
-    e?.preventDefault();
-    e?.stopPropagation();
-    window.location.hash = `course/${slug}`;
-  };
-
   return (
-    <a
+    <Link
       className="dp-card"
       data-dept={cardTheme.id}
-      href={`#course/${slug}`}
+      href={`/courses/${slug}`}
       style={{
         "--rot": `rotate(${rot}deg)`,
         "--dp": cardTheme.colorVar,
         "--dp-light": cardTheme.lightVar,
         "--dp-dark": cardTheme.darkVar,
         "--dp-text": cardTheme.id === "it" ? "var(--white)" : "var(--ink)",
-      }}
-      onClick={(e) => {
-        if (e.defaultPrevented) return;
       }}
     >
       <div className="dp-card-cover">
@@ -127,14 +93,11 @@ export default function DepartmentCourseCard({ c, rot, persona: cardPersona, sto
           )}
           <span
             className="dp-card-btn"
-            role="button"
-            tabIndex={0}
-            onClick={goToCourse}
           >
             مشاهده
           </span>
         </div>
       </div>
-    </a>
+    </Link>
   );
 }

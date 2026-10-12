@@ -2,6 +2,6 @@
 
 import DepartmentPage from "@/legacy-pages/DepartmentPage/index.jsx";
 
-export default function DepartmentClient({ deptId }) {
-  return <DepartmentPage deptId={deptId} />;
+export default function DepartmentClient({ deptId, initialCourses }) {
+  return <DepartmentPage deptId={deptId} initialCourses={initialCourses} />;
 }

@@ -2,6 +2,6 @@
 
 import CourseSingle from "@/legacy-pages/CourseSingle/index.jsx";
 
-export default function CourseSingleClient({ slug }) {
-  return <CourseSingle slug={slug} />;
+export default function CourseSingleClient({ slug, initialCourse }) {
+  return <CourseSingle slug={slug} initialCourse={initialCourse} />;
 }

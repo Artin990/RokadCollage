@@ -58,15 +58,21 @@ export default function DepartmentSuggestedRow({
         </div>
       </div>
       <div className="dp-row" ref={suggestNav.rowRef} aria-label={`دوره‌های پیشنهادی ${dept.name}`}>
-        {tabList.map((c, i) => (
-          <DepartmentCourseCard
-            c={c}
-            rot={[-1, 1, -0.5, 0.5][i % 4]}
-            persona={persona}
-            store={store}
-            key={i}
-          />
-        ))}
+        {tabList.length === 0 ? (
+          <div className="dp-empty" style={{ width: "100%", padding: "2rem", textAlign: "center", color: "var(--ink-soft)" }}>
+            دوره‌ای برای این بخش یافت نشد.
+          </div>
+        ) : (
+          tabList.map((c, i) => (
+            <DepartmentCourseCard
+              c={c}
+              rot={[-1, 1, -0.5, 0.5][i % 4]}
+              persona={persona}
+              store={store}
+              key={c._id || c.id || c.slug || i}
+            />
+          ))
+        )}
       </div>
     </section>
   );

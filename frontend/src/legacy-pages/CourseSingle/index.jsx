@@ -22,7 +22,7 @@ import {
 
 import { getCourseBySlugOrId } from "@/services/courseService.js";
 
-export default function CourseSingle({ slug }) {
+export default function CourseSingle({ slug, initialCourse }) {
   const [tab, setTab] = useState(0);
   const [openChapter, setOpenChapter] = useState(0);
   const headRef = useRef(null);
@@ -30,8 +30,8 @@ export default function CourseSingle({ slug }) {
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [activeLesson, setActiveLesson] = useState(null);
 
-  const [course, setCourse] = useState(() => getCourseBySlug(slug));
-  const [loading, setLoading] = useState(true);
+  const [course, setCourse] = useState(() => initialCourse || getCourseBySlug(slug));
+  const [loading, setLoading] = useState(!initialCourse && !getCourseBySlug(slug));
   const [store, setStore] = useState(getPanelStore);
   const [enrollToast, setEnrollToast] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
@@ -50,7 +50,7 @@ export default function CourseSingle({ slug }) {
             duration: live.duration || prev?.duration,
             instructor: live.instructor || prev?.instructor,
             category: live.category || prev?.category,
-            isInPerson: live.isInPerson || live.mode === "in-person",
+            isInPerson: live.isInPerson || live.mode === "in-person" || live.type === "حضوری",
           }));
         }
       } catch (err) {
@@ -74,6 +74,10 @@ export default function CourseSingle({ slug }) {
     return () => window.removeEventListener("rokad_panel_store_changed", handleStoreChange);
   }, []);
 
+  if (!course && loading) {
+    return <div className="min-h-screen flex items-center justify-center font-['IRANSansX'] text-stone-500">در حال بارگذاری دوره...</div>;
+  }
+
   if (!course) {
     return <CourseSingleNotFound />;
   }
@@ -81,6 +85,7 @@ export default function CourseSingle({ slug }) {
   if (
     course.mode === "in-person" ||
     course.isInPerson ||
+    course.type === "حضوری" ||
     (slug && (slug.includes("bootcamp") || slug.includes("حضوری") || slug.includes("in-person")))
   ) {
     return <CourseSingleInPerson course={course} slug={slug} />;

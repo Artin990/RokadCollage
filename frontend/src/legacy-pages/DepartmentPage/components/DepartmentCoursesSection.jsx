@@ -97,7 +97,7 @@ export default function DepartmentCoursesSection({
                 rot={[-0.5, 0.5, -0.25, 0.25][i % 4]}
                 persona={persona}
                 store={store}
-                key={i}
+                key={c._id || c.id || c.slug || i}
               />
             ))}
           </div>
