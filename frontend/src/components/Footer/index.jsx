@@ -77,11 +77,7 @@ function toFa(num) {
 export default function Footer() {
   const [phone, setPhone] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [year, setYear] = useState("۱۴۰۵");
-
-  useEffect(() => {
-    setYear(getJalaliYear());
-  }, []);
+  const [year] = useState(() => (typeof window !== "undefined" ? getJalaliYear() : "۱۴۰۵"));
 
   const handleSubmit = (e) => {
     e.preventDefault();

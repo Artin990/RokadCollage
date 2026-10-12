@@ -28,9 +28,10 @@ const PANEL_PAGES = {
 export default function PanelPage() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState("dashboard");
-  const [ready, setReady] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     if (!isUserLoggedIn()) {
       if (typeof window !== "undefined") {
         sessionStorage.setItem("rokad_auth_redirect", "panel");
@@ -49,13 +50,11 @@ export default function PanelPage() {
     };
 
     parseHash();
-    setReady(true);
-
     window.addEventListener("hashchange", parseHash);
     return () => window.removeEventListener("hashchange", parseHash);
   }, [router]);
 
-  if (!ready) return null;
+  if (!mounted) return null;
 
   const ActiveComponent = PANEL_PAGES[currentPage] || Dashboard;
 
