@@ -27,8 +27,9 @@ export default function AuthForgotFlow({
 }) {
   const [forgotPhone, setForgotPhone] = useState("");
   const [forgotPhoneError, setForgotPhoneError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handlePhoneSubmit = (e) => {
+  const handlePhoneSubmit = async (e) => {
     e.preventDefault();
     if (forgotPhone.length !== 11) {
       setForgotPhoneError("شماره موبایل باید دقیقاً ۱۱ رقم باشد (مثال: ۰۹۱۲۳۴۵۶۷۸۹)");
@@ -39,7 +40,16 @@ export default function AuthForgotFlow({
       return;
     }
     setForgotPhoneError("");
-    setForgotStep(2);
+    setIsSubmitting(true);
+    try {
+      const { sendOtp } = await import("@/services/authService");
+      await sendOtp(forgotPhone);
+      setForgotStep(2);
+    } catch (err) {
+      setForgotPhoneError(err.message || "خطا در ارسال کد");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
 

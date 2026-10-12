@@ -10,6 +10,8 @@ import { toEnDigits, toFa } from "./components/AuthIcons.jsx";
 import { getCourseBySlug } from "../CourseSingle/courseData.js";
 import { Sparkles, BookOpen, ArrowLeft, CheckCircle2 } from "lucide-react";
 
+import { sendOtp, loginWithPassword, loginWithOtp, forgetPassword } from "../../services/authService.js";
+
 export default function AuthPage({ initialMode, onLoginSuccess }) {
   const getIsLoginFromHash = () => {
     if (typeof window === "undefined") return true;
@@ -24,6 +26,7 @@ export default function AuthPage({ initialMode, onLoginSuccess }) {
   const [step, setStep] = useState("form"); // "form" | "otp" | "forgot"
   const [forgotStep, setForgotStep] = useState(1); // 1: mobile, 2: otp+newpass, 3: success
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Form states
   const [phone, setPhone] = useState("");
@@ -135,7 +138,7 @@ export default function AuthPage({ initialMode, onLoginSuccess }) {
     refs.current[focusIdx]?.focus();
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     if (phone.length !== 11) {
       setFormError("شماره موبایل باید دقیقاً ۱۱ رقم باشد (مثال: ۰۹۱۲۳۴۵۶۷۸۹)");
@@ -155,24 +158,74 @@ export default function AuthPage({ initialMode, onLoginSuccess }) {
     }
 
     setFormError("");
-    setStep("otp");
+    setIsLoading(true);
+
+    try {
+      if (isLogin) {
+        // Try direct password login first
+        try {
+          const res = await loginWithPassword(phone, password);
+          if (res?.data?.token) {
+            loginUser({
+              phone,
+              token: res.data.token,
+              user: res.data.user,
+            });
+            proceedToNextPage();
+            return;
+          }
+        } catch (err) {
+          // If user hasn't set password or requires OTP, fallback to sending OTP
+          if (err.status === 400 || err.message?.includes("رمز عبور")) {
+            await sendOtp(phone);
+            setStep("otp");
+            return;
+          }
+          throw err;
+        }
+      } else {
+        // Registration flow: send OTP
+        await sendOtp(phone);
+        setStep("otp");
+      }
+    } catch (err) {
+      setFormError(err.message || "خطا در برقراری ارتباط");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const completeAuth = () => {
-    // 1. Log user in store
-    loginUser({
-      phone: phone || "09123456789",
-      name: !isLogin && fullName.trim() ? fullName.trim() : undefined,
-    });
-
-    // 2. If it was registration, show the celebration modal
-    if (!isLogin) {
-      setRegSuccessModalOpen(true);
+  const completeAuth = async () => {
+    const code = loginOtp.join("");
+    if (code.length < 5) {
+      setFormError("لطفاً کد تایید ۵ رقمی را کامل وارد کنید");
       return;
     }
 
-    // 3. If login, proceed to custom callback or previous redirect or panel
-    proceedToNextPage();
+    setIsLoading(true);
+    setFormError("");
+
+    try {
+      const res = await loginWithOtp(phone, code, password, !isLogin ? fullName : undefined);
+      if (res?.data?.token) {
+        loginUser({
+          phone,
+          token: res.data.token,
+          user: res.data.user,
+          name: !isLogin && fullName.trim() ? fullName.trim() : undefined,
+        });
+
+        if (!isLogin) {
+          setRegSuccessModalOpen(true);
+        } else {
+          proceedToNextPage();
+        }
+      }
+    } catch (err) {
+      setFormError(err.message || "کد تایید نامعتبر است");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const proceedToNextPage = (targetOverride = null) => {
@@ -210,9 +263,16 @@ export default function AuthPage({ initialMode, onLoginSuccess }) {
     setShowConfirmModal(true);
   };
 
-  const confirmPasswordReset = () => {
+  const confirmPasswordReset = async () => {
     setShowConfirmModal(false);
-    setForgotStep(3);
+    const code = forgotOtp.join("");
+    try {
+      await forgetPassword(phone, code, newPass);
+      setForgotStep(3);
+    } catch (err) {
+      setPassError(err.message || "خطا در بازیابی رمز عبور");
+      setShowConfirmModal(false);
+    }
   };
 
   const handleClose = (e) => {

@@ -5,15 +5,20 @@ export function isUserLoggedIn() {
   return Boolean(state.auth && state.auth.isLoggedIn);
 }
 
-export function loginUser({ phone, name } = {}) {
+export function loginUser({ phone, name, token, user } = {}) {
   const state = getPanelStore();
+  const authToken = token || "rokad_token_" + Date.now();
+  if (typeof window !== "undefined" && token) {
+    localStorage.setItem("rokad_token", token);
+  }
   const updatedAuth = {
     isLoggedIn: true,
-    token: "rokad_token_" + Date.now(),
-    userPhone: phone || state.auth?.userPhone || "09123456789",
+    token: authToken,
+    userPhone: phone || user?.phoneNumber || state.auth?.userPhone || "09123456789",
   };
   const updatedUser = {
     ...state.user,
+    ...(user ? user : {}),
     ...(name ? { fullName: name, firstName: name.split(" ")[0] } : {}),
   };
   const updatedState = { ...state, auth: updatedAuth, user: updatedUser };

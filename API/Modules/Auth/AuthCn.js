@@ -93,7 +93,7 @@ export const loginWithPassword = catchAsync(async (req, res, next) => {
 });
 
 export const loginWithOtp = catchAsync(async (req, res, next) => {
-  const { phoneNumber, code, password } = req.body;
+  const { phoneNumber, code, password, fullName } = req.body;
   const cleanPhone = normalizePersianDigits(phoneNumber).trim();
   const cleanCode = normalizePersianDigits(code).trim();
 
@@ -107,13 +107,22 @@ export const loginWithOtp = catchAsync(async (req, res, next) => {
 
   if (!user) {
     let userData = { phoneNumber: cleanPhone };
+    if (fullName) userData.fullName = fullName.trim();
     if (password) {
       userData.password = await bcryptjs.hash(password, 12);
     }
     user = await User.create(userData);
   } else {
+    let modified = false;
+    if (fullName && !user.fullName) {
+      user.fullName = fullName.trim();
+      modified = true;
+    }
     if (password) {
       user.password = await bcryptjs.hash(password, 12);
+      modified = true;
+    }
+    if (modified) {
       await user.save();
     }
   }

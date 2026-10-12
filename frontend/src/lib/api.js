@@ -11,6 +11,13 @@ export async function apiRequest(endpoint, options = {}) {
     Accept: "application/json",
   };
 
+  if (typeof window !== "undefined") {
+    const token = localStorage.getItem("rokad_token");
+    if (token) {
+      defaultHeaders["Authorization"] = `Bearer ${token}`;
+    }
+  }
+
   const config = {
     ...options,
     headers: {
