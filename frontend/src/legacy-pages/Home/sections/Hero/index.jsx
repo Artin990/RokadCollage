@@ -1,5 +1,6 @@
 import { ArrowIcon, ChevronLeftIcon } from "@/common/Icons";
 import PatternLayer from "@/components/PatternLayer";
+import Link from "next/link";
 
 /* ---- Course list items ---- */
 const courses = [
@@ -47,10 +48,10 @@ export default function Hero() {
           </p>
 
           <div className="hero-v5-actions">
-            <a href="#courses-index" className="hero-v5-btn-primary">
+            <Link href="/courses" className="hero-v5-btn-primary">
               مشاهده دوره‌ها
               <ArrowIcon width={16} height={16} />
-            </a>
+            </Link>
             <a href="#consult" className="hero-v5-btn-ghost">
               مشاورهٔ رایگان
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" width={16} height={16}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -86,10 +87,10 @@ export default function Hero() {
               </a>
             ))}
 
-            <a href="#courses-index" className="hero-v5-all">
+            <Link href="/courses" className="hero-v5-all">
               مشاهدهٔ همه دوره‌ها
               <ArrowIcon width={14} height={14} />
-            </a>
+            </Link>
           </div>
         </div>
       </div>

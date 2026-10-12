@@ -4,8 +4,10 @@ import PatternLayer from "../../components/PatternLayer";
 import { getCourseBySlug } from "./courseData.js";
 import { getPanelStore, enrollInCourse, toggleWishlist } from "../../data/panelStore.js";
 import { isEnrolledIn, isWishlisted as checkWishlisted } from "../../data/selectors.js";
-import CheckoutModal from "../Checkout/CheckoutModal.jsx";
-import VideoPlayerModal from "../../components/VideoPlayerModal/index.jsx";
+import dynamic from "next/dynamic";
+
+const CheckoutModal = dynamic(() => import("../Checkout/CheckoutModal.jsx"), { ssr: false });
+const VideoPlayerModal = dynamic(() => import("../../components/VideoPlayerModal/index.jsx"), { ssr: false });
 import CourseSingleInPerson from "./CourseSingleInPerson.jsx";
 import CourseSingleNotFound from "./components/CourseSingleNotFound.jsx";
 import { CourseTopbar, CourseSidebar } from "./components/CourseSidebar.jsx";
