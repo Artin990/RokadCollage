@@ -13,7 +13,7 @@ export default function TeacherDropdown({
   if (!isOpen) return null;
 
   return (
-    <div className="absolute z-50 mt-1.5 w-full bg-surface border border-border rounded-2xl shadow-lg max-h-64 overflow-y-auto p-1.5 animate-fadeIn">
+    <div className="absolute z-50 mt-1.5 w-full bg-surface border border-border rounded-2xl shadow-lg max-h-64 overflow-y-auto overscroll-contain p-1.5 animate-fadeIn custom-scrollbar">
       {results.length > 0 ? (
         results.map((teacher) => {
           const isSelected = selectedIds.includes(teacher._id);

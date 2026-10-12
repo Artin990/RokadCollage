@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import axiosInstance from "../../Utils/axiosInstance";
+import { fetchTeachers, fetchTeacherById } from "../../Pages/Teacher/api/teacherApi";
 import Loading from "../Loading";
 import SelectedTeachersBadges from "./SelectedTeachersBadges";
 import TeacherDropdown from "./TeacherDropdown";
@@ -39,15 +39,14 @@ export default function TeacherSelect({
 
       try {
         const promises = selectedIds.map((id) =>
-          axiosInstance
-            .get(`teacher/${id}`)
+          fetchTeacherById(id)
             .then((res) => (res.data ? (Array.isArray(res.data) ? res.data[0] : res.data) : null))
             .catch(() => null)
         );
         const resolved = await Promise.all(promises);
         setSelectedDetails(resolved.filter(Boolean));
       } catch (err) {
-        console.error("Error fetching selected teachers:", err);
+        // Handled silently
       }
     };
 
@@ -60,17 +59,17 @@ export default function TeacherSelect({
     const timer = setTimeout(async () => {
       setLoading(true);
       try {
-        const endpoint = query.trim()
-          ? `teacher?q=${encodeURIComponent(query.trim())}&limit=10`
-          : `teacher?limit=10&sort=-_id`;
+        const params = query.trim()
+          ? { q: query.trim(), limit: 10 }
+          : { limit: 10, sort: "-_id" };
 
-        const res = await axiosInstance.get(endpoint);
+        const res = await fetchTeachers(params);
         if (active && res && res.success !== false) {
           const list = Array.isArray(res) ? res : res.data || [];
           setResults(list);
         }
       } catch (err) {
-        console.error("Error searching teachers:", err);
+        // Handled silently
       } finally {
         if (active) setLoading(false);
       }
@@ -124,8 +123,8 @@ export default function TeacherSelect({
   return (
     <div className="flex flex-col gap-2 w-full text-right" ref={dropdownRef}>
       {label && (
-        <div className="flex items-center justify-between">
-          <label className="text-xs md:text-sm font-semibold text-text-primary select-none">
+        <div className="flex flex-wrap items-center justify-between gap-1 select-none">
+          <label className="text-xs md:text-sm font-semibold text-text-primary">
             {label}
           </label>
           <span className="text-[11px] text-text-muted">
@@ -147,8 +146,8 @@ export default function TeacherSelect({
       {/* Search Input Box */}
       <div className="relative w-full">
         <div className="relative flex items-center">
-          <div className="absolute right-3.5 flex items-center pointer-events-none text-text-muted">
-            <SearchIcon fontSize="small" />
+          <div className="absolute start-3 flex items-center pointer-events-none text-text-muted">
+            <SearchIcon style={{ fontSize: "1.15rem" }} />
           </div>
 
           <input
@@ -159,20 +158,20 @@ export default function TeacherSelect({
               setIsOpen(true);
             }}
             onFocus={() => setIsOpen(true)}
-            placeholder="نام یا تخصص معلم را جستجو کنید..."
+            placeholder="جستجوی نام یا تخصص استاد..."
             className={`
-              w-full py-2.5 px-4 pr-10 rounded-xl text-sm bg-surface text-text-primary placeholder:text-text-muted
-              border transition-all duration-200 outline-none
+              w-full h-10 min-h-[40px] ps-10 pe-10 rounded-xl text-xs md:text-sm bg-surface text-text-primary placeholder:text-text-muted
+              border transition-all duration-200 outline-none truncate placeholder:truncate shadow-xs
               ${
                 error
-                  ? "border-error focus:border-error focus:ring-4 focus:ring-error/15"
-                  : "border-border hover:border-border-hover focus:border-primary focus:ring-4 focus:ring-primary/15"
+                  ? "border-error focus:border-error focus:ring-2 focus:ring-error/20"
+                  : "border-border hover:border-border-hover focus:border-primary focus:ring-2 focus:ring-primary/20"
               }
             `}
           />
 
           {loading && (
-            <div className="absolute left-3.5 flex items-center">
+            <div className="absolute end-3.5 flex items-center">
               <Loading size={6} />
             </div>
           )}

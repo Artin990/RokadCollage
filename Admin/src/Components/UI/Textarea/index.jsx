@@ -33,13 +33,13 @@ export const Textarea = forwardRef(
           name={name}
           rows={rows}
           className={`
-            w-full py-2.5 px-4 rounded-xl text-sm bg-white text-text-primary placeholder:text-text-muted
+            w-full py-2.5 px-4 rounded-xl text-sm bg-surface text-text-primary placeholder:text-text-muted
             border transition-all duration-200 outline-none resize-y
             disabled:bg-bg-subtle disabled:text-text-muted disabled:cursor-not-allowed
             ${
               error
-                ? "border-error focus:border-error focus:ring-4 focus:ring-error/15"
-                : "border-border hover:border-border-hover focus:border-primary focus:ring-4 focus:ring-primary/15"
+                ? "border-error focus:border-error focus:ring-2 focus:ring-error/20"
+                : "border-border hover:border-border-hover focus:border-primary focus:ring-2 focus:ring-primary/20"
             }
             ${className}
           `}

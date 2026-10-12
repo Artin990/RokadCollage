@@ -119,8 +119,8 @@ export const JalaliDatePicker = ({
         className="rokad-datepicker-theme"
         render={(formattedValue, openCalendar) => (
           <div className="relative flex items-center w-full">
-            {/* Calendar Icon on right */}
-            <div className="absolute right-3.5 flex items-center pointer-events-none text-text-muted z-10">
+            {/* Calendar Icon on start */}
+            <div className="absolute start-3.5 flex items-center pointer-events-none text-text-muted z-10">
               <CalendarIcon className="w-4 h-4 text-text-muted" />
             </div>
 
@@ -132,13 +132,13 @@ export const JalaliDatePicker = ({
               disabled={disabled}
               onClick={openCalendar}
               className={`
-                w-full min-h-[42px] py-2.5 pr-10 pl-10 rounded-xl text-sm bg-surface text-text-primary text-right transition-all duration-200 outline-none
+                w-full h-10 min-h-[40px] py-2 ps-10 pe-10 rounded-xl text-sm bg-surface text-text-primary text-right transition-all duration-200 outline-none
                 border cursor-pointer select-none flex items-center justify-between
                 disabled:bg-bg-subtle disabled:text-text-muted disabled:cursor-not-allowed
                 ${
                   error
-                    ? "border-error focus:border-error focus:ring-4 focus:ring-error/15"
-                    : "border-border hover:border-border-hover focus:border-primary focus:ring-4 focus:ring-primary/15"
+                    ? "border-error focus:border-error focus:ring-2 focus:ring-error/20"
+                    : "border-border hover:border-border-hover focus:border-primary focus:ring-2 focus:ring-primary/20"
                 }
               `}
             >
@@ -151,9 +151,9 @@ export const JalaliDatePicker = ({
               </span>
             </button>
 
-            {/* Clear Button on left */}
+            {/* Clear Button on end */}
             {formattedValue && !disabled && (
-              <div className="absolute left-3 flex items-center gap-1.5 z-10">
+              <div className="absolute end-3 flex items-center gap-1.5 z-10">
                 <button
                   type="button"
                   onClick={handleClear}

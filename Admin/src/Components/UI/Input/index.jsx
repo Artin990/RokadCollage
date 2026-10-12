@@ -30,7 +30,7 @@ export const Input = forwardRef(
 
         <div className="relative flex items-center w-full">
           {icon && (
-            <div className="absolute right-3.5 flex items-center pointer-events-none text-text-muted">
+            <div className="absolute start-3.5 flex items-center pointer-events-none text-text-muted">
               {icon}
             </div>
           )}
@@ -41,14 +41,14 @@ export const Input = forwardRef(
             name={name}
             dir={dir}
             className={`
-              w-full min-h-[42px] py-2.5 px-4 rounded-xl text-sm bg-white text-text-primary placeholder:text-text-muted
+              w-full h-10 min-h-[40px] py-2 px-3.5 rounded-xl text-sm bg-surface text-text-primary placeholder:text-text-muted
               border transition-all duration-200 outline-none
               disabled:bg-bg-subtle disabled:text-text-muted disabled:cursor-not-allowed
-              ${icon ? "pr-10" : "pr-4"}
+              ${icon ? "ps-10" : "ps-3.5"} pe-3.5
               ${
                 error
-                  ? "border-error focus:border-error focus:ring-4 focus:ring-error/15"
-                  : "border-border hover:border-border-hover focus:border-primary focus:ring-4 focus:ring-primary/15"
+                  ? "border-error focus:border-error focus:ring-2 focus:ring-error/20"
+                  : "border-border hover:border-border-hover focus:border-primary focus:ring-2 focus:ring-primary/20"
               }
               ${className}
             `}

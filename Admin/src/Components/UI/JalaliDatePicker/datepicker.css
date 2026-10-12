@@ -71,21 +71,21 @@
 
 .rokad-datepicker-theme .rmdp-day.rmdp-selected span:not(.highlight) {
   background-color: var(--color-primary) !important;
-  color: var(--color-white) !important;
+  color: var(--color-on-primary) !important;
   box-shadow: 0 3px 10px var(--color-primary-subtle) !important;
   font-weight: 700 !important;
 }
 
 .rokad-datepicker-theme .rmdp-day.rmdp-today span {
   border: 1.5px solid var(--color-primary) !important;
-  color: var(--color-primary) !important;
+  color: var(--color-primary-text) !important;
   background-color: transparent !important;
   font-weight: 700 !important;
 }
 
 .rokad-datepicker-theme .rmdp-day.rmdp-today.rmdp-selected span {
   background-color: var(--color-primary) !important;
-  color: var(--color-white) !important;
+  color: var(--color-on-primary) !important;
 }
 
 /* Time Picker Section */
@@ -168,7 +168,7 @@
 .rokad-datepicker-theme .rmdp-toolbar div {
   background-color: var(--color-primary) !important;
   border-radius: 0.65rem !important;
-  color: var(--color-white) !important;
+  color: var(--color-on-primary) !important;
   font-weight: 700 !important;
   font-size: 0.75rem !important;
   padding: 5px 12px !important;

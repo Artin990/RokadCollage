@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="rokadGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F8A41D" />
+      <stop offset="100%" stop-color="#E08F12" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="#1b234d" />
+  <rect x="3" y="3" width="58" height="58" rx="13" fill="none" stroke="#F8A41D" stroke-opacity="0.3" stroke-width="1.5" />
+  <!-- Stylized Academic Cap / Rokad Emblem -->
+  <path d="M32 16 L50 25 L32 34 L14 25 Z" fill="url(#rokadGrad)" />
+  <path d="M22 30.5 V42 C22 45 32 48 32 48 C32 48 42 45 42 42 V30.5" fill="none" stroke="url(#rokadGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  <circle cx="50" cy="27" r="2" fill="#F8A41D" />
+  <path d="M50 29 V38" stroke="#F8A41D" stroke-width="2" stroke-linecap="round" />
+</svg>
