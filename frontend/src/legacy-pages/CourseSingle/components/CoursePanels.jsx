@@ -25,19 +25,43 @@ export const PlayGlyph = ({ size = 22 }) => (
 );
 
 export function CurriculumPanel({ course, openChapter, setOpenChapter, onLessonPlay, isEnrolled }) {
+  const chapters = Array.isArray(course.chapters) && course.chapters.length > 0
+    ? course.chapters
+    : Array.isArray(course.sprints) && course.sprints.length > 0
+    ? course.sprints.map((sp, idx) => ({
+        n: `۰${idx + 1}`,
+        title: sp.title,
+        sub: `بخش تخصصی ${idx + 1}`,
+        dur: course.duration || "۴ ساعت",
+        lessons: [
+          { t: sp.description || sp.title, free: idx === 0, time: "۴۵ دقیقه" }
+        ],
+      }))
+    : [
+        {
+          n: "۰۱",
+          title: "مقدمه و نقشه راه دوره",
+          sub: "آشنایی با مفاهیم و سرفصل‌ها",
+          dur: "۲ ساعت",
+          lessons: [{ t: "آشنایی با دوره و نحوه کار با پلیر", free: true, time: "۲۰ دقیقه" }],
+        },
+      ];
+
+  const totalLessons = chapters.reduce((acc, ch) => acc + (ch.lessons?.length || 0), 0);
+
   return (
     <div className="cs-curriculum">
       <div className="cs-progress">
-        <b>۱۲ فصل · ۴۸ درس · ۳۲ ساعت</b>
-        <div className="bar"><span /></div>
-        <b>{course.progressLabel}</b>
+        <b>{chapters.length} سرفصل · {totalLessons} جلسه · {course.duration || "آموزش کامل"}</b>
+        <div className="bar"><span style={{ width: "100%" }} /></div>
+        <b>{course.progressLabel || "آماده شروع"}</b>
       </div>
 
       <div className="cs-chapters">
-        {course.chapters.map((ch, i) => {
+        {chapters.map((ch, i) => {
           const open = openChapter === i;
           return (
-            <div key={ch.n} className={`cs-ch${open ? " open" : ""}`}>
+            <div key={ch.n || i} className={`cs-ch${open ? " open" : ""}`}>
               <button className="cs-ch-head" onClick={() => setOpenChapter(open ? -1 : i)} aria-expanded={open}>
                 <span className="num">{ch.n}</span>
                 <span className="info">
@@ -48,13 +72,13 @@ export function CurriculumPanel({ course, openChapter, setOpenChapter, onLessonP
                 <span className="chev"><Chevron open={open} /></span>
               </button>
 
-              {ch.lessons.length > 0 && (
+              {ch.lessons?.length > 0 && (
                 <div className={`cs-lessons${open ? " open" : ""}`}>
-                  {ch.lessons.map((l) => {
+                  {ch.lessons.map((l, lIdx) => {
                     const canPlay = l.free || isEnrolled;
                     return (
                       <div
-                        key={l.t}
+                        key={lIdx}
                         className={`cs-lesson${canPlay ? " free" : " locked"}`}
                         onClick={() => onLessonPlay(l)}
                         style={{ cursor: "pointer" }}
@@ -86,11 +110,23 @@ export function CurriculumPanel({ course, openChapter, setOpenChapter, onLessonP
 }
 
 export function ReviewsPanel({ course }) {
+  const reviews = Array.isArray(course.reviews) && course.reviews.length > 0
+    ? course.reviews
+    : [
+        {
+          name: "دانشجوی کالج رکاد",
+          avatar: "ر",
+          date: "به‌تازگی",
+          rating: 5,
+          text: "کیفیت سرفصل‌ها و توضیحات استاد بسیار عالی و کاملاً کاربردی برای بازار کار بود.",
+        },
+      ];
+
   return (
     <div className="cs-panel-body">
       <div className="cs-reviews">
-        {course.reviews.map((r) => (
-          <div className="cs-review" key={r.name}>
+        {reviews.map((r, idx) => (
+          <div className="cs-review" key={idx}>
             <div className="cs-review-head">
               <span className="cs-review-av">{r.avatar}</span>
               <div className="cs-review-who">
@@ -112,11 +148,20 @@ export function ReviewsPanel({ course }) {
 }
 
 export function QaPanel({ course }) {
+  const qaList = Array.isArray(course.qa) && course.qa.length > 0
+    ? course.qa
+    : [
+        {
+          q: "نحوه دسترسی به فایل‌های دوره و لایسنس اسپات‌پلیر چگونه است؟",
+          a: "بلافاصله پس از ثبت‌نام، کلید لایسنس اختصاصی در پنل کاربری شما نمایش داده شده و به صورت مادام‌العمر در دسترس است.",
+        },
+      ];
+
   return (
     <div className="cs-panel-body">
       <div className="cs-qa">
-        {course.qa.map((item) => (
-          <div className="cs-qa-item" key={item.q}>
+        {qaList.map((item, idx) => (
+          <div className="cs-qa-item" key={idx}>
             <b>{item.q}</b>
             <p>{item.a}</p>
           </div>
@@ -127,9 +172,11 @@ export function QaPanel({ course }) {
 }
 
 export function DescriptionPanel({ course }) {
-  const paragraphs = Array.isArray(course.description) && course.description.length > 0
+  const descText = typeof course.description === "string"
     ? course.description
-    : (course.lede ? [course.lede] : []);
+    : Array.isArray(course.description)
+    ? course.description.join("\n\n")
+    : course.lede || "دوره آموزشی تخصصی و مهارت‌محور کالج رکاد.";
 
   return (
     <div className="cs-panel-body cs-desc-panel">
@@ -138,14 +185,9 @@ export function DescriptionPanel({ course }) {
           <p className="cs-desc-lead">{course.lede}</p>
         </div>
       )}
-
-      {paragraphs.length > 0 && (
-        <div className="cs-desc-content">
-          {paragraphs.map((p, i) => (
-            <p key={i}>{p}</p>
-          ))}
-        </div>
-      )}
+      <div className="cs-desc-paragraphs">
+        <p style={{ lineHeight: "1.8", whiteSpace: "pre-line" }}>{descText}</p>
+      </div>
     </div>
   );
 }

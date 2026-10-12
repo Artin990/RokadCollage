@@ -96,20 +96,40 @@ export function CourseSidebar({
         <div className="cs-divider" />
 
         <div className="cs-facts">
-          {course.facts.map((f) => (
-            <div className="f" key={f.k}>
-              <div className="k">{f.k}</div>
-              <div className="v">{f.v}</div>
-            </div>
-          ))}
+          <div className="f">
+            <div className="k">مدت زمان</div>
+            <div className="v">{course.duration || "۳۲ ساعت"}</div>
+          </div>
+          <div className="f">
+            <div className="k">دسته‌بندی</div>
+            <div className="v">{course.category || "فناوری اطلاعات"}</div>
+          </div>
+          <div className="f">
+            <div className="k">سطح دوره</div>
+            <div className="v">مقدماتی تا پیشرفته</div>
+          </div>
+          <div className="f">
+            <div className="k">نوع دوره</div>
+            <div className="v">{course.type || "آنلاین با اسپات پلیر"}</div>
+          </div>
+          <div className="f">
+            <div className="k">دسترسی</div>
+            <div className="v">مادام‌العمر</div>
+          </div>
+          <div className="f">
+            <div className="k">زبان</div>
+            <div className="v">فارسی</div>
+          </div>
         </div>
       </div>
 
       <div className="cs-instr">
-        <span className="av">{course.teacher.initial}</span>
+        <span className="av">
+          {((Array.isArray(course.teachers) && course.teachers[0]?.name) || course.teacher?.name || "استاد").slice(0, 2)}
+        </span>
         <span className="who">
-          <b>{course.teacher.name}</b>
-          <small>{course.teacher.role}</small>
+          <b>{(Array.isArray(course.teachers) && course.teachers[0]?.name) || course.teacher?.name || "استاد کالج رکاد"}</b>
+          <small>{(Array.isArray(course.teachers) && course.teachers[0]?.role) || course.teacher?.role || "مدرس رسمی دوره"}</small>
         </span>
       </div>
     </aside>
