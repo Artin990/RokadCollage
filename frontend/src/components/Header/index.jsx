@@ -1,16 +1,19 @@
 import { useState, useEffect, useRef, useMemo } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import Logo from "../Logo.jsx";
 import { getPanelStore } from "../../data/panelStore.js";
 import { getUnreadNotificationsCount, getUserProfile } from "../../data/selectors.js";
-import { searchableData, matchItem } from "./searchData.jsx";
+import { matchItem } from "./searchData.jsx";
 import SearchOverlay from "./components/SearchOverlay.jsx";
 import MobileDrawer from "./components/MobileDrawer.jsx";
 import HeaderAuthButtons from "./components/HeaderAuthButtons.jsx";
+import { getAllCourses } from "@/services/courseService.js";
+import { getBlogs } from "@/services/blogService.js";
 
 export default function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -18,8 +21,47 @@ export default function Header() {
   const [active, setActive] = useState(0);
   const [scrolled, setScrolled] = useState(false);
   const [store, setStore] = useState(getPanelStore);
+  const [liveItems, setLiveItems] = useState([]);
   const searchRef = useRef(null);
   const searchInputRef = useRef(null);
+
+  useEffect(() => {
+    async function fetchSearchItems() {
+      try {
+        const [courses, blogs] = await Promise.all([
+          getAllCourses().catch(() => []),
+          getBlogs().catch(() => []),
+        ]);
+        const courseHits = (Array.isArray(courses) ? courses : []).map((c) => ({
+          section: "دوره‌ها",
+          title: c.title,
+          text: c.description || c.category || "دوره تخصصی کالج رکاد",
+          link: `/courses/${c.slug || c._id || c.id}`,
+          slug: c.slug || c._id || c.id,
+          tags: `${c.title} ${c.category || ""} ${(c.tags || []).join(" ")}`,
+          image: c.img || "/assets/StatCard/blue.png",
+        }));
+        const blogHits = (Array.isArray(blogs) ? blogs : []).map((b) => ({
+          section: "وبلاگ",
+          title: b.title,
+          text: b.description || "مقاله آموزشی کالج رکاد",
+          link: `/blog/${b.slug || b._id || b.id}`,
+          slug: b.slug || b._id || b.id,
+          tags: `${b.title} ${b.category || ""}`,
+          image: b.img || "/assets/StatCard/green.png",
+        }));
+        const depts = [
+          { section: "دپارتمان‌ها", title: "دپارتمان فناوری اطلاعات (IT)", text: "مسیرهای تخصصی وب، برنامه‌نویسی و سئو", link: "/dept/it", tags: "دپارتمان it وب برنامه‌نویسی", image: "/assets/StatCard/blue.png" },
+          { section: "دپارتمان‌ها", title: "دپارتمان کسب و کار", text: "مهارت‌های نوین کسب‌وکار و مدیریت", link: "/dept/business", tags: "دپارتمان کسب و کار مارکتینگ مدیریت", image: "/assets/StatCard/yellow.png" },
+          { section: "دپارتمان‌ها", title: "دپارتمان زبان‌های خارجی", text: "انگلیسی، آیلتس و مکالمه", link: "/dept/languages", tags: "دپارتمان زبان خارجی آیلتس انگلیسی", image: "/assets/StatCard/green.png" },
+        ];
+        setLiveItems([...courseHits, ...blogHits, ...depts]);
+      } catch (err) {
+        console.error("Failed to load search data:", err);
+      }
+    }
+    fetchSearchItems();
+  }, []);
 
   useEffect(() => {
     const t = setTimeout(() => setDebouncedQuery(query), 160);
@@ -53,8 +95,8 @@ export default function Header() {
 
   const results = useMemo(() => {
     if (!debouncedQuery.trim()) return [];
-    return searchableData.filter((item) => matchItem(item, debouncedQuery));
-  }, [debouncedQuery]);
+    return liveItems.filter((item) => matchItem(item, debouncedQuery));
+  }, [debouncedQuery, liveItems]);
 
   const grouped = useMemo(() => {
     const map = {};
@@ -68,8 +110,14 @@ export default function Header() {
   const handleResultClick = (link) => {
     setSearchOpen(false);
     setQuery("");
-    if (link.startsWith("#")) {
-      window.location.hash = link.slice(1);
+    if (link) {
+      if (link.startsWith("/")) {
+        router.push(link);
+      } else if (link.startsWith("#")) {
+        window.location.hash = link.slice(1);
+      } else {
+        router.push(link);
+      }
     }
   };
 
@@ -181,6 +229,7 @@ export default function Header() {
         searchInputRef={searchInputRef}
         handleResultClick={handleResultClick}
         store={store}
+        liveItems={liveItems}
       />
 
       <MobileDrawer

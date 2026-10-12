@@ -13,6 +13,7 @@ export default function SearchOverlay({
   searchInputRef,
   handleResultClick,
   store,
+  liveItems = [],
 }) {
   return (
     <>
@@ -137,7 +138,7 @@ export default function SearchOverlay({
               >
                 پیشنهادهای برتر کالج رکاد
               </div>
-              {searchableData.slice(0, 4).map((item) => (
+              {(liveItems.length > 0 ? liveItems : searchableData).slice(0, 4).map((item) => (
                 <SearchHitCard
                   key={item.title}
                   item={item}
