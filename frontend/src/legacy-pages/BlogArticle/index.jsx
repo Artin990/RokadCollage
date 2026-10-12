@@ -16,11 +16,30 @@ const toneGrad = (t) =>
 
 const H2_COLORS = ["var(--college)", "var(--navy)", "var(--accent)"];
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Link from "next/link";
 import { Check } from "lucide-react";
+import { getBlogBySlugOrId } from "@/services/blogService.js";
 
-export default function BlogArticle() {
+export default function BlogArticle({ slug }) {
   const [copied, setCopied] = useState(false);
+  const [article, setArticle] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchArticle() {
+      if (!slug) return;
+      try {
+        const data = await getBlogBySlugOrId(slug);
+        setArticle(data);
+      } catch (err) {
+        console.error("Failed to load blog article:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchArticle();
+  }, [slug]);
 
   const scrollTo = (id) => (e) => {
     e.preventDefault();
@@ -65,16 +84,23 @@ export default function BlogArticle() {
     return <p className="rbs-p" key={i}>{b.text}</p>;
   };
 
+  const displayTitle = article?.title || post.titleWords.map((w) => w.t).join(" ");
+  const displayCategory = article?.category || post.tags[0] || "آموزش";
+  const displayAuthorName = article?.author?.fullName || article?.author?.name || post.author.name;
+  const displayAuthorRole = article?.author?.role || post.author.role;
+  const displayDate = article?.createdAt ? new Date(article.createdAt).toLocaleDateString("fa-IR") : post.meta[1];
+  const displayReadTime = article?.readTime ? `${article.readTime} دقیقه` : post.meta[0];
+
   return (
     <section className="rbs-page">
       <div className="container">
         {/* بریدکرامب */}
         <nav className="rbs-crumb" aria-label="مسیر">
-          <a href="#/">خانه</a>
+          <Link href="/">خانه</Link>
           <span className="sep">/</span>
-          <a href="#blog-index">مجله</a>
+          <Link href="/blog">مجله</Link>
           <span className="sep">/</span>
-          <span className="cur">{post.titleWords.map((w) => w.t).join(" ")}</span>
+          <span className="cur">{displayTitle}</span>
         </nav>
 
         {/* گرید اصلی: مقاله + سایدبار */}
@@ -83,49 +109,48 @@ export default function BlogArticle() {
           <article className="rbs-article">
             {/* تگ‌ها */}
             <div className="rbs-tags">
-              {post.tags.map((t, i) => (
-                <span
-                  key={i}
-                  className={`rbs-tag ${i === 0 ? "filled-amber" : i === 1 ? "filled-navy" : "ghost"}`}
-                >
-                  {t}
-                </span>
+              <span className="rbs-tag filled-amber">{displayCategory}</span>
+              {article?.tags?.map((t, i) => (
+                <span key={i} className="rbs-tag ghost">{t}</span>
               ))}
             </div>
 
-            {/* تیتر کلمه‌ای چرخان */}
-            <h1 className="rbs-title">
-              {post.titleWords.map((w, i) => (
-                <span
-                  key={i}
-                  className={`w ${i % 2 === 0 ? "even" : "odd"} ${w.accent || ""}`}
-                >
-                  {w.t}
-                </span>
-              ))}
+            {/* تیتر مقاله */}
+            <h1 className="rbs-title" style={{ fontSize: "2rem", lineHeight: "1.4" }}>
+              {displayTitle}
             </h1>
 
             {/* متا */}
             <div className="rbs-meta">
-              {post.meta.map((m, i) => (
-                <span className="rbs-meta-item" key={i}>
-                  {i > 0 && (
-                    <span className="dot" style={{ color: i % 2 ? "var(--accent)" : "var(--college)" }}>●</span>
-                  )}
-                  {m}
-                </span>
-              ))}
+              <span className="rbs-meta-item">{displayReadTime}</span>
+              <span className="rbs-meta-item">
+                <span className="dot" style={{ color: "var(--accent)" }}>●</span>
+                {displayDate}
+              </span>
+              <span className="rbs-meta-item">
+                <span className="dot" style={{ color: "var(--college)" }}>●</span>
+                {displayAuthorName}
+              </span>
             </div>
 
             {/* کاور */}
             <div className="rbs-cover">
               <div className="rbs-cover-card" style={{ background: AMBER_GRAD }}>
-                <span className="rbs-cover-cap">{post.coverCaption}</span>
+                <span className="rbs-cover-cap">{article?.headline || post.coverCaption}</span>
               </div>
             </div>
 
             {/* بدنه */}
-            <div className="rbs-prose">{blocks.map(renderBlock)}</div>
+            <div className="rbs-prose">
+              {article?.content ? (
+                <div
+                  className="article-dynamic-html"
+                  dangerouslySetInnerHTML={{ __html: article.content }}
+                />
+              ) : (
+                blocks.map(renderBlock)
+              )}
+            </div>
 
             {/* نویسنده پایین مقاله */}
             <div className="rbs-author">

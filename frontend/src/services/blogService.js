@@ -23,3 +23,33 @@ export async function getBlogById(id) {
   const res = await apiRequest(`/blogs/${id}`);
   return res?.data || res;
 }
+
+/**
+ * دریافت مقاله با اسلاگ یا شناسه با جستجو در مقالات
+ */
+export async function getBlogBySlugOrId(identifier) {
+  if (!identifier) return null;
+  // If it's a valid 24-character MongoDB ObjectId, fetch directly
+  if (/^[0-9a-fA-F]{24}$/.test(identifier)) {
+    const direct = await getBlogById(identifier).catch(() => null);
+    if (direct) return direct;
+  }
+
+  // Otherwise search in blog collection
+  const all = await getBlogs({ limit: 50 }).catch(() => []);
+  const list = Array.isArray(all) ? all : all.data || [];
+  const clean = String(identifier).trim().toLowerCase();
+  const match = list.find(
+    (b) =>
+      b.slug === clean ||
+      b.id === clean ||
+      b._id === clean ||
+      (b.title && b.title.toLowerCase().includes(clean))
+  );
+
+  if (match) {
+    const full = await getBlogById(match._id || match.id).catch(() => null);
+    return full || match;
+  }
+  return null;
+}
