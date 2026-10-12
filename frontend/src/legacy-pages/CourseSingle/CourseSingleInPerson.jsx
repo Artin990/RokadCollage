@@ -57,27 +57,12 @@ export default function CourseSingleInPerson({ course, slug }) {
   const liveSprints = Array.isArray(course.sprints) && course.sprints.length > 0
     ? course.sprints.map((s, idx) => ({
         n: `۰${idx + 1}`,
-        weeks: `بخش ${idx + 1}`,
+        weeks: s.weeks || `بخش ${idx + 1}`,
         title: s.title || `اسپرینت ${idx + 1}`,
         desc: s.description || "تمرین و پیاده‌سازی گام‌به‌گام در محیط کارگاهی",
         output: s.output || "پروژه و تحویل تمرین عملی",
       }))
-    : [
-        {
-          n: "۰۱",
-          weeks: "هفته ۱ و ۲",
-          title: "راه‌اندازی محیط کار تیمی و استانداردهای توسعه",
-          desc: "پیکربندی ورک‌استیشن، گیت تیمی و پیاده‌سازی نخستین تسک کارگاهی.",
-          output: "ریپازیتوری تیمی استاندارد",
-        },
-        {
-          n: "۰۲",
-          weeks: "هفته ۳ تا ۵",
-          title: "معماری عمیق، حل چالش‌های واقعی و کد ریویو زنده",
-          desc: "پیاده‌سازی معماری ماژولار و بررسی خط‌به‌خط پروژه‌ها.",
-          output: "پیاده‌سازی هسته عملیاتی پروژه",
-        },
-      ];
+    : [];
 
   const firstTeacher = Array.isArray(course.teachers) && course.teachers.length > 0 ? course.teachers[0] : course.teacher;
   const teacher = {
@@ -144,12 +129,14 @@ export default function CourseSingleInPerson({ course, slug }) {
       <div className="container">
         <div className="cs-ip-sections-stack">
           <InPersonAbout course={course} />
-          <InPersonSprints
-            sprints={liveSprints}
-            schedule={schedule}
-            openSprint={openSprint}
-            setOpenSprint={setOpenSprint}
-          />
+          {liveSprints.length > 0 && (
+            <InPersonSprints
+              sprints={liveSprints}
+              schedule={schedule}
+              openSprint={openSprint}
+              setOpenSprint={setOpenSprint}
+            />
+          )}
           <InPersonVenue
             venue={venue}
             cleanDays={schedule.days}

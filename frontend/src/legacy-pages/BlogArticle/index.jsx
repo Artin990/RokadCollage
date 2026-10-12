@@ -3,7 +3,10 @@
    دیزاین و محتوا: دقیقاً «BlogSingle» سایت رکاد وب
    («چطور یک نوجوان را عاشق کد کنیم؟») با رنگ‌بندی کالج
    ============================================================ */
-import { post, blocks, related } from "../../data/blogSingle.js";
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { Check } from "lucide-react";
+import { getBlogBySlugOrId, getBlogs } from "@/services/blogService.js";
 
 /* رنگ‌های پالت کالج */
 const AMBER_GRAD = "linear-gradient(135deg, #ffd44d 0%, var(--college) 55%, var(--college-dark) 100%)";
@@ -15,11 +18,6 @@ const toneGrad = (t) =>
       : "linear-gradient(135deg, var(--navy) 0%, var(--navy-hover) 100%)";
 
 const H2_COLORS = ["var(--college)", "var(--navy)", "var(--accent)"];
-
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { Check } from "lucide-react";
-import { getBlogBySlugOrId, getBlogs } from "@/services/blogService.js";
 
 export default function BlogArticle({ slug }) {
   const [copied, setCopied] = useState(false);
@@ -81,40 +79,31 @@ export default function BlogArticle({ slug }) {
     }
   };
 
-  const renderBlock = (b, i) => {
-    if (b.type === "h2") {
-      const n = parseInt(String(b.id || "s0").replace(/\D/g, ""), 10) || 0;
-      const hc = H2_COLORS[n % 3];
-      return (
-        <h2 className="rbs-h2" id={b.id} key={i} style={{ color: hc }}>
-          <span className="bar" style={{ background: hc }} />
-          {b.text}
-        </h2>
-      );
-    }
-    if (b.type === "quote")
-      return (
-        <figure className="rbs-quote" key={i}>
-          <span className="mark">&ldquo;</span>
-          <blockquote>{b.text}</blockquote>
-        </figure>
-      );
-    if (b.type === "info")
-      return (
-        <div className="rbs-info" key={i}>
-          <div className="rbs-info-label">{b.label}</div>
-          <div className="rbs-info-text">{b.text}</div>
-        </div>
-      );
-    return <p className="rbs-p" key={i}>{b.text}</p>;
-  };
+  if (loading) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center font-['IRANSansX'] text-stone-500 font-medium">
+        در حال بارگذاری مقاله...
+      </div>
+    );
+  }
 
-  const displayTitle = article?.title || post.titleWords.map((w) => w.t).join(" ");
-  const displayCategory = article?.category || post.tags[0] || "آموزش";
-  const displayAuthorName = article?.author?.fullName || article?.author?.name || post.author.name;
-  const displayAuthorRole = article?.author?.role || post.author.role;
-  const displayDate = article?.createdAt ? new Date(article.createdAt).toLocaleDateString("fa-IR") : post.meta[1];
-  const displayReadTime = article?.readTime ? `${article.readTime} دقیقه` : post.meta[0];
+  if (!article) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center font-['IRANSansX'] text-stone-500 gap-4">
+        <h2 className="text-xl font-bold">مقاله مورد نظر یافت نشد.</h2>
+        <Link href="/blog" className="px-4 py-2 bg-stone-900 text-white rounded-lg text-sm">
+          بازگشت به مقالات
+        </Link>
+      </div>
+    );
+  }
+
+  const displayTitle = article.title;
+  const displayCategory = article.category || "آموزش";
+  const displayAuthorName = article.author?.fullName || article.author?.name || "تحریریه کالج رکاد";
+  const displayAuthorRole = article.author?.role || "مدرس و نویسنده کالج";
+  const displayDate = article.createdAt ? new Date(article.createdAt).toLocaleDateString("fa-IR") : "به‌تازگی";
+  const displayReadTime = article.readTime || "۵ دقیقه";
 
   return (
     <section className="rbs-page">
@@ -161,7 +150,7 @@ export default function BlogArticle({ slug }) {
             {/* کاور */}
             <div className="rbs-cover">
               <div className="rbs-cover-card" style={{ background: AMBER_GRAD }}>
-                <span className="rbs-cover-cap">{article?.headline || post.coverCaption}</span>
+                <span className="rbs-cover-cap">{article?.headline || article?.title}</span>
               </div>
             </div>
 
@@ -173,7 +162,7 @@ export default function BlogArticle({ slug }) {
                   dangerouslySetInnerHTML={{ __html: article.content }}
                 />
               ) : (
-                blocks.map(renderBlock)
+                <p className="rbs-p">{article.description}</p>
               )}
             </div>
 

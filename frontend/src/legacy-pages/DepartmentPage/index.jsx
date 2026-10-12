@@ -15,6 +15,7 @@ import DepartmentCtaSection from "./components/DepartmentCtaSection.jsx";
 import DepartmentFab from "./components/DepartmentFab.jsx";
 
 import { getAllCourses } from "@/services/courseService.js";
+import { getComments } from "@/services/commentService.js";
 
 const INITIAL_COUNT = 6;
 
@@ -27,25 +28,26 @@ const DEPT_CATEGORY_MAP = {
 export default function DepartmentPage({ deptId, initialCourses = [] }) {
   const [store, setStore] = useState(getPanelStore);
   const [liveCourses, setLiveCourses] = useState(initialCourses);
+  const [liveComments, setLiveComments] = useState([]);
   const [loading, setLoading] = useState(initialCourses.length === 0);
 
   useEffect(() => {
-    if (initialCourses && initialCourses.length > 0) {
-      setLiveCourses(initialCourses);
-      setLoading(false);
-      return;
-    }
-    async function loadDeptCourses() {
+    async function loadDeptData() {
       try {
-        const all = await getAllCourses();
-        setLiveCourses(Array.isArray(all) ? all : []);
+        const [coursesRes, commentsRes] = await Promise.all([
+          initialCourses && initialCourses.length > 0 ? Promise.resolve(initialCourses) : getAllCourses().catch(() => []),
+          getComments().catch(() => []),
+        ]);
+        setLiveCourses(Array.isArray(coursesRes) ? coursesRes : []);
+        const commList = Array.isArray(commentsRes) ? commentsRes : (commentsRes?.data || []);
+        setLiveComments(commList);
       } catch (err) {
-        console.error("Failed to load department courses:", err);
+        console.error("Failed to load department data:", err);
       } finally {
         setLoading(false);
       }
     }
-    loadDeptCourses();
+    loadDeptData();
   }, [initialCourses]);
 
   useEffect(() => {
@@ -92,14 +94,33 @@ export default function DepartmentPage({ deptId, initialCourses = [] }) {
     };
   });
 
+  const deptTestimonials = useMemo(() => {
+    if (!liveComments || liveComments.length === 0) return [];
+    const matching = liveComments.filter((c) => {
+      const cat = c.course?.category;
+      if (!cat) return true;
+      if (currentId === "it") return cat.includes("اطلاعات") || cat.includes("فرانتاند") || cat.includes("بکاند");
+      if (currentId === "business") return cat.includes("کسب");
+      if (currentId === "languages") return cat.includes("زبان");
+      return true;
+    });
+    const source = matching.length > 0 ? matching : liveComments;
+    return source.map((c) => ({
+      name: c.name,
+      role: c.role || c.job || "هنرجوی دوره",
+      text: c.comment,
+    }));
+  }, [liveComments, currentId]);
+
   const dept = useMemo(() => {
     return {
       ...baseDept,
       popular: formattedDeptCourses,
       newest: formattedDeptCourses,
       suggested: formattedDeptCourses.slice(0, 4),
+      testimonials: deptTestimonials.length > 0 ? deptTestimonials : (baseDept.testimonials || []),
     };
-  }, [baseDept, formattedDeptCourses]);
+  }, [baseDept, formattedDeptCourses, deptTestimonials]);
 
   const [tab, setTab] = useState("popular");
   const [selectedTopic, setSelectedTopic] = useState(null);

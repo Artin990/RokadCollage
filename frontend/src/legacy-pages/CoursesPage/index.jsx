@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import "./courses-hub.css";
 import { getPanelStore } from "@/data/panelStore.js";
 import { getAllCourses } from "@/services/courseService.js";
+import { getTeachers } from "@/services/teacherService.js";
 import { useHorizontalDragScroll } from "./hooks/useHorizontalDragScroll.js";
 import CoursesHubHero from "./components/CoursesHubHero.jsx";
 import FlagshipSection from "./components/FlagshipSection.jsx";
 import SuggestedGroupSection from "./components/SuggestedGroupSection.jsx";
 import InstructorsSection from "./components/InstructorsSection.jsx";
-import { TOP_INSTRUCTORS } from "./data/instructorsData.js";
 import { Code, Briefcase, Globe } from "lucide-react";
 
 const DEPT_CONFIG = {
@@ -46,21 +46,26 @@ const DEPT_CONFIG = {
 export default function CoursesPage() {
   const [store, setStore] = useState(getPanelStore);
   const [courses, setCourses] = useState([]);
+  const [instructors, setInstructors] = useState([]);
   const [loading, setLoading] = useState(true);
   const instScroll = useHorizontalDragScroll();
 
   useEffect(() => {
-    async function fetchCourses() {
+    async function fetchData() {
       try {
-        const data = await getAllCourses();
-        setCourses(Array.isArray(data) ? data : []);
+        const [coursesData, teachersData] = await Promise.all([
+          getAllCourses().catch(() => []),
+          getTeachers().catch(() => []),
+        ]);
+        setCourses(Array.isArray(coursesData) ? coursesData : []);
+        setInstructors(Array.isArray(teachersData) ? teachersData : []);
       } catch (err) {
-        console.error("Failed to load courses:", err);
+        console.error("Failed to load courses or instructors:", err);
       } finally {
         setLoading(false);
       }
     }
-    fetchCourses();
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -129,6 +134,19 @@ export default function CoursesPage() {
 
   const displayedSuggestedGroups = Object.values(groupedCategories);
 
+  const displayedInstructors = instructors.map((t) => ({
+    name: t.name,
+    dept: t.specialization?.includes("فرانت") || t.specialization?.includes("برنامه") || t.specialization?.includes("UI") ? "فناوری اطلاعات" : t.specialization?.includes("کسب") || t.specialization?.includes("مارکتینگ") ? "کسب و کار" : "زبان‌های خارجی",
+    role: t.specialization,
+    bio: `استاد و مربی کالج رکاد در زمینه تخصصی ${t.specialization}.`,
+    courses: "دوره‌های فعال",
+    students: "هنرجوی فعال",
+    rating: "۴.۹",
+    initial: t.name?.slice(0, 2) || "اس",
+    avatar: t.photo || "/assets/StatCard/blue.png",
+    color: "var(--male-light)",
+  }));
+
   return (
     <div className="ch-page">
       <CoursesHubHero />
@@ -144,9 +162,11 @@ export default function CoursesPage() {
             {displayedSuggestedGroups.length > 0 && (
               <SuggestedGroupSection suggestedGroups={displayedSuggestedGroups} store={store} />
             )}
+            {displayedInstructors.length > 0 && (
+              <InstructorsSection topInstructors={displayedInstructors} instScroll={instScroll} />
+            )}
           </>
         )}
-        <InstructorsSection topInstructors={TOP_INSTRUCTORS} instScroll={instScroll} />
       </div>
     </div>
   );

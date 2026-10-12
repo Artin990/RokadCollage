@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { ArrowIcon } from "./DepartmentIcons.jsx";
 
 export default function DepartmentHero({ dept, persona, onScrollTo }) {
@@ -7,9 +8,9 @@ export default function DepartmentHero({ dept, persona, onScrollTo }) {
       <img src={persona.pattern} alt="" aria-hidden="true" className="dp-hero-pattern" />
       <div className="container dp-hero-inner">
         <nav className="dp-crumb" aria-label="مسیر">
-          <a href="#">خانه</a>
+          <Link href="/">خانه</Link>
           <span className="sep">›</span>
-          <a href="#departments">دپارتمان‌ها</a>
+          <Link href="/#departments">دپارتمان‌ها</Link>
           <span className="sep">›</span>
           <span className="cur">{dept.name}</span>
         </nav>

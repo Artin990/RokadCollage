@@ -3,6 +3,8 @@ import { CheckCircle2 } from "lucide-react";
 import { SectionHead, StarIcon } from "./DepartmentIcons.jsx";
 
 export default function DepartmentTestimonialsSection({ dept }) {
+  if (!dept?.testimonials || dept.testimonials.length === 0) return null;
+
   return (
     <section className="dp-block" id="dp-testimonials">
       <SectionHead pre="تجربهٔ" accent="هنرجویان" />

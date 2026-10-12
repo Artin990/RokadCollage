@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./comments.css";
 import PatternLayer from "@/components/PatternLayer";
-import { testimonials, pad2Fa } from "./testimonialsData.jsx";
+import { pad2Fa } from "./testimonialsData.jsx";
 import CommentCard from "./CommentCard.jsx";
-
-const total = testimonials.length;
+import { getComments } from "@/services/commentService.js";
 
 function Chevron({ right = false }) {
   const d = right ? "M9 6l6 6-6 6" : "M15 6l-6 6 6 6";
@@ -24,6 +23,8 @@ function Chevron({ right = false }) {
 }
 
 export default function Comments() {
+  const [commentsList, setCommentsList] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [idx, setIdx] = useState(0);
   const [perView, setPerView] = useState(2);
   const [step, setStep] = useState(0);
@@ -33,6 +34,31 @@ export default function Comments() {
   const timerRef = useRef(null);
   const dragRef = useRef(null);
 
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const data = await getComments();
+        const list = Array.isArray(data) ? data : (data?.data || []);
+        const formatted = list.map((item) => ({
+          name: item.name,
+          role: item.role,
+          course: item.course?.title || "دوره تخصصی",
+          date: "به‌تازگی",
+          status: item.job || "هنرجوی دوره",
+          quote: item.comment,
+        }));
+        setCommentsList(formatted);
+      } catch (err) {
+        console.error("Failed to load comments:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, []);
+
+  const items = commentsList;
+  const total = items.length;
   const maxIndex = Math.max(0, total - perView);
   const dotCount = maxIndex + 1;
   const dragging = dragDx !== null;
@@ -180,63 +206,77 @@ export default function Comments() {
               </span>
             </h2>
           </div>
-          <div className="cmt3-counter">
-            <span className="cur">{pad2Fa(idx + 1)}</span>
-            <span>از</span>
-            <span>{pad2Fa(total)}</span>
-          </div>
+          {total > 0 && (
+            <div className="cmt3-counter">
+              <span className="cur">{pad2Fa(idx + 1)}</span>
+              <span>از</span>
+              <span>{pad2Fa(total)}</span>
+            </div>
+          )}
         </div>
 
-        <div
-          className={`cmt3-carousel${dragging ? " dragging" : ""}`}
-          ref={carRef}
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={endDrag}
-          onPointerCancel={endDrag}
-        >
-          <div
-            className="cmt3-track"
-            ref={trackRef}
-            style={{
-              transform: `translateX(${shift}px)`,
-              transition: dragging ? "none" : undefined,
-            }}
-          >
-            {testimonials.map((t) => (
-              <CommentCard key={t.name} testimonial={t} />
-            ))}
+        {loading ? (
+          <div style={{ textAlign: "center", padding: "50px 0", color: "var(--muted)" }}>
+            در حال بارگذاری دیدگاه‌ها...
           </div>
-        </div>
+        ) : items.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "50px 0", color: "var(--muted)" }}>
+            هنوز دیدگاهی ثبت نشده است.
+          </div>
+        ) : (
+          <>
+            <div
+              className={`cmt3-carousel${dragging ? " dragging" : ""}`}
+              ref={carRef}
+              onPointerDown={onPointerDown}
+              onPointerMove={onPointerMove}
+              onPointerUp={endDrag}
+              onPointerCancel={endDrag}
+            >
+              <div
+                className="cmt3-track"
+                ref={trackRef}
+                style={{
+                  transform: `translateX(${shift}px)`,
+                  transition: dragging ? "none" : undefined,
+                }}
+              >
+                {items.map((t) => (
+                  <CommentCard key={t.name} testimonial={t} />
+                ))}
+              </div>
+            </div>
 
-        <div className="cmt3-nav">
-          <div className="cmt3-dots">
-            {Array.from({ length: dotCount }, (_, i) => (
-              <button
-                key={i}
-                className={`cmt3-dot${i === idx ? " active" : ""}`}
-                aria-label={`اسلاید ${i + 1}`}
-                onClick={() => goTo(i)}
-              />
-            ))}
-          </div>
-          <div className="cmt3-nav-arrows">
-            <button
-              className="cmt3-icon-btn"
-              onClick={() => goTo(idx - 1)}
-              aria-label="قبلی"
-            >
-              <Chevron right />
-            </button>
-            <button
-              className="cmt3-icon-btn"
-              onClick={() => goTo(idx + 1)}
-              aria-label="بعدی"
-            >
-              <Chevron />
-            </button>
-          </div>
-        </div>
+            <div className="cmt3-nav">
+              <div className="cmt3-dots">
+                {Array.from({ length: dotCount }, (_, i) => (
+                  <button
+                    key={i}
+                    className={`cmt3-dot${i === idx ? " active" : ""}`}
+                    aria-label={`اسلاید ${i + 1}`}
+                    onClick={() => goTo(i)}
+                  />
+                ))}
+              </div>
+              <div className="cmt3-nav-arrows">
+                <button
+                  className="cmt3-icon-btn"
+                  onClick={() => goTo(idx - 1)}
+                  aria-label="قبلی"
+                >
+                  <Chevron right />
+                </button>
+                <button
+                  className="cmt3-icon-btn"
+                  onClick={() => goTo(idx + 1)}
+                  aria-label="بعدی"
+                >
+                  <Chevron />
+                </button>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </section>
   );

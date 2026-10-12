@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import InPersonCourse from "./Modules/InPersonCourse/InPersonCourseMd.js";
 import VirtualCourse from "./Modules/VirtualCourse/VirtualCourseMd.js";
 import Blog from "./Modules/Blog/BlogMd.js";
+import Comment from "./Modules/Comment/CommentMd.js";
+import Teacher from "./Modules/Teacher/TeacherMd.js";
 
 dotenv.config({ path: "./config.env" });
 
@@ -91,6 +93,74 @@ async function seedData() {
         },
       ]);
       console.log("✅ Sample Blog articles seeded.");
+    }
+
+    // 4. نظرات و تجربیات هنرجویان
+    const commentCount = await Comment.countDocuments();
+    if (commentCount === 0) {
+      const anyInPerson = await InPersonCourse.findOne();
+      const anyVirtual = await VirtualCourse.findOne();
+      if (anyInPerson) {
+        await Comment.create([
+          {
+            course: anyInPerson._id,
+            courseModel: "InPersonCourse",
+            name: "سارا رحیمی",
+            role: "طراح فریلنسر",
+            job: "در حال کار در بازار آزاد",
+            comment: "من اصلاً پیش‌زمینهٔ فنی نداشتم و می‌ترسیدم شروع کنم. دوره‌های کارگاهی رکاد کاملاً پروژه‌محور بود و مهارت واقعی بازار کار را یاد گرفتم.",
+          },
+          {
+            course: anyInPerson._id,
+            courseModel: "InPersonCourse",
+            name: "امیرحسین کریمی",
+            role: "توسعه‌دهنده فرانت‌اند",
+            job: "استخدام در تیم نرم‌افزاری",
+            comment: "بزرگ‌ترین تفاوت رکاد با دوره‌های دیگر، پشتیبانی زنده و رفع اشکال روزانه بود. بعد از پایان کارگاه توانستم سریع وارد بازار کار شوم.",
+          },
+        ]);
+      }
+      if (anyVirtual) {
+        await Comment.create([
+          {
+            course: anyVirtual._id,
+            courseModel: "VirtualCourse",
+            name: "مریم صادقی",
+            role: "متخصص دیجیتال مارکتینگ",
+            job: "شاغل تمام‌وقت",
+            comment: "سرفصل‌ها بسیار عمیق و اصولی تدوین شده بودند و نحوه پیاده‌سازی گام‌به‌گام پروژه‌ها باعث شد در مصاحبه شغلی با اعتماد به نفس ظاهر شوم.",
+          },
+        ]);
+      }
+      console.log("✅ Sample Comments seeded.");
+    }
+
+    // 5. اساتید و منتورها
+    const teacherCount = await Teacher.countDocuments();
+    if (teacherCount === 0) {
+      await Teacher.create([
+        {
+          name: "مهندس آرش تهرانی",
+          specialization: "توسعه‌دهنده ارشد فرانت‌اند",
+          photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=240&auto=format&fit=crop&q=80",
+        },
+        {
+          name: "مهندس محسن قاسمی",
+          specialization: "کارآفرین و استراتژیست کسب و کار",
+          photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=240&auto=format&fit=crop&q=80",
+        },
+        {
+          name: "استاد شبنم رضایی",
+          specialization: "اگزمینر و مدرس ارشد آیلتس",
+          photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=240&auto=format&fit=crop&q=80",
+        },
+        {
+          name: "نگین ایزدی",
+          specialization: "مدیر ارشد دیجیتال مارکتینگ و سئو",
+          photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=240&auto=format&fit=crop&q=80",
+        },
+      ]);
+      console.log("✅ Sample Teachers seeded.");
     }
 
     console.log("🎉 All sample data ready!");

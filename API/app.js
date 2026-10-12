@@ -124,7 +124,7 @@ app.use(["/api/user", "/user"], userRouter);
 app.use(["/api/upload", "/upload"], uploadRouter);
 app.use(["/api/in-person-courses", "/in-person-courses"], inPersonCourseRouter);
 app.use(["/api/virtual-courses", "/virtual-courses"], virtualCourseRouter);
-app.use(["/api/teacher", "/teacher"], teacherRouter);
+app.use(["/api/teacher", "/teacher", "/api/teachers", "/teachers"], teacherRouter);
 app.use(["/api/wallet", "/wallet"], walletRouter);
 app.use(["/api/enrollment", "/api/enrollments", "/enrollments", "/enrollment"], enrollmentRouter);
 app.use(["/api/comment", "/api/comments", "/comments", "/comment"], commentRouter);

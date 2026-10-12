@@ -1,8 +1,10 @@
 import React from "react";
+import Link from "next/link";
 import { I, coverBg } from "./BlogIcons.jsx";
 
 export default function BlogFeatured({ featured }) {
-  const authorInitials = featured.author.trim().split(/\s+/).map((w) => w[0]).join(".");
+  if (!featured) return null;
+  const authorInitials = (featured.author || "رکاد").trim().split(/\s+/).map((w) => w[0]).join(".");
 
   return (
     <section className="bi-featured">
@@ -69,9 +71,9 @@ export default function BlogFeatured({ featured }) {
                     <small>سردبیر مجلهٔ رکاد</small>
                   </span>
                 </div>
-                <a href={`#article/${featured.slug}`} className="bi-read-btn">
+                <Link href={`/blog/${featured.slug}`} className="bi-read-btn">
                   خواندن مقاله <I.Arrow style={{ width: 16, height: 16 }} />
-                </a>
+                </Link>
               </div>
             </div>
           </div>

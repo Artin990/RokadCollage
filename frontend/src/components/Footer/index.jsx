@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { addConsultationRequest } from "@/data/panelStore.js";
 
 /* ---------- Data (from the V5 design) ---------- */
 const departments = [
-  { label: "فناوری اطلاعات", href: "#courses-index" },
-  { label: "گرافیک", href: "#courses-index" },
-  { label: "زبان و MBA", href: "#courses-index" },
-  { label: "دیجیتال مارکتینگ", href: "#courses-index" },
+  { label: "فناوری اطلاعات", href: "/dept/it" },
+  { label: "کسب و کار", href: "/dept/business" },
+  { label: "زبان‌های خارجی", href: "/dept/languages" },
 ];
 
 const quickLinks = [
@@ -153,7 +153,7 @@ export default function Footer() {
           <ul>
             {departments.map((item) => (
               <li key={item.label}>
-                <a href={item.href}>{item.label}</a>
+                <Link href={item.href}>{item.label}</Link>
               </li>
             ))}
           </ul>
@@ -165,7 +165,7 @@ export default function Footer() {
           <ul>
             {quickLinks.map((item) => (
               <li key={item.label}>
-                <a href={item.href}>{item.label}</a>
+                <Link href={item.href}>{item.label}</Link>
               </li>
             ))}
           </ul>

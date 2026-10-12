@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { SectionHead, CourseIcon, ArrowIcon } from "./DepartmentIcons.jsx";
 
 export default function DepartmentPathsSection({ dept, currentId }) {
@@ -23,10 +24,10 @@ export default function DepartmentPathsSection({ dept, currentId }) {
               <span className="dp-path-feature">
                 <CourseIcon id="spark" size={14} /> پروژه‌محور
               </span>
-              <a href={`#courses-index/${currentId}`} className="dp-path-btn">
+              <Link href="/courses" className="dp-path-btn">
                 <span>شروع مسیر</span>
                 <ArrowIcon />
-              </a>
+              </Link>
             </div>
           </article>
         ))}

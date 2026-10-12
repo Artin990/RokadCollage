@@ -1,15 +1,10 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { ArrowIcon, ChevronLeftIcon } from "@/common/Icons";
 import PatternLayer from "@/components/PatternLayer";
 import Link from "next/link";
-
-/* ---- Course list items ---- */
-const courses = [
-  { title: "طراحی سایت با وردپرس", sub: "۱۲ هفته • IT", cls: "" },
-  { title: "برنامه‌نویسی فرانت‌اند", sub: "۱۶ هفته • IT", cls: "" },
-  { title: "سئو و بهینه‌سازی سایت", sub: "۸ هفته • IT", cls: "s" },
-  { title: "فتوشاپ و طراحی گرافیک", sub: "۱۰ هفته • گرافیک", cls: "g" },
-  { title: "مسیر زبان و MBA", sub: "۴ ماه • بین‌المللی", cls: "l" },
-];
+import { getAllCourses } from "@/services/courseService.js";
 
 /* ---- SVG icons per course ---- */
 const courseIcons = [
@@ -24,6 +19,22 @@ const courseIcons = [
 const iconColors = ["", "", "var(--navy)", "var(--female)", "var(--ecosystem)"];
 
 export default function Hero() {
+  const [coursesList, setCoursesList] = useState([]);
+
+  useEffect(() => {
+    let mounted = true;
+    getAllCourses()
+      .then((data) => {
+        if (mounted && Array.isArray(data)) {
+          setCoursesList(data.slice(0, 5));
+        }
+      })
+      .catch((err) => console.error("Hero courses fetch error:", err));
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <section className="hero-v5" id="hero" style={{ background: "var(--bg-college-tint)" }}>
       {/* Background pattern (mask fade) */}
@@ -69,23 +80,32 @@ export default function Hero() {
           <div className="hero-v5-panel">
             <div className="hero-v5-panel-head">
               <h4>دوره‌های پیشنهادی</h4>
-              <span className="hero-v5-cnt">۶ دوره فعال</span>
+              <span className="hero-v5-cnt">
+                {coursesList.length > 0 ? `${coursesList.length} دوره فعال` : "دوره‌های فعال"}
+              </span>
             </div>
 
-            {courses.map((c, i) => (
-              <a key={c.title} href="#course/ui-ux" className={`hero-v5-course ${c.cls}`}>
-                <div className="hero-v5-course-ic" style={iconColors[i] ? { background: iconColors[i] } : {}}>
-                  {courseIcons[i]}
-                </div>
-                <div className="hero-v5-course-info">
-                  <div className="hero-v5-course-t">{c.title}</div>
-                  <div className="hero-v5-course-s">{c.sub}</div>
-                </div>
-                <div className="hero-v5-course-arr">
-                  <ChevronLeftIcon width={12} height={12} />
-                </div>
-              </a>
-            ))}
+            {coursesList.map((c, i) => {
+              const href = `/courses/${c.slug || c._id}`;
+              const subText = `${c.duration ? `${c.duration} • ` : ""}${c.category || c.department || (c.isVirtual ? "مجازی" : "حضوری")}`;
+              return (
+                <Link key={c._id || c.slug || i} href={href} className="hero-v5-course">
+                  <div
+                    className="hero-v5-course-ic"
+                    style={iconColors[i % iconColors.length] ? { background: iconColors[i % iconColors.length] } : {}}
+                  >
+                    {courseIcons[i % courseIcons.length]}
+                  </div>
+                  <div className="hero-v5-course-info">
+                    <div className="hero-v5-course-t">{c.title}</div>
+                    <div className="hero-v5-course-s">{subText}</div>
+                  </div>
+                  <div className="hero-v5-course-arr">
+                    <ChevronLeftIcon width={12} height={12} />
+                  </div>
+                </Link>
+              );
+            })}
 
             <Link href="/courses" className="hero-v5-all">
               مشاهدهٔ همه دوره‌ها

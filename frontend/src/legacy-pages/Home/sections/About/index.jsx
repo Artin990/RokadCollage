@@ -1,4 +1,5 @@
 import "./about.css";
+import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import PatternLayer from "@/components/PatternLayer";
 
@@ -45,10 +46,10 @@ export default function About() {
               ورود به بازار کار.
             </h2>
             <div className="abt-foot-mobile">
-              <a href="#courses-index" className="abt-btn" style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                <span>مسیرهای رکاد</span>
+              <Link href="/courses" className="abt-btn" style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                <span>مشاهده دوره‌ها</span>
                 <ArrowLeft size={14} />
-              </a>
+              </Link>
             </div>
           </div>
           <p className="abt-body">
@@ -57,10 +58,10 @@ export default function About() {
             آماده‌شدن برای اولین شغلت.
           </p>
           <div className="abt-foot">
-            <a href="#courses-index" className="abt-btn" style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-              <span>درباره‌ی مسیرهای رکاد بیشتر بدون</span>
+            <Link href="/courses" className="abt-btn" style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+              <span>مشاهده دوره‌ها</span>
               <ArrowLeft size={16} />
-            </a>
+            </Link>
           </div>
         </div>
 

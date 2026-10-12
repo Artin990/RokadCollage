@@ -1,4 +1,5 @@
 import "./departments.css";
+import Link from "next/link";
 import PatternLayer from "@/components/PatternLayer";
 
 /* ---- سه دپارتمان کالج رکاد ----
@@ -141,10 +142,10 @@ export default function Departments({ layout = "stack" }) {
                       <strong>{d.stat}</strong>
                       <span>{d.statLabel}</span>
                     </div>
-                    <a href={`#dept/${d.id}`} className="dept5-cta">
+                    <Link href={`/dept/${d.id}`} className="dept5-cta">
                       ورود به دپارتمان
                       <ArrowIcon />
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </article>

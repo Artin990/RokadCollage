@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import "./course.css";
 import PatternLayer from "../../components/PatternLayer";
-import { getCourseBySlug } from "./courseData.js";
 import { getPanelStore, enrollInCourse, toggleWishlist } from "../../data/panelStore.js";
 import { isEnrolledIn, isWishlisted as checkWishlisted } from "../../data/selectors.js";
 import dynamic from "next/dynamic";
@@ -30,8 +29,8 @@ export default function CourseSingle({ slug, initialCourse }) {
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [activeLesson, setActiveLesson] = useState(null);
 
-  const [course, setCourse] = useState(() => initialCourse || getCourseBySlug(slug));
-  const [loading, setLoading] = useState(!initialCourse && !getCourseBySlug(slug));
+  const [course, setCourse] = useState(() => initialCourse || null);
+  const [loading, setLoading] = useState(!initialCourse);
   const [store, setStore] = useState(getPanelStore);
   const [enrollToast, setEnrollToast] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
@@ -41,17 +40,7 @@ export default function CourseSingle({ slug, initialCourse }) {
       try {
         const live = await getCourseBySlugOrId(slug);
         if (live) {
-          setCourse((prev) => ({
-            ...prev,
-            ...live,
-            title: live.title || prev?.title,
-            price: live.price ? `${Number(live.price).toLocaleString("fa-IR")} تومان` : prev?.price,
-            description: live.description || live.headline || prev?.description,
-            duration: live.duration || prev?.duration,
-            instructor: live.instructor || prev?.instructor,
-            category: live.category || prev?.category,
-            isInPerson: live.isInPerson || live.mode === "in-person" || live.type === "حضوری",
-          }));
+          setCourse(live);
         }
       } catch (err) {
         console.error("Failed to load course details from API:", err);
