@@ -28,69 +28,60 @@ export default function CourseSingleInPerson({ course, slug }) {
   const isEnrolled = isEnrolledIn(courseSlug, store);
   const isWished = isLoggedIn && checkWishlisted(courseSlug, store);
 
-  const venue = course.venue || {
-    name: "کمپوس مرکزی کالج رکاد",
-    address: "تهران، میدان آزادی، بلوار اکبری، جنب ایستگاه مترو، پلاک ۲۴، طبقه ۳",
-    metro: "۲ دقیقه پیاده‌روی از ایستگاه مترو میدان آزادی (خط ۴)",
+  const venue = {
+    name: course.location?.name || "کمپوس مرکزی کالج رکاد",
+    address: course.location?.address || "تهران، میدان آزادی، بلوار اکبری، جنب ایستگاه مترو، پلاک ۲۴",
+    metro: "۲ دقیقه پیاده‌روی از ایستگاه مترو میدان آزادی",
     parking: "دارای پارکینگ اختصاصی برای هنرجویان",
-    room: "سالن کارگاهی آلفا",
+    room: course.location?.room || "سالن کارگاهی آلفا",
   };
 
-  const schedule = course.schedule || {
-    days: "شنبه و چهارشنبه",
-    hours: "۱۶:۰۰ الی ۲۰:۰۰",
-    totalWeeks: "۱۰ هفته",
-    totalHours: "۸۰ ساعت کارگاهی + ۴۰ ساعت منتورینگ",
-    startDate: course.startDate || "۱۵ مهر ۱۴۰۴",
+  const schedule = {
+    days: course.days || "شنبه و چهارشنبه",
+    hours: course.hours || "۱۶:۰۰ الی ۲۰:۰۰",
+    totalWeeks: course.duration || "۱۰ هفته",
+    totalHours: course.duration ? `${course.duration} آموزش و کارگاه عملی` : "۸۰ ساعت کارگاهی + ۴۰ ساعت منتورینگ",
+    startDate: course.startDate || "به‌زودی",
   };
 
-  const cleanDays = (schedule.days || "").replace(/\s*\(.*?\)/g, "").trim();
-  const cleanHours = (schedule.hours || "").replace(/\s*\(.*?\)/g, "").trim();
-  const cleanRoom = (venue.room || "سالن کارگاهی آلفا").replace(/\s*\(.*?\)/g, "").trim();
-
-  const capacity = course.capacity || {
-    total: 18,
-    registered: 14,
-    remaining: 4,
-    pct: 78,
+  const capacity = {
+    total: course.capacity || 20,
+    registered: course.enrolledCount || 12,
+    remaining: Math.max(0, (course.capacity || 20) - (course.enrolledCount || 12)),
+    pct: Math.min(100, Math.round(((course.enrolledCount || 12) / (course.capacity || 20)) * 100)),
   };
 
-  const sprints = course.sprints || [
-    {
-      n: "۰۱",
-      weeks: "هفته ۱ و ۲",
-      title: "راه‌اندازی محیط کار تیمی و زیرساخت حرفه‌ای",
-      desc: "پیکربندی ورک‌استیشن، گیت تیمی، استانداردهای کدنویسی تمیز و پیاده‌سازی نخستین تسک عملیاتی کارگاه.",
-      output: "ریپازیتوری تیمی استاندارد و اجرای نخستین سناریو",
-    },
-    {
-      n: "۰۲",
-      weeks: "هفته ۳ تا ۵",
-      title: "معماری عمیق، حل چالش‌های واقعی و کد ریویو زنده",
-      desc: "پیاده‌سازی معماری ماژولار با هدایت استاد و بررسی خط‌به‌خط پروژه‌ها روی پروژکتور سالن کارگاه.",
-      output: "پیاده‌سازی هسته عملیاتی پروژه تیمی",
-    },
-    {
-      n: "۰۳",
-      weeks: "هفته ۶ و ۷",
-      title: "هکاتون حضوری و شبیه‌سازی اسپرینت اسکرام شرکتی",
-      desc: "شبیه‌سازی یک اسپرینت فشرده شرکتی، مواجهه با باگ‌های نامنتظره و استقرار روی سرور واقعی.",
-      output: "نسخه قابل اتکا و آماده تحویل محصول (Production-Ready)",
-    },
-    {
-      n: "۰۴",
-      weeks: "هفته ۸ تا ۱۰",
-      title: "ارائه در Demo Day، ساخت رزومه و آمادگی مصاحبه",
-      desc: "پرزنت محصول در حضور مدیران فنی شرکت‌های پارتنر کالج رکاد و شبیه‌سازی مصاحبه‌های استخدامی.",
-      output: "پورتفولیوی اختصاصی و معرفی رزومه به شرکت‌های همکار",
-    },
-  ];
+  const liveSprints = Array.isArray(course.sprints) && course.sprints.length > 0
+    ? course.sprints.map((s, idx) => ({
+        n: `۰${idx + 1}`,
+        weeks: `بخش ${idx + 1}`,
+        title: s.title || `اسپرینت ${idx + 1}`,
+        desc: s.description || "تمرین و پیاده‌سازی گام‌به‌گام در محیط کارگاهی",
+        output: s.output || "پروژه و تحویل تمرین عملی",
+      }))
+    : [
+        {
+          n: "۰۱",
+          weeks: "هفته ۱ و ۲",
+          title: "راه‌اندازی محیط کار تیمی و استانداردهای توسعه",
+          desc: "پیکربندی ورک‌استیشن، گیت تیمی و پیاده‌سازی نخستین تسک کارگاهی.",
+          output: "ریپازیتوری تیمی استاندارد",
+        },
+        {
+          n: "۰۲",
+          weeks: "هفته ۳ تا ۵",
+          title: "معماری عمیق، حل چالش‌های واقعی و کد ریویو زنده",
+          desc: "پیاده‌سازی معماری ماژولار و بررسی خط‌به‌خط پروژه‌ها.",
+          output: "پیاده‌سازی هسته عملیاتی پروژه",
+        },
+      ];
 
-  const teacher = course.teacher || {
-    name: "مهندس آرش تهرانی",
-    role: "مدرس ارشد و سرپرست کارگاه حضوری",
-    bio: "بیش از ۱۰ سال سابقه هدایت تیم‌های فنی در شرکت‌های بزرگ فناوری و راهبری بیش از ۶۰۰ متخصص تا ورود به بازار کار.",
-    initial: "آ.ت",
+  const firstTeacher = Array.isArray(course.teachers) && course.teachers.length > 0 ? course.teachers[0] : course.teacher;
+  const teacher = {
+    name: firstTeacher?.name || firstTeacher?.fullName || "استاد کالج رکاد",
+    role: firstTeacher?.role || "مدرس ارشد و سرپرست کارگاه حضوری",
+    bio: firstTeacher?.bio || firstTeacher?.description || "مدرس باسابقه و راهبر دوره‌های تخصصی کالج رکاد.",
+    initial: (firstTeacher?.name || firstTeacher?.fullName || "رکاد").slice(0, 2),
   };
 
   const handleBookmarkClick = () => {
@@ -151,7 +142,7 @@ export default function CourseSingleInPerson({ course, slug }) {
         <div className="cs-ip-sections-stack">
           <InPersonAbout course={course} />
           <InPersonSprints
-            sprints={sprints}
+            sprints={liveSprints}
             schedule={schedule}
             openSprint={openSprint}
             setOpenSprint={setOpenSprint}

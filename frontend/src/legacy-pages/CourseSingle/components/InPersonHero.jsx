@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { ArrowLeft, MapPin, Bookmark, Calendar, Clock, CheckCircle2, Phone, ShieldCheck } from "lucide-react";
 
 const FA = "۰۱۲۳۴۵۶۷۸۹";
@@ -17,20 +18,16 @@ export default function InPersonHero({
   return (
     <>
       <div className="cs-topbar container">
-        <a href="#courses-index" className="cs-back">
+        <Link href="/courses" className="cs-back">
           <ArrowLeft size={14} style={{ transform: "rotate(180deg)" }} />
           <span>همهٔ دوره‌ها</span>
-        </a>
+        </Link>
 
         <nav className="cs-crumbs" aria-label="مسیر دوره">
-          <a href="#courses-index">دوره‌ها</a>
+          <Link href="/courses">دوره‌ها</Link>
           <span className="sep">›</span>
-          {course.departmentFa && (
-            <>
-              <a href={`#courses-index/${course.department || "all"}`}>{course.departmentFa}</a>
-              <span className="sep">›</span>
-            </>
-          )}
+          <Link href="/courses">{course.category || "حضوری"}</Link>
+          <span className="sep">›</span>
           <b>{course.title}</b>
         </nav>
 
