@@ -2,10 +2,11 @@ import React from "react";
 import { RouterProvider } from "react-router-dom";
 import router from "./Routes";
 import { Toaster } from "react-hot-toast";
+import ErrorBoundary from "./Components/ErrorBoundary";
 
 export default function App() {
   return (
-    <>
+    <ErrorBoundary>
       <RouterProvider router={router} />
       <Toaster
         position="top-center"
@@ -19,6 +20,6 @@ export default function App() {
           },
         }}
       />
-    </>
+    </ErrorBoundary>
   );
 }
