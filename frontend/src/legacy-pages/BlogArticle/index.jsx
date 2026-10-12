@@ -19,11 +19,13 @@ const H2_COLORS = ["var(--college)", "var(--navy)", "var(--accent)"];
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Check } from "lucide-react";
-import { getBlogBySlugOrId } from "@/services/blogService.js";
+import { getBlogBySlugOrId, getBlogs } from "@/services/blogService.js";
 
 export default function BlogArticle({ slug }) {
   const [copied, setCopied] = useState(false);
   const [article, setArticle] = useState(null);
+  const [relatedArticles, setRelatedArticles] = useState([]);
+  const [headings, setHeadings] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -32,6 +34,29 @@ export default function BlogArticle({ slug }) {
       try {
         const data = await getBlogBySlugOrId(slug);
         setArticle(data);
+
+        // Fetch related articles from same category or newest
+        const rel = await getBlogs({ limit: 4 }).catch(() => []);
+        const relList = (Array.isArray(rel) ? rel : rel?.data || []).filter(
+          (b) => b._id !== data?._id && b.id !== data?.id
+        );
+        setRelatedArticles(relList.slice(0, 3));
+
+        // Parse H2 headings from content or blocks
+        if (data?.content) {
+          const regex = /<h2[^>]*>(.*?)<\/h2>/gi;
+          const found = [];
+          let match;
+          let idx = 0;
+          while ((match = regex.exec(data.content)) !== null) {
+            found.push({
+              id: `sec-${idx}`,
+              label: match[1].replace(/<[^>]+>/g, "").trim(),
+            });
+            idx++;
+          }
+          setHeadings(found);
+        }
       } catch (err) {
         console.error("Failed to load blog article:", err);
       } finally {
@@ -154,32 +179,36 @@ export default function BlogArticle({ slug }) {
 
             {/* نویسنده پایین مقاله */}
             <div className="rbs-author">
-              <span className="avatar">{post.author.initials}</span>
+              <span className="avatar">
+                {displayAuthorName.slice(0, 2)}
+              </span>
               <div className="info">
-                <strong>{post.author.name}</strong>
-                <div className="role">{post.author.role}</div>
-                <p>{post.author.bio}</p>
+                <strong>{displayAuthorName}</strong>
+                <div className="role">{displayAuthorRole}</div>
+                <p>مدرس و عضو هیئت علمی کالج تخصصی مهارت و کارآفرینی رکاد.</p>
               </div>
             </div>
 
             {/* مطالب مرتبط */}
-            <section className="rbs-related">
-              <h2 className="rbs-related-head">
-                <span className="bar" />
-                مطالب مرتبط
-              </h2>
-              <div className="rbs-rp-grid">
-                {related.map((r, i) => (
-                  <a className="rbs-rp" href="#blog-index" key={i}>
-                    <div className="thumb" style={{ background: toneGrad(r.tone) }} />
-                    <div className="body">
-                      <span className="tag">{r.tag}</span>
-                      <h3>{r.title}</h3>
-                    </div>
-                  </a>
-                ))}
-              </div>
-            </section>
+            {relatedArticles.length > 0 && (
+              <section className="rbs-related">
+                <h2 className="rbs-related-head">
+                  <span className="bar" />
+                  مطالب مرتبط
+                </h2>
+                <div className="rbs-rp-grid">
+                  {relatedArticles.map((r, i) => (
+                    <Link className="rbs-rp" href={`/blog/${r.slug || r._id || r.id}`} key={i}>
+                      <div className="thumb" style={{ background: toneGrad(i % 3 === 0 ? "amber" : i % 3 === 1 ? "teal" : "magenta") }} />
+                      <div className="body">
+                        <span className="tag">{r.category}</span>
+                        <h3>{r.title}</h3>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </section>
+            )}
           </article>
 
           {/* ══════ سایدبار (sticky) ══════ */}
@@ -187,52 +216,53 @@ export default function BlogArticle({ slug }) {
             {/* نویسنده */}
             <div className="rbs-side-card rbs-side-author">
               <div className="row">
-                <span className="avatar">{post.author.initials}</span>
+                <span className="avatar">
+                  {displayAuthorName.slice(0, 2)}
+                </span>
                 <div>
-                  <strong>{post.author.name}</strong>
-                  <div className="role">{post.author.role}</div>
+                  <strong>{displayAuthorName}</strong>
+                  <div className="role">{displayAuthorRole}</div>
                 </div>
               </div>
-              <p>{post.author.bio}</p>
+              <p>تولید شده توسط تحریریه تخصصی و اساتید کالج رکاد.</p>
             </div>
 
             {/* فهرست مطالب */}
-            <div className="rbs-side-card">
-              <div className="head">فهرست مطالب</div>
-              <ul className="rbs-toc">
-                {post.toc.map((t, i) => (
-                  <li key={i}>
-                    <a href={`#${t.id}`} onClick={scrollTo(t.id)}>
-                      <span className="num">{t.num}</span>
-                      {t.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {headings.length > 0 && (
+              <div className="rbs-side-card">
+                <div className="head">فهرست مطالب</div>
+                <ul className="rbs-toc">
+                  {headings.map((t, i) => (
+                    <li key={i}>
+                      <a href={`#${t.id}`} onClick={scrollTo(t.id)}>
+                        <span className="num">۰{i + 1}</span>
+                        {t.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {/* اشتراک‌گذاری */}
             <div className="rbs-side-card">
-              <div className="head">این مطلب رو به اشتراک بذار!</div>
+              <div className="head">اشتراک‌گذاری</div>
               <div className="rbs-share-btns">
-                {post.share.map((s, i) => (
-                  <button
-                    className={`rbs-sbtn${s === "کپی لینک" && copied ? " copied" : ""}`}
-                    type="button"
-                    key={i}
-                    onClick={s === "کپی لینک" ? copyLink : undefined}
-                    style={s === "کپی لینک" && copied ? { background: "var(--teal)", color: "#fff", borderColor: "var(--ink)" } : {}}
-                  >
-                    {s === "کپی لینک" && copied ? (
-                      <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
-                        <Check size={12} strokeWidth={3} />
-                        <span>کپی شد</span>
-                      </span>
-                    ) : (
-                      s
-                    )}
-                  </button>
-                ))}
+                <button
+                  className={`rbs-sbtn${copied ? " copied" : ""}`}
+                  type="button"
+                  onClick={copyLink}
+                  style={copied ? { background: "var(--teal)", color: "#fff", borderColor: "var(--ink)" } : {}}
+                >
+                  {copied ? (
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+                      <Check size={12} strokeWidth={3} />
+                      <span>کپی شد</span>
+                    </span>
+                  ) : (
+                    "کپی لینک"
+                  )}
+                </button>
               </div>
             </div>
           </aside>
