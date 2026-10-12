@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from "react";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 import Logo from "../Logo.jsx";
 import { getPanelStore } from "../../data/panelStore.js";
 import { getUnreadNotificationsCount, getUserProfile } from "../../data/selectors.js";
@@ -8,6 +10,7 @@ import MobileDrawer from "./components/MobileDrawer.jsx";
 import HeaderAuthButtons from "./components/HeaderAuthButtons.jsx";
 
 export default function Header() {
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -35,22 +38,18 @@ export default function Header() {
   useEffect(() => {
     const apply = () => {
       setScrolled(window.scrollY > 80);
-      const h = window.location.hash || "";
-      setActive(
-        h.startsWith("#courses-index") || h.startsWith("#dept/") || h.startsWith("#course/") ? 1
-          : h.startsWith("#blog-index") || h.startsWith("#article/") ? 2
-          : 0
-      );
-
     };
     window.addEventListener("scroll", apply, { passive: true });
-    window.addEventListener("hashchange", apply);
     apply();
-    return () => {
-      window.removeEventListener("scroll", apply);
-      window.removeEventListener("hashchange", apply);
-    };
+    return () => window.removeEventListener("scroll", apply);
   }, []);
+
+  const activeIndex = useMemo(() => {
+    if (!pathname) return 0;
+    if (pathname.startsWith("/courses") || pathname.startsWith("/dept")) return 1;
+    if (pathname.startsWith("/blog")) return 2;
+    return 0;
+  }, [pathname]);
 
   const results = useMemo(() => {
     if (!debouncedQuery.trim()) return [];
@@ -130,14 +129,13 @@ export default function Header() {
             <Logo />
             <nav className="nav-links">
               {links.map((l, i) => (
-                <a
+                <Link
                   key={i}
                   href={l.href}
-                  className={"nav-link" + (active === i ? " active" : "")}
-                  onClick={() => setActive(i)}
+                  className={"nav-link" + (activeIndex === i ? " active" : "")}
                 >
                   {l.t}
-                </a>
+                </Link>
               ))}
             </nav>
 
