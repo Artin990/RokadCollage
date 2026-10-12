@@ -2,20 +2,39 @@ import React, { useState, useRef, useEffect } from "react";
 import { Sparkles } from "lucide-react";
 import { I, toFa } from "./BlogIcons.jsx";
 import BlogCard from "./BlogCard.jsx";
-import { POSTS, PAGE_SIZE, CAT_TAGS } from "../data/blogIndexData.js";
+import { PAGE_SIZE } from "../data/blogIndexData.js";
+import { getBlogs } from "@/services/blogService.js";
 
 const ENTER_STAGGER = 60, ENTER_MS = 550, EXIT_STAGGER = 45, EXIT_MS = 420;
 
 export default function BlogGrid({ activeCategory, searchQuery }) {
-  const tags = CAT_TAGS[activeCategory] || null;
-  const q = searchQuery.toLowerCase().trim();
-
+  const [blogsList, setBlogsList] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState("newest");
   const [sortOpen, setSortOpen] = useState(false);
   const [visible, setVisible] = useState(PAGE_SIZE);
   const [animState, setAnimState] = useState({ phase: "idle", fromIndex: 0 });
   const ref = useRef(null);
   const animTimers = useRef([]);
+
+  useEffect(() => {
+    async function loadData() {
+      setLoading(true);
+      try {
+        const res = await getBlogs({
+          category: activeCategory !== "all" ? activeCategory : undefined,
+          search: searchQuery ? searchQuery.trim() : undefined,
+        });
+        const list = Array.isArray(res) ? res : res.data || [];
+        setBlogsList(list);
+      } catch (err) {
+        console.error("Failed to load blogs from API:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, [activeCategory, searchQuery]);
 
   const clearAnimTimers = () => {
     animTimers.current.forEach(clearTimeout);
@@ -46,21 +65,23 @@ export default function BlogGrid({ activeCategory, searchQuery }) {
   ];
   const sortLabel = SORTS.find((s) => s.id === sortBy)?.label;
 
-  const parseReads = (r) => parseFloat(String(r).replace(/[^\d.]/g, "")) || 0;
+  const formattedPosts = blogsList.map((b, i) => ({
+    id: b.id || b._id,
+    title: b.title,
+    excerpt: b.excerpt || b.headline || (b.content ? b.content.replace(/<[^>]+>/g, "").slice(0, 100) + "..." : ""),
+    tag: b.category || "آموزش",
+    tagColor: i % 2 === 0 ? "primary" : "secondary",
+    author: b.author?.fullName || b.author?.name || "تحریریه کالج رکاد",
+    readTime: b.readTime ? `${toFa(b.readTime)} دقیقه` : "۵ دقیقه",
+    reads: `${toFa(b.views || 320)}`,
+    date: b.createdAt ? new Date(b.createdAt).toLocaleDateString("fa-IR") : "به‌تازگی",
+    size: i % 3 === 0 ? "lg" : "sm",
+    slug: b.slug || b.id || b._id,
+  }));
 
-  const filtered = POSTS.filter((p) => {
-    if (tags && !tags.some((t) => p.tag === t)) return false;
-    if (q) {
-      const match = (p.title + " " + p.excerpt + " " + p.tag + " " + p.author).toLowerCase();
-      if (!match.includes(q)) return false;
-    }
-    return true;
-  });
-
-  const sorted = [...filtered].sort((a, b) => {
-    if (sortBy === "popular") return parseReads(b.reads) - parseReads(a.reads);
-    if (sortBy === "oldest") return a.id - b.id;
-    return b.id - a.id;
+  const sorted = [...formattedPosts].sort((a, b) => {
+    if (sortBy === "oldest") return a.id > b.id ? 1 : -1;
+    return 0;
   });
 
   const posts = sorted.slice(0, visible);

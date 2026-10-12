@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { articles } from "@/data/blogArticles";
+import Link from "next/link";
 import { I, coverBg } from "./BlogIcons.jsx";
 import { TAG_COLORS, TAG_TONE, CARD_ROTS } from "../data/blogIndexData.js";
 
 export default function BlogCard({ post, index, entering, exiting, animDelay = 0 }) {
   const c = TAG_COLORS[post.tagColor] || TAG_COLORS.primary;
   const rot = CARD_ROTS[index % CARD_ROTS.length];
-  const slug = articles[(post.id - 1) % articles.length].slug;
+  const slug = post.slug || post.id;
   const [saved, setSaved] = useState(false);
 
   return (
@@ -15,7 +15,7 @@ export default function BlogCard({ post, index, entering, exiting, animDelay = 0
       style={{ "--rot": rot, animationDelay: animDelay ? `${animDelay}ms` : undefined }}
     >
       <div className="bi-card-sh" />
-      <a href={`#article/${slug}`} className="bi-card-body">
+      <Link href={`/blog/${slug}`} className="bi-card-body">
         <div className="bi-card-media" style={{ background: coverBg(TAG_TONE[post.tagColor]) }}>
           <div className="bi-card-circle" style={{ background: "rgba(255,255,255,.25)" }} />
           <div className="bi-card-square" />
@@ -61,7 +61,7 @@ export default function BlogCard({ post, index, entering, exiting, animDelay = 0
             </span>
           </div>
         </div>
-      </a>
+      </Link>
     </div>
   );
 }

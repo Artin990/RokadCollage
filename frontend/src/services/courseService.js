@@ -62,3 +62,29 @@ export async function getAllCourses() {
     return [];
   }
 }
+
+/**
+ * دریافت یک دوره با شناسه یا اسلاگ
+ */
+export async function getCourseBySlugOrId(identifier) {
+  if (!identifier) return null;
+  const all = await getAllCourses();
+  const clean = String(identifier).trim().toLowerCase();
+  const found = all.find(
+    (c) =>
+      c.slug === clean ||
+      c.id === clean ||
+      c._id === clean ||
+      (c.title && c.title.toLowerCase().includes(clean))
+  );
+  if (found) {
+    if (found.isVirtual) {
+      const details = await getVirtualCourseById(found._id || found.id).catch(() => null);
+      return { ...found, ...(details || {}) };
+    } else {
+      const details = await getInPersonCourseById(found._id || found.id).catch(() => null);
+      return { ...found, ...(details || {}) };
+    }
+  }
+  return null;
+}

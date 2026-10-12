@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { Compass, ChevronLeft, Star, Clock, Users, ArrowLeft, Code } from "lucide-react";
 import { DEPT_ICONS, CourseModeBadge, CourseSaveButton } from "./CourseCardComponents.jsx";
 
@@ -127,9 +128,9 @@ function SuggestedDeptGroup({ group, store, isMobile }) {
           }
         >
           {courses.map((c) => (
-            <a
+            <Link
               key={c.id}
-              href={`#course/${c.slug}`}
+              href={`/courses/${c.slug}`}
               className="ch-card"
               data-dept={group.deptId}
             >

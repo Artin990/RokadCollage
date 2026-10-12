@@ -1,15 +1,12 @@
 import React from "react";
+import Link from "next/link";
 import { ArrowIcon } from "@/common/Icons";
 import { toggleWishlist } from "@/data/panelStore.js";
 import { isWishlisted } from "@/data/selectors.js";
 import {
   catColors,
   courseIcons,
-  durations,
-  courseTags,
   toPersianNum,
-  COURSE_SLUGS,
-  MODE_MAP,
   MODE_LABEL,
   MODE_ICON,
 } from "./coursesSectionData.jsx";
@@ -17,13 +14,15 @@ import {
 export function CourseCard({ course, index, store }) {
   const cat = catColors[course.category] || catColors["فناوری اطلاعات"];
   const icon = courseIcons[index % courseIcons.length];
-  const dur = durations[index % durations.length];
-  const tags = courseTags[index % courseTags.length];
   const num = toPersianNum(index + 1);
-  const mode = MODE_MAP[index];
-  const slug = COURSE_SLUGS[index % COURSE_SLUGS.length];
+  const mode = course.mode === "in-person" || course.isInPerson ? "onsite" : "online";
+  const slug = course.slug || course.id || course._id;
   const isLoggedIn = Boolean(store?.auth?.isLoggedIn);
   const isSaved = isLoggedIn && isWishlisted(slug, store);
+
+  const durationText = course.duration || (course.hours ? `${toPersianNum(course.hours)} ساعت` : "۱۲ هفته");
+  const priceFormatted = course.price ? `${toPersianNum(Number(course.price).toLocaleString("fa-IR"))} تومان` : "رایگان";
+  const tags = Array.isArray(course.tags) && course.tags.length > 0 ? course.tags : [course.category || "مهارت"];
 
   return (
     <div
@@ -117,15 +116,14 @@ export function CourseCard({ course, index, store }) {
           </div>
           <div className="v2-action">
             <div className="v2-price">
-              <div className="v2-price-lbl">{"مدت دوره"}</div>
+              <div className="v2-price-lbl">{course.price ? "شهریه" : "مدت"}</div>
               <div className="v2-price-val">
-                {dur.split(" ")[0]}
-                <small>{dur.split(" ")[1]}</small>
+                {priceFormatted !== "رایگان" ? priceFormatted : durationText}
               </div>
             </div>
-            <a href={"#course/" + slug} className="v2-btn">
+            <Link href={`/courses/${slug}`} className="v2-btn">
               {"مشاهده "} <ArrowIcon width={14} height={14} />
-            </a>
+            </Link>
           </div>
         </div>
       </article>
@@ -135,7 +133,7 @@ export function CourseCard({ course, index, store }) {
 
 export function CtaRow() {
   return (
-    <a href="#courses-index" className="v2-cta-row">
+    <Link href="/courses" className="v2-cta-row">
       <div className="v2-cta-row-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <polyline points="16 18 22 12 16 6" />
@@ -144,11 +142,11 @@ export function CtaRow() {
       </div>
       <div className="v2-cta-row-text">
         <span className="v2-cta-row-title">{"مشاهده همه دوره‌ها"}</span>
-        <span className="v2-cta-row-sub">{"+۸ دورهٔ دیگر در ۴ دپارتمان"}</span>
+        <span className="v2-cta-row-sub">{"آرشیو کامل آموزش‌های تخصصی"}</span>
       </div>
       <span className="v2-cta-row-arrow" aria-hidden="true">
         <ArrowIcon width={18} height={18} />
       </span>
-    </a>
+    </Link>
   );
 }

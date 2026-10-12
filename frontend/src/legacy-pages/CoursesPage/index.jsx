@@ -1,16 +1,67 @@
 import React, { useState, useEffect } from "react";
 import "./courses-hub.css";
 import { getPanelStore } from "@/data/panelStore.js";
-import { SUGGESTED_BY_DEPT, FLAGSHIP_COURSES, TOP_INSTRUCTORS } from "./data/coursesHubData.js";
+import { getAllCourses } from "@/services/courseService.js";
 import { useHorizontalDragScroll } from "./hooks/useHorizontalDragScroll.js";
 import CoursesHubHero from "./components/CoursesHubHero.jsx";
 import FlagshipSection from "./components/FlagshipSection.jsx";
 import SuggestedGroupSection from "./components/SuggestedGroupSection.jsx";
 import InstructorsSection from "./components/InstructorsSection.jsx";
+import { TOP_INSTRUCTORS } from "./data/instructorsData.js";
+import { Code, Briefcase, Globe } from "lucide-react";
+
+const DEPT_CONFIG = {
+  "فناوری اطلاعات": {
+    deptId: "it",
+    deptName: "فناوری اطلاعات",
+    badgeColor: "var(--navy-alt)",
+    badgeBg: "var(--male-light)",
+    pattern: "/assets/StatCard/blue.png",
+    icon: Code,
+    themeClass: "flag-it",
+    badge: "دپارتمان فناوری اطلاعات",
+  },
+  "کسب و کار": {
+    deptId: "business",
+    deptName: "کسب و کار",
+    badgeColor: "var(--college-darker)",
+    badgeBg: "var(--college-light)",
+    pattern: "/assets/StatCard/yellow.png",
+    icon: Briefcase,
+    themeClass: "flag-business",
+    badge: "دپارتمان کسب و کار",
+  },
+  "زبان‌های خارجی": {
+    deptId: "languages",
+    deptName: "زبان‌های خارجی",
+    badgeColor: "var(--olive)",
+    badgeBg: "var(--green-light)",
+    pattern: "/assets/StatCard/green.png",
+    icon: Globe,
+    themeClass: "flag-languages",
+    badge: "دپارتمان زبان‌های خارجی",
+  },
+};
 
 export default function CoursesPage() {
   const [store, setStore] = useState(getPanelStore);
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
   const instScroll = useHorizontalDragScroll();
+
+  useEffect(() => {
+    async function fetchCourses() {
+      try {
+        const data = await getAllCourses();
+        setCourses(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error("Failed to load courses:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchCourses();
+  }, []);
 
   useEffect(() => {
     const handleStoreChange = (e) => {
@@ -20,15 +71,80 @@ export default function CoursesPage() {
     return () => window.removeEventListener("rokad_panel_store_changed", handleStoreChange);
   }, []);
 
-  const displayedSuggestedGroups = Object.values(SUGGESTED_BY_DEPT);
+  // Format flagship courses from real API courses
+  const flagshipCourses = courses.slice(0, 3).map((c, i) => {
+    const deptInfo = DEPT_CONFIG[c.category] || DEPT_CONFIG["فناوری اطلاعات"];
+    return {
+      deptId: deptInfo.deptId,
+      deptName: c.category || deptInfo.deptName,
+      themeClass: deptInfo.themeClass,
+      pattern: deptInfo.pattern,
+      badge: c.isInPerson || c.mode === "in-person" ? "دوره حضوری و کارگاهی" : "دوره آنلاین و پروژه محور",
+      title: c.title,
+      inst: c.instructor?.fullName || c.instructor?.name || "استاد کالج رکاد",
+      desc: c.description || c.headline || "آموزش جامع و پروژه محور متناسب با نیازهای بازار کار ایران و بین‌الملل.",
+      hours: c.duration || `${c.hours || 40} ساعت آموزش`,
+      students: `${Number(c.studentCount || 120).toLocaleString("fa-IR")} هنرجو`,
+      rating: "۴.۹",
+      price: c.price ? `${Number(c.price).toLocaleString("fa-IR")} تومان` : "رایگان",
+      slug: c.slug || c.id || c._id,
+      mode: c.isInPerson || c.mode === "in-person" ? "in-person" : "online",
+      deptHref: `/dept/${deptInfo.deptId}`,
+      deptBtnText: `مشاهده دپارتمان ${c.category || deptInfo.deptName}`,
+      icon: deptInfo.icon,
+    };
+  });
+
+  // Group real courses dynamically by category
+  const groupedCategories = {};
+  courses.forEach((c) => {
+    const cat = c.category || "فناوری اطلاعات";
+    const deptInfo = DEPT_CONFIG[cat] || DEPT_CONFIG["فناوری اطلاعات"];
+    if (!groupedCategories[cat]) {
+      groupedCategories[cat] = {
+        deptId: deptInfo.deptId,
+        deptName: cat,
+        badgeColor: deptInfo.badgeColor,
+        badgeBg: deptInfo.badgeBg,
+        pattern: deptInfo.pattern,
+        courses: [],
+      };
+    }
+    groupedCategories[cat].courses.push({
+      id: c.id || c._id,
+      title: c.title,
+      cat: cat,
+      inst: c.instructor?.fullName || c.instructor?.name || "استاد کالج",
+      hours: c.duration || `${c.hours || 30} ساعت`,
+      students: `${Number(c.studentCount || 85).toLocaleString("fa-IR")} هنرجو`,
+      rating: "۴.۸",
+      price: c.price ? `${Number(c.price).toLocaleString("fa-IR")} تومان` : "رایگان",
+      tag: c.isInPerson || c.mode === "in-person" ? "حضوری" : "آنلاین",
+      tagType: "hot",
+      slug: c.slug || c.id || c._id,
+      mode: c.isInPerson || c.mode === "in-person" ? "in-person" : "online",
+    });
+  });
+
+  const displayedSuggestedGroups = Object.values(groupedCategories);
 
   return (
     <div className="ch-page">
       <CoursesHubHero />
 
       <div className="ch-container">
-        <FlagshipSection flagshipCourses={FLAGSHIP_COURSES} store={store} />
-        <SuggestedGroupSection suggestedGroups={displayedSuggestedGroups} store={store} />
+        {loading ? (
+          <div className="py-20 text-center text-stone-500 font-bold">در حال بارگذاری دوره‌ها از سرور...</div>
+        ) : (
+          <>
+            {flagshipCourses.length > 0 && (
+              <FlagshipSection flagshipCourses={flagshipCourses} store={store} />
+            )}
+            {displayedSuggestedGroups.length > 0 && (
+              <SuggestedGroupSection suggestedGroups={displayedSuggestedGroups} store={store} />
+            )}
+          </>
+        )}
         <InstructorsSection topInstructors={TOP_INSTRUCTORS} instScroll={instScroll} />
       </div>
     </div>
