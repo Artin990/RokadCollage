@@ -77,15 +77,11 @@ export default function Courses() {
   ];
 
   return (
-    <section className="v2-courses" id="courses">
+    <section className="section v2-courses" id="courses">
       <PatternLayer />
-      <div className="container">
-        <div className="v2-header">
+      <div className="container section-inner">
+        <div className="head">
           <RotatedHeading
-            badge="دوره‌های آموزشی"
-            badgeBg="var(--college)"
-            badgeColor="var(--navy)"
-            tag="h2"
             words={[
               { t: "مسیر", rot: "-1deg" },
               { t: "یادگیری", rot: "1deg" },
@@ -96,63 +92,67 @@ export default function Courses() {
               { t: "کن", rot: "-0.5deg" },
             ]}
           />
-          <p className="v2-sub">
+          <p className="lead" style={{ color: "var(--ink-subtle)", margin: "0.5rem auto 0", fontWeight: 500 }}>
             دوره‌های پروژه‌محور با جدیدترین متدهای آموزشی؛ از پایه تا ورود به بازار کار.
           </p>
+        </div>
 
-          <div className="v2-tabs-wrap">
-            <div className="v2-tabs" role="tablist">
-              {segs.map((s) => (
-                <button
-                  key={s.f}
-                  type="button"
-                  role="tab"
-                  aria-selected={filter === s.f}
-                  className={"v2-tab" + (filter === s.f ? " active" : "")}
-                  onClick={() => setFilter(s.f)}
-                >
-                  {s.label}
-                  <span className="v2-cnt">{s.count}</span>
-                </button>
-              ))}
-            </div>
+        <div className="v2-controls">
+          <div className="segment" role="tablist">
+            {segs.map((s) => (
+              <button
+                key={s.f}
+                type="button"
+                role="tab"
+                aria-selected={filter === s.f}
+                data-f={s.f}
+                className={"seg-btn" + (filter === s.f ? " on" : "")}
+                onClick={() => setFilter(s.f)}
+              >
+                <span className="dot" />
+                {s.label}
+                <span className="cnt">{s.count}</span>
+              </button>
+            ))}
+          </div>
 
-            <div className="v2-nav" aria-label="ورق‌زدن دوره‌ها">
-              <button
-                type="button"
-                className="v2-arrow"
-                aria-label="صفحه قبلی"
-                disabled={safePage === 0}
-                onClick={() => setPage((p) => Math.max(0, p - 1))}
-              >
-                <Chevron right={true} />
-              </button>
-              <button
-                type="button"
-                className="v2-arrow"
-                aria-label="صفحه بعدی"
-                disabled={safePage >= pageCount - 1}
-                onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
-              >
-                <Chevron right={false} />
-              </button>
-            </div>
+          <div className="v2-nav-arrows" aria-label="ورق‌زدن دوره‌ها">
+            <button
+              type="button"
+              className="v2-icon-btn"
+              aria-label="صفحه قبلی"
+              disabled={safePage === 0}
+              onClick={() => setPage((p) => Math.max(0, p - 1))}
+            >
+              <Chevron right={true} />
+            </button>
+            <button
+              type="button"
+              className="v2-icon-btn"
+              aria-label="صفحه بعدی"
+              disabled={safePage >= pageCount - 1}
+              onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
+            >
+              <Chevron right={false} />
+            </button>
           </div>
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 py-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-8">
             {[1, 2, 3, 4].map((n) => (
-              <div key={n} className="h-80 bg-white border-2 border-[#292827] rounded-2xl animate-pulse p-4" />
+              <div key={n} className="h-64 bg-white border-2 border-[#292827] rounded-2xl animate-pulse p-4" />
             ))}
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-12 text-stone-500 font-bold">هیچ دوره‌ای در این بخش یافت نشد.</div>
         ) : (
-          <div className="v2-grid">
-            {filtered.slice(safePage * perPage, (safePage + 1) * perPage).map((c, i) => (
-              <CourseCard key={c._id || i} course={c} index={safePage * perPage + i} store={store} />
-            ))}
+          <div className="v2-carousel">
+            <div className="v2-page">
+              {filtered.slice(safePage * perPage, (safePage + 1) * perPage).map((c, i) => (
+                <CourseCard key={c._id || i} course={c} index={safePage * perPage + i} store={store} />
+              ))}
+            </div>
           </div>
         )}
 

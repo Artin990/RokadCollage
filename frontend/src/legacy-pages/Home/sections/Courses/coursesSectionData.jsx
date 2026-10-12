@@ -23,10 +23,19 @@ export const MODE_ICON = {
   ),
 };
 
+export const COLOR_PALETTE = [
+  { bg: "var(--college-light)", fg: "var(--college-darker)", border: "var(--college-light-active)", accent: "var(--college)" },
+  { bg: "#E9EAEF", fg: "#182044", border: "#BABDCC", accent: "var(--navy-alt)" },
+  { bg: "#E6F5F3", fg: "#28544F", border: "#CCEAE6", accent: "var(--ecosystem)" },
+  { bg: "#FCE8EF", fg: "#A81344", border: "#F5B8CC", accent: "var(--female)" },
+];
+
 export const catColors = {
-  "فناوری اطلاعات": { bg: "var(--college-light)", fg: "var(--college-darker)", border: "var(--college-light-active)", accent: "var(--college)" },
+  "فناوری اطلاعات": { bg: "#E9EAEF", fg: "#182044", border: "#BABDCC", accent: "var(--navy-alt)" },
+  "کسب و کار": { bg: "var(--college-light)", fg: "var(--college-darker)", border: "var(--college-light-active)", accent: "var(--college)" },
   "گرافیک": { bg: "#FCE8EF", fg: "#A81344", border: "#F5B8CC", accent: "var(--female)" },
   "زبان و MBA": { bg: "#E6F5F3", fg: "#28544F", border: "#CCEAE6", accent: "var(--ecosystem)" },
+  "زبان‌های خارجی": { bg: "#E6F5F3", fg: "#28544F", border: "#CCEAE6", accent: "var(--ecosystem)" },
 };
 
 export const courseIcons = [

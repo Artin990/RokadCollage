@@ -124,32 +124,34 @@ export default function Blogs() {
   const shift = isMobile ? idx * step + (dragDx || 0) : 0;
 
   return (
-    <section className="mag-section" id="blog">
+    <section className="section mag-section" id="blog">
       <PatternLayer />
       <div className="container">
         <div className="mag-head">
-          <div className="mag-head-info">
-            <span className="mag-badge">مجلهٔ کالج رکاد</span>
-            <h2>
-              <span>روایت‌ها،</span> <span className="mk">بینش‌ها</span>{" "}
-              <span>و تجربه‌ها</span>
+          <div className="left">
+            <h2 className="mag-title">
+              <span className="w w1">روایت‌ها،</span>
+              <span className="w w2">بینش‌ها</span>
+              <span className="w w3">و تجربه‌ها</span>
             </h2>
-            <p className="mag-desc">
+            <p style={{ color: "var(--ink-subtle)", margin: "8px 0 0", fontSize: "14.5px", fontWeight: 500 }}>
               مقاله‌های دست‌اول از مدیران و مدرسین کالج برای تسلط بر مهارت‌های روز
             </p>
           </div>
 
-          <Link href="/blog" className="mag-all-link">
-            مشاهده همه مقالات
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16">
-              <path d="M15 6l-6 6 6 6" />
-            </svg>
-          </Link>
+          <div className="right">
+            <Link href="/blog" className="mag-btn">
+              <span className="mag-btn-text">مشاهده همه مقالات</span>
+              <svg className="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16">
+                <path d="M15 6l-6 6 6 6" />
+              </svg>
+            </Link>
+          </div>
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-8">
-            {[1, 2, 3].map((n) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-8">
+            {[1, 2].map((n) => (
               <div key={n} className="h-64 bg-white border-2 border-[#292827] rounded-2xl animate-pulse" />
             ))}
           </div>
@@ -157,7 +159,7 @@ export default function Blogs() {
           <div className="text-center py-12 text-stone-500 font-bold">هنوز مقاله‌ای منتشر نشده است.</div>
         ) : (
           <div
-            className="mag-carousel"
+            className={`mag-carousel-wrap${dragging ? " dragging" : ""}`}
             ref={carRef}
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
@@ -182,17 +184,17 @@ export default function Blogs() {
                   <article className="mag-card" key={a._id || i}>
                     <div className="shadow" />
                     <div className="body">
-                      <div className="cover" style={{ background: "linear-gradient(135deg, var(--college-light) 0%, #ffd44d 100%)" }}>
+                      <div className="cover">
                         <span className="num">۰{i + 1}</span>
                         <span className="glyph-lg">✦</span>
                       </div>
                       <div className="info">
                         <div className="cat-row">
-                          <span className="cat">{a.category}</span>
+                          <span className="cat">{a.category || "مقاله"}</span>
                           <span className="read-time">{a.readTime || "۵ دقیقه"}</span>
                         </div>
                         <h3>
-                          <Link href={`/blog/${articleSlug}`} className="mag-title-link">
+                          <Link href={`/blog/${articleSlug}`}>
                             {a.title}
                           </Link>
                         </h3>

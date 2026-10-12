@@ -5,6 +5,7 @@ import { toggleWishlist } from "@/data/panelStore.js";
 import { isWishlisted } from "@/data/selectors.js";
 import {
   catColors,
+  COLOR_PALETTE,
   courseIcons,
   toPersianNum,
   MODE_LABEL,
@@ -12,7 +13,7 @@ import {
 } from "./coursesSectionData.jsx";
 
 export function CourseCard({ course, index, store }) {
-  const cat = catColors[course.category] || catColors["فناوری اطلاعات"];
+  const cat = COLOR_PALETTE[index % COLOR_PALETTE.length];
   const icon = courseIcons[index % courseIcons.length];
   const num = toPersianNum(index + 1);
   const mode = course.mode === "in-person" || course.isInPerson ? "onsite" : "online";
