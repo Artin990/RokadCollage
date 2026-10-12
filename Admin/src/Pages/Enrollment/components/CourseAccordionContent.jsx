@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import GroupsIcon from "@mui/icons-material/Groups";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import axiosInstance from "../../../Utils/axiosInstance";
+import { fetchCourseSessions } from "../../Course/InPerson/api/inPersonApi";
 import Notify from "../../../Utils/notify";
 import Loading from "../../../Components/Loading";
 import { Badge } from "../../../Components/UI";
@@ -11,21 +10,22 @@ import { toPersianDigits } from "../../../Utils/jalaliDate";
 import EnrolledStudentsList from "./EnrolledStudentsList";
 
 /**
- * Level 2 Component — Course Accordion Content
- * - In-Person: fetches and renders class sessions, expands level 3 enrolled students upon selection.
- * - Virtual: renders direct virtual notice and renders level 3 enrolled students.
+ * Level 2 Component — In-Person Course Class Sessions & Enrolled Students
+ * Fetches and renders class sessions, expands level 3 enrolled students upon selection.
  */
-export default function CourseAccordionContent({ course, courseId, courseTitle }) {
-  const targetCourse = course || { _id: courseId, title: courseTitle, type: "حضوری" };
+export default function CourseAccordionContent({ course, courseId: propCourseId, courseTitle: propCourseTitle }) {
   const [sessions, setSessions] = useState([]);
-  const [loadingSessions, setLoadingSessions] = useState(false);
+  const [loadingSessions, setLoadingSessions] = useState(true);
   const [selectedSessionId, setSelectedSessionId] = useState(null);
 
+  const activeCourseId = course?._id || propCourseId;
+  const activeCourseTitle = course?.title || propCourseTitle || "";
+
   const fetchSessions = async (isMounted = true) => {
-    if (targetCourse.type && targetCourse.type !== "حضوری") return;
+    if (!activeCourseId) return;
     setLoadingSessions(true);
     try {
-      const res = await axiosInstance.get(`in-person-courses/${targetCourse._id}/sessions`);
+      const res = await fetchCourseSessions(activeCourseId);
       if (isMounted && res && res.data) {
         const sessionList = Array.isArray(res.data)
           ? res.data
@@ -37,7 +37,6 @@ export default function CourseAccordionContent({ course, courseId, courseTitle }
       }
     } catch (err) {
       if (isMounted) {
-        console.error("Error fetching sessions:", err);
         Notify.error("خطا در دریافت کدهای کلاس دوره");
       }
     } finally {
@@ -52,27 +51,11 @@ export default function CourseAccordionContent({ course, courseId, courseTitle }
     return () => {
       isMounted = false;
     };
-  }, [targetCourse._id, targetCourse.type]);
-
-  // For virtual courses, directly display the enrolled students list
-  if (targetCourse.type === "مجازی") {
-    return (
-      <div className="flex flex-col gap-4 p-4 md:p-5 bg-bg-light/50 border-t border-border/80">
-        <div className="flex items-center gap-2.5 p-3 rounded-xl bg-info-light/60 border border-info-border text-info-text text-xs leading-relaxed">
-          <InfoOutlinedIcon fontSize="small" className="shrink-0" />
-          <span>
-            این دوره به صورت <strong>مجازی</strong> برگزار می‌شود و بدون کد کلاس است. تمامی ثبت‌نام‌کنندگان مستقیماً در ادامه لیست شده‌اند:
-          </span>
-        </div>
-
-        <EnrolledStudentsList courseId={targetCourse._id} title={targetCourse.title} />
-      </div>
-    );
-  }
+  }, [course?._id]);
 
   // For in-person courses
   return (
-    <div className="flex flex-col gap-5 p-4 md:p-5 bg-bg-light/50 border-t border-border/80">
+    <div className="flex flex-col gap-5 p-4 md:p-5 bg-bg-light/40">
       {/* Level 2: Class Sessions List */}
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
@@ -90,10 +73,12 @@ export default function CourseAccordionContent({ course, courseId, courseTitle }
         </div>
 
         {loadingSessions ? (
-          <div className="py-6 flex flex-col items-center justify-center gap-2">
-            <Loading size={6} />
-            <span className="text-xs text-text-muted">در حال بارگذاری کدهای کلاس...</span>
-          </div>
+          <Loading
+            container
+            minHeight="min-h-[140px] sm:min-h-[170px]"
+            size={6}
+            text="در حال بارگذاری کدهای کلاس..."
+          />
         ) : sessions.length === 0 ? (
           <div className="text-center py-6 border border-dashed border-border/80 rounded-xl text-text-muted text-xs">
             هنوز هیچ کد کلاسی برای این دوره حضوری تعریف نشده است.
@@ -158,15 +143,15 @@ export default function CourseAccordionContent({ course, courseId, courseTitle }
 
       {/* Level 3: Enrolled Students of Selected Session */}
       {selectedSessionId && (
-        <div className="pt-3 border-t border-border/80 animate-fadeIn">
+        <div className="pt-1 flex flex-col gap-3 animate-fadeIn">
           {(() => {
             const currentSession = sessions.find((s) => s._id === selectedSessionId);
             return (
               <EnrolledStudentsList
                 sessionId={selectedSessionId}
                 sessionCode={currentSession?.code}
-                title={course.title}
-                courseId={course._id}
+                title={activeCourseTitle}
+                courseId={activeCourseId}
                 onEnrollmentChanged={() => fetchSessions(true)}
               />
             );

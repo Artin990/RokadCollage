@@ -1,11 +1,10 @@
 import * as Yup from "yup";
 import {
   commonCourseFields,
-  iconCreateValidation,
-  iconUpdateValidation,
-} from "../../shared/courseCommonSchema";
-
-const hex24Regex = /^[0-9a-fA-F]{24}$/;
+  imgCreateValidation,
+  imgUpdateValidation,
+} from "../../schemas/courseCommonSchema";
+import { hex24Regex } from "../../../../Constants/validationRules";
 
 export const virtualSpecificSchemaFields = {
   spotplayerCourseId: Yup.string()
@@ -17,11 +16,11 @@ export const virtualSpecificSchemaFields = {
 export const virtualCourseValidationSchema = Yup.object({
   ...commonCourseFields,
   ...virtualSpecificSchemaFields,
-  icon: iconCreateValidation,
+  img: imgCreateValidation,
 });
 
 export const virtualCourseUpdateSchema = Yup.object({
   ...commonCourseFields,
   ...virtualSpecificSchemaFields,
-  icon: iconUpdateValidation,
+  img: imgUpdateValidation,
 });

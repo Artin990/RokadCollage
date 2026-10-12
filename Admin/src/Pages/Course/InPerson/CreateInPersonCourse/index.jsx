@@ -19,7 +19,7 @@ export default function CreateInPersonCourse() {
       price: "",
       description: "",
       tags: [],
-      icon: "",
+      img: null,
       teachers: [],
       timedDiscount: {
         percentage: "",
@@ -66,7 +66,7 @@ export default function CreateInPersonCourse() {
   });
 
   return (
-    <div dir="rtl" className="p-6 md:p-8 w-full bg-background min-h-screen">
+    <div dir="rtl" className="p-3.5 sm:p-5 md:p-6 lg:p-8 pb-4 sm:pb-6 lg:pb-8 w-full bg-background min-h-full flex flex-col">
       <PageHeader
         title="افزودن دوره حضوری جدید"
         subtitle="تعریف مشخصات، قیمت، کدهای کلاس و موقعیت مکانی دوره حضوری"

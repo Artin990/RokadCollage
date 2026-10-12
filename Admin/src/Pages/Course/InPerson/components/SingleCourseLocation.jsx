@@ -102,10 +102,10 @@ export default function SingleCourseLocation({ location }) {
           </div>
         ) : (
           <div className="flex flex-col gap-3.5">
-            {/* Map Selector Tabs (if more than 1 map service is provided) */}
+            {/* Map Selector Tabs */}
             {mapSources.length > 1 && (
               <div className="flex flex-wrap items-center gap-2 pb-2 border-b border-border/60">
-                <span className="text-xs font-semibold text-text-muted ml-1">
+                <span className="text-xs font-semibold text-text-muted me-1">
                   انتخاب سرویس نقشه:
                 </span>
                 {mapSources.map((map) => {
@@ -144,7 +144,7 @@ export default function SingleCourseLocation({ location }) {
               />
             </div>
 
-            {/* Direct Navigation Links for all configured maps */}
+            {/* Direct Navigation Links */}
             <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-border/50">
               <span className="text-xs text-text-muted">
                 مسیریابی مستقیم در اپلیکیشن‌های نقشه:

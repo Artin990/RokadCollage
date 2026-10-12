@@ -5,7 +5,7 @@ export default function InPersonCourseLayout() {
   return <Outlet />;
 }
 
-export { default as InPersonCourseListPage } from "./InPersonCourseListPage";
-export { default as CreateInPersonCourse } from "./CreateInPersonCourse";
-export { default as UpdateInPersonCourse } from "./UpdateInPersonCourse";
-export { default as SingleInPersonCourse } from "./SingleInPersonCourse";
+export { default as InPersonCourseListPage } from "./InPersonCourseListPage/index.jsx";
+export { default as CreateInPersonCourse } from "./CreateInPersonCourse/index.jsx";
+export { default as UpdateInPersonCourse } from "./UpdateInPersonCourse/index.jsx";
+export { default as SingleInPersonCourse } from "./SingleInPersonCourse/index.jsx";

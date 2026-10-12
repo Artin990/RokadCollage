@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from "react";
+import {
+  fetchEnrolledStudents,
+  retrySpotPlayerLicense,
+  manualEnrollVirtual,
+} from "../api/enrollmentApi";
 import axiosInstance from "../../../Utils/axiosInstance";
 import Notify from "../../../Utils/notify";
-import Search from "../../../Components/Search";
 import Filter from "../../../Components/Filter";
 import Loading from "../../../Components/Loading";
-import RefreshIcon from "@mui/icons-material/Refresh";
-import { Button } from "../../../Components/UI";
+import { Button, Toolbar, CardGridSkeleton } from "../../../Components/UI";
 import UserProfileModal from "../../../Components/UserProfileModal";
-import AddStudentModal from "../shared/AddStudentModal";
-import LicenseKeyModal from "../shared/LicenseKeyModal";
+import AddStudentModal from "./AddStudentModal";
+import LicenseKeyModal from "./LicenseKeyModal";
 import VirtualCourseAccordionItem from "./VirtualCourseAccordionItem";
 import { courseCategoryOptions } from "../../../Constants/validationRules";
+import useInfiniteScroll from "../../../Utils/useInfiniteScroll";
 
 export default function VirtualEnrollmentsTab() {
   const [courses, setCourses] = useState([]);
@@ -49,13 +53,18 @@ export default function VirtualEnrollmentsTab() {
       if (filters.category) filterParams += `&category=${encodeURIComponent(filters.category)}`;
 
       const data = await axiosInstance.get(
-        `virtual-courses?limit=${LIMIT}&page=${pageNumber}&sort=-_id${
-          query ? `&q=${encodeURIComponent(query)}` : ""
+        `virtual-courses?limit=${LIMIT}&page=${pageNumber}&sort=-_id${query ? `&q=${encodeURIComponent(query)}` : ""
         }${filterParams}`
       );
 
       if (data && data.success !== false) {
-        const fetched = Array.isArray(data) ? data : data.data || [];
+        const fetched = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.data)
+          ? data.data
+          : Array.isArray(data?.data?.data)
+          ? data.data.data
+          : [];
         setHasMore(fetched.length >= LIMIT);
 
         if (pageNumber === 1) {
@@ -84,28 +93,24 @@ export default function VirtualEnrollmentsTab() {
     fetchCourses(page, searchQuery, activeFilters);
   }, [page, searchQuery, activeFilters]);
 
-  // Infinite Scroll Trigger
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollHeight = document.documentElement.scrollHeight;
-      const scrollTop = document.documentElement.scrollTop;
-      const clientHeight = window.innerHeight;
-
-      if (scrollHeight - scrollTop <= clientHeight + 150 && !loading && !loadingMore && hasMore) {
-        setPage((prevPage) => prevPage + 1);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [loading, loadingMore, hasMore]);
+  useInfiniteScroll({
+    onReachBottom: () => setPage((prevPage) => prevPage + 1),
+    hasMore,
+    isLoading: loading || loadingMore,
+  });
 
   const fetchCourseStudents = async (courseId) => {
     setLoadingStudents((prev) => ({ ...prev, [courseId]: true }));
     try {
-      const res = await axiosInstance.get(`enrollment/all?course=${courseId}&sort=-createdAt`);
+      const res = await fetchEnrolledStudents(`course=${courseId}&sort=-createdAt`);
       if (res && res.success !== false) {
-        const list = Array.isArray(res) ? res : res.data || [];
+        const list = Array.isArray(res)
+          ? res
+          : Array.isArray(res?.data)
+          ? res.data
+          : Array.isArray(res?.data?.data)
+          ? res.data.data
+          : [];
         setStudentsByCourse((prev) => ({ ...prev, [courseId]: list }));
       }
     } catch (err) {
@@ -129,7 +134,7 @@ export default function VirtualEnrollmentsTab() {
   const handleRetryLicense = async (enrollmentId, courseId) => {
     setRetryingLicenseId(enrollmentId);
     try {
-      const res = await axiosInstance.post(`enrollment/${enrollmentId}/retry-license`);
+      const res = await retrySpotPlayerLicense(enrollmentId);
       if (res && res.success) {
         Notify.success(res.message || "لایسنس اسپات‌پلیر با موفقیت صادر شد");
         fetchCourseStudents(courseId);
@@ -147,10 +152,7 @@ export default function VirtualEnrollmentsTab() {
     if (!addModalCourse) return;
     setIsSubmittingAdd(true);
     try {
-      const res = await axiosInstance.post(
-        `virtual-courses/${addModalCourse._id}/enrollments`,
-        { userId: selectedUser._id }
-      );
+      const res = await manualEnrollVirtual(addModalCourse._id, selectedUser._id);
       if (res && res.success !== false) {
         Notify.success(res?.message || "کاربر با موفقیت در این دوره مجازی ثبت‌نام شد");
         setAddModalCourse(null);
@@ -167,64 +169,53 @@ export default function VirtualEnrollmentsTab() {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Search and Filters toolbar */}
-      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
-        <Search
-          onSearch={(q) => { setSearchQuery(q); setPage(1); }}
-          placeholder="جستجو در دوره‌های مجازی..."
-        />
-
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="md"
-            icon={<RefreshIcon className={refreshing ? "animate-spin" : ""} fontSize="small" />}
-            onClick={() => { setPage(1); fetchCourses(1, searchQuery, activeFilters, true); }}
-            disabled={refreshing}
-          >
-            تازه‌سازی
-          </Button>
-
-          <Filter
-            filterConfig={[{ field: "category", label: "دسته‌بندی", options: courseCategoryOptions }]}
-            onFilterChange={(f) => { setActiveFilters(f); setPage(1); }}
-          />
-        </div>
-      </div>
+      {/* Unified Toolbar */}
+      <Toolbar
+        searchPlaceholder="جستجو در دوره‌های مجازی..."
+        searchValue={searchQuery}
+        onSearch={(q) => { setSearchQuery(q); setPage(1); }}
+        filterConfig={[{ field: "category", label: "دسته‌بندی", options: courseCategoryOptions }]}
+        onFilterChange={(f) => { setActiveFilters(f); setPage(1); }}
+        onRefresh={() => { setPage(1); fetchCourses(1, searchQuery, activeFilters, true); }}
+        isRefreshing={refreshing}
+      />
 
       {/* Courses Accordion List */}
-      {loading ? (
-        <div className="py-20 flex justify-center"><Loading size={10} /></div>
-      ) : courses.length === 0 ? (
-        <div className="text-center py-12 bg-surface rounded-2xl border border-dashed border-border text-text-muted text-sm">
-          دوره‌ای یافت نشد.
-        </div>
-      ) : (
-        <div className="flex flex-col gap-4">
-          {courses.map((course) => (
-            <VirtualCourseAccordionItem
-              key={course._id}
-              course={course}
-              isExpanded={expandedCourseId === course._id}
-              onToggle={() => toggleCourseAccordion(course._id)}
-              students={studentsByCourse[course._id] || []}
-              loadingStudents={loadingStudents[course._id]}
-              onAddStudent={(c) => setAddModalCourse(c)}
-              onRetryLicense={handleRetryLicense}
-              onViewProfile={(u) => setSelectedStudentForProfile(u)}
-              onViewLicenseKey={(enrId, name) => setLicenseKeyModalData({ enrollmentId: enrId, studentName: name })}
-              retryingLicenseId={retryingLicenseId}
-            />
-          ))}
-          {loadingMore && <div className="py-4 flex justify-center"><Loading size={6} /></div>}
-        </div>
-      )}
+      <div className="flex flex-col flex-1">
+        {loading ? (
+          <CardGridSkeleton count={4} cols="grid-cols-1" />
+        ) : courses.length === 0 ? (
+          <div className="text-center py-12 bg-surface rounded-2xl border border-dashed border-border text-text-muted text-sm">
+            دوره‌ای یافت نشد.
+          </div>
+        ) : (
+          <div className="flex flex-col gap-4">
+            {courses.map((course) => (
+              <VirtualCourseAccordionItem
+                key={course._id}
+                course={course}
+                isExpanded={expandedCourseId === course._id}
+                onToggle={() => toggleCourseAccordion(course._id)}
+                students={studentsByCourse[course._id] || []}
+                loadingStudents={loadingStudents[course._id]}
+                onAddStudent={(c) => setAddModalCourse(c)}
+                onRetryLicense={handleRetryLicense}
+                onViewProfile={(u) => setSelectedStudentForProfile(u)}
+                onViewLicenseKey={(enrId, name) => setLicenseKeyModalData({ enrollmentId: enrId, studentName: name })}
+                retryingLicenseId={retryingLicenseId}
+              />
+            ))}
+            {loadingMore && <div className="py-4 flex justify-center"><Loading size={6} /></div>}
+          </div>
+        )}
+      </div>
 
       {/* User Profile Modal */}
       {selectedStudentForProfile && (
         <UserProfileModal
           isOpen={Boolean(selectedStudentForProfile)}
           user={selectedStudentForProfile}
+          userId={selectedStudentForProfile._id}
           onClose={() => setSelectedStudentForProfile(null)}
         />
       )}

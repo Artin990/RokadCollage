@@ -1,6 +1,7 @@
 import * as Yup from "yup";
+import { safeTextRegex } from "../../../Constants/validationRules";
 
-export const safeTextRegex = /^[\u0600-\u06FF\sA-Za-z0-9\-\_،؛؟!.:«»",;?()\u200c\u200d]+$/;
+export { safeTextRegex };
 
 export const categoryOptions = [
   { value: "فناوری اطلاعات", label: "فناوری اطلاعات" },
@@ -55,18 +56,18 @@ export const commonCourseFields = {
   ),
 };
 
-export const iconCreateValidation = Yup.mixed()
-  .required("ارسال کد SVG یا فایل آیکون دوره الزامی است")
+export const imgCreateValidation = Yup.mixed()
+  .required("انتخاب تصویر دوره الزامی است")
   .test(
     "fileSize",
-    "حجم فایل آیکون نباید بیشتر از ۵ مگابایت باشد",
+    "حجم فایل تصویر نباید بیشتر از ۵ مگابایت باشد",
     (val) => !val || !(val instanceof File) || val.size <= 5 * 1024 * 1024
   );
 
-export const iconUpdateValidation = Yup.mixed()
+export const imgUpdateValidation = Yup.mixed()
   .nullable()
   .test(
     "fileSize",
-    "حجم فایل آیکون نباید بیشتر از ۵ مگابایت باشد",
+    "حجم فایل تصویر نباید بیشتر از ۵ مگابایت باشد",
     (val) => !val || !(val instanceof File) || val.size <= 5 * 1024 * 1024
   );

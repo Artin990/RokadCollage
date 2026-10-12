@@ -2,15 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
+import ForumOutlinedIcon from "@mui/icons-material/ForumOutlined";
 import Notify from "../../../../Utils/notify";
-import Loading from "../../../../Components/Loading";
-import { Button, Card, PageHeader } from "../../../../Components/UI";
+import { Button, PageHeader, LoadingState } from "../../../../Components/UI";
 import { fetchVirtualCourseById } from "../api/virtualApi";
-import SingleCourseHero from "../../shared/singleCourse/SingleCourseHero";
-import SingleCourseDiscounts from "../../shared/singleCourse/SingleCourseDiscounts";
-import SingleCourseAbout from "../../shared/singleCourse/SingleCourseAbout";
-import SingleCourseSprints from "../../shared/singleCourse/SingleCourseSprints";
-import SingleCourseTeachers from "../../shared/singleCourse/SingleCourseTeachers";
+import SingleCourseHero from "../../components/SingleCourseHero";
+import SingleCourseDiscounts from "../../components/SingleCourseDiscounts";
+import SingleCourseAbout from "../../components/SingleCourseAbout";
+import SingleCourseSprints from "../../components/SingleCourseSprints";
+import SingleCourseTeachers from "../../components/SingleCourseTeachers";
 
 export default function SingleVirtualCourse() {
   const { id } = useParams();
@@ -43,58 +43,75 @@ export default function SingleVirtualCourse() {
       }
     };
 
-    if (id) loadCourse();
+    if (id) {
+      loadCourse();
+    }
   }, [id]);
 
   if (loading) {
     return (
-      <div dir="rtl" className="flex justify-center items-center min-h-[70vh] bg-background">
-        <Loading size={12} />
+      <div dir="rtl" className="p-3.5 sm:p-5 md:p-6 lg:p-8 pb-4 sm:pb-6 lg:pb-8 w-full bg-background min-h-full flex flex-col">
+        <PageHeader
+          title="مشخصات دوره مجازی"
+          subtitle="در حال بارگذاری اطلاعات دوره..."
+          backTo="/virtual-courses"
+        />
+        <LoadingState text="در حال دریافت اطلاعات دوره مجازی..." minHeight="min-h-[440px]" />
       </div>
     );
   }
 
   if (!course) {
     return (
-      <div dir="rtl" className="p-6 md:p-8 max-w-4xl mx-auto text-center">
-        <Card className="p-8">
-          <h2 className="text-xl font-bold text-secondary mb-3">دوره مجازی یافت نشد</h2>
-          <Button variant="primary" onClick={() => navigate("/virtual-courses")}>
-            بازگشت به لیست دوره‌های مجازی
-          </Button>
-        </Card>
+      <div dir="rtl" className="p-3.5 sm:p-5 md:p-6 lg:p-8 pb-4 sm:pb-6 lg:pb-8 w-full bg-background min-h-full flex flex-col">
+        <PageHeader
+          title="دوره یافت نشد"
+          backTo="/virtual-courses"
+        />
+        <div className="p-12 text-center text-text-secondary bg-surface rounded-2xl border border-dashed border-border mt-4">
+          دوره مجازی مورد نظر یافت نشد یا ممکن است حذف شده باشد.
+        </div>
       </div>
     );
   }
 
   return (
-    <div dir="rtl" className="p-6 md:p-8 w-full bg-background min-h-screen">
+    <div dir="rtl" className="p-3.5 sm:p-5 md:p-6 lg:p-8 pb-4 sm:pb-6 lg:pb-8 w-full bg-background min-h-full flex flex-col">
       <PageHeader
         title={course.title}
-        subtitle="صفحه اختصاصی و مشخصات دوره مجازی (اسپات‌پلیر)"
+        subtitle="جزئیات و مشخصات کامل دوره مجازی، سرفصل‌ها و اساتید"
         backTo="/virtual-courses"
-        backLabel="بازگشت به دوره‌های مجازی"
         action={
-          <Button
-            variant="primary"
-            size="md"
-            icon={<EditIcon fontSize="small" />}
-            onClick={() => navigate(`/virtual-courses/update/${course._id}`)}
-          >
-            ویرایش دوره مجازی
-          </Button>
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <Button
+              variant="outline"
+              size="md"
+              icon={<ForumOutlinedIcon fontSize="small" />}
+              onClick={() => navigate(`/virtual-courses/${course._id}/comments`)}
+            >
+              مدیریت کامنت‌ها و پرسش‌ها
+            </Button>
+            <Button
+              variant="primary"
+              size="md"
+              icon={<EditIcon fontSize="small" />}
+              onClick={() => navigate(`/virtual-courses/update/${course._id}`)}
+            >
+              ویرایش دوره
+            </Button>
+          </div>
         }
       />
 
-      <div className="max-w-5xl mx-auto flex flex-col gap-8">
-        {/* SpotPlayer Key Banner */}
-        <div className="bg-purple-50 border border-purple-200 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+      <div className="flex flex-col gap-6 max-w-5xl mx-auto">
+        {/* SpotPlayer Connection Banner */}
+        <div className="bg-purple-50/80 border border-purple-200/80 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center shrink-0">
               <VpnKeyIcon fontSize="small" />
             </div>
             <div>
-              <h4 className="text-sm font-bold text-secondary">
+              <h4 className="font-bold text-purple-950 text-sm md:text-base">
                 شناسه اتصال به پنل SpotPlayer
               </h4>
               <p className="text-xs text-text-muted mt-0.5">

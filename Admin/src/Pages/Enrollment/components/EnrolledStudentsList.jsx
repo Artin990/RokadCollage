@@ -3,18 +3,35 @@ import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
-import axiosInstance from "../../../Utils/axiosInstance";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import {
+  fetchEnrolledStudents,
+  cancelEnrollment,
+  manualEnrollInPerson,
+} from "../api/enrollmentApi";
 import Notify from "../../../Utils/notify";
+import confirm from "../../../Utils/confirm";
 import Loading from "../../../Components/Loading";
-import { Badge, Button } from "../../../Components/UI";
+import {
+  Badge,
+  Button,
+  Table,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TableHeadCell,
+  TableCell,
+  TableBody,
+} from "../../../Components/UI";
 import { formatJalaliDate, toPersianDigits } from "../../../Utils/jalaliDate";
 import UserProfileModal from "../../../Components/UserProfileModal";
-import AddStudentModal from "../shared/AddStudentModal";
+import AddStudentModal from "./AddStudentModal";
 
 /**
  * Level 3 Component — Displays list of enrolled students for a session or virtual course.
  * - Allows manual user enrollment into session via search modal
  * - Allows clicking on any student name to open the reusable UserProfileModal
+ * - Allows cancelling an enrollment with automated wallet refund if purchased by student
  */
 export default function EnrolledStudentsList({
   sessionId,
@@ -27,26 +44,32 @@ export default function EnrolledStudentsList({
   const [loading, setLoading] = useState(true);
   const [selectedStudentForProfile, setSelectedStudentForProfile] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [cancellingId, setCancellingId] = useState(null);
 
   const fetchStudents = async () => {
     setLoading(true);
     try {
-      let endpoint = "enrollment/all?sort=-createdAt";
+      let queryStr = "sort=-createdAt";
       if (sessionId) {
-        endpoint += `&session=${sessionId}`;
+        queryStr += `&session=${sessionId}`;
       } else if (courseId) {
-        endpoint += `&course=${courseId}`;
+        queryStr += `&course=${courseId}`;
       }
 
-      const res = await axiosInstance.get(endpoint);
+      const res = await fetchEnrolledStudents(queryStr);
       if (res && res.success !== false) {
-        const list = Array.isArray(res) ? res : res.data || [];
+        const list = Array.isArray(res)
+          ? res
+          : Array.isArray(res.data)
+          ? res.data
+          : Array.isArray(res.data?.data)
+          ? res.data.data
+          : [];
         setStudents(list);
       } else {
         Notify.error(res?.message || "خطا در دریافت لیست دانش‌آموزان");
       }
     } catch (err) {
-      console.error("Error fetching enrolled students:", err);
       Notify.error(err.response?.data?.message || err.message || "خطا در دریافت لیست دانش‌آموزان");
     } finally {
       setLoading(false);
@@ -64,20 +87,62 @@ export default function EnrolledStudentsList({
     }
   };
 
+  const handleCancelEnrollment = async (enrollment) => {
+    const studentName = enrollment.user?.fullName || "کاربر";
+    const price = Number(enrollment.pricePaid) || 0;
+
+    const confirmText =
+      price > 0
+        ? `آیا از لغو ثبت‌نام «${studentName}» اطمینان دارید؟ با لغو، مبلغ ${toPersianDigits(
+            price.toLocaleString("fa-IR")
+          )} تومان به کیف پول کاربر بازگردانده شده و ۱ ظرفیت به کد کلاس اضافه می‌شود.`
+        : `آیا از لغو ثبت‌نام دستی «${studentName}» اطمینان دارید؟ این کاربر از دوره حذف شده و ۱ ظرفیت به کد کلاس اضافه خواهد شد.`;
+
+    const isConfirmed = await confirm(
+      "لغو ثبت‌نام دوره حضوری",
+      confirmText,
+      "بله، لغو ثبت‌نام کن",
+      "warning",
+      "#ef4444"
+    );
+
+    if (!isConfirmed) return;
+
+    setCancellingId(enrollment._id);
+    try {
+      const res = await cancelEnrollment(enrollment._id);
+      if (res && res.success !== false) {
+        Notify.success(res?.message || "ثبت‌نام با موفقیت لغو شد");
+        fetchStudents();
+        if (onEnrollmentChanged) {
+          onEnrollmentChanged();
+        }
+      } else {
+        throw new Error(res?.message || "خطا در لغو ثبت‌نام");
+      }
+    } catch (err) {
+      Notify.error(err.message || "خطا در لغو ثبت‌نام دانش‌آموز");
+    } finally {
+      setCancellingId(null);
+    }
+  };
+
   if (loading) {
     return (
-      <div className="py-8 flex flex-col items-center justify-center gap-2">
-        <Loading size={6} />
-        <span className="text-xs text-text-muted">در حال بارگذاری لیست دانش‌آموزان...</span>
-      </div>
+      <Loading
+        container
+        minHeight="min-h-[220px] sm:min-h-[260px]"
+        size={6}
+        text="در حال بارگذاری لیست دانش‌آموزان..."
+      />
     );
   }
 
   return (
     <div className="flex flex-col gap-3">
       {/* Level 3 Header */}
-      <div className="flex flex-wrap items-center justify-between gap-2 px-1">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 px-1">
+        <div className="flex flex-wrap items-center gap-2">
           <PeopleAltOutlinedIcon fontSize="small" className="text-primary" />
           <h5 className="text-xs md:text-sm font-bold text-text-primary">
             دانش‌آموزان ثبت‌نام‌کرده {sessionCode ? `در «${sessionCode}»` : ""}
@@ -93,6 +158,7 @@ export default function EnrolledStudentsList({
             size="sm"
             icon={<PersonAddAlt1Icon fontSize="small" />}
             onClick={() => setIsAddModalOpen(true)}
+            className="w-full sm:w-auto"
           >
             افزودن کاربر به این کلاس
           </Button>
@@ -117,30 +183,36 @@ export default function EnrolledStudentsList({
           )}
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-border/80 bg-surface shadow-2xs">
-          <table className="w-full text-right border-collapse text-xs">
-            <thead>
-              <tr className="bg-bg-subtle/80 text-text-secondary border-b border-border/70 font-semibold">
-                <th className="py-3 px-3.5 w-12 text-center">#</th>
-                <th className="py-3 px-3.5">نام و مشخصات دانش‌آموز</th>
-                <th className="py-3 px-3.5">شماره همراه</th>
-                <th className="py-3 px-3.5">مبلغ پرداختی</th>
-                <th className="py-3 px-3.5">کد تخفیف / نوع</th>
-                <th className="py-3 px-3.5">تاریخ و ساعت ثبت‌نام</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border/50 text-text-primary">
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow isHeader hover={false}>
+                <TableHeadCell align="center" className="w-12">#</TableHeadCell>
+                <TableHeadCell>نام و مشخصات دانش‌آموز</TableHeadCell>
+                <TableHeadCell>شماره همراه</TableHeadCell>
+                <TableHeadCell>مبلغ پرداختی</TableHeadCell>
+                <TableHeadCell>کد تخفیف / نوع</TableHeadCell>
+                <TableHeadCell>تاریخ و ساعت ثبت‌نام</TableHeadCell>
+                <TableHeadCell align="center">عملیات</TableHeadCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
               {students.map((item, index) => {
                 const price = Number(item.pricePaid) || 0;
-                const hasCoupon = Boolean(item.couponCode && item.couponCode.trim());
+                const isManualAdmin = price === 0 || item.couponCode === "ثبت‌نام دستی ادمین";
+                const isRealCoupon = Boolean(
+                  item.couponCode &&
+                  item.couponCode.trim() &&
+                  item.couponCode !== "ثبت‌نام دستی ادمین"
+                );
                 const discount = Number(item.discountAmount) || 0;
 
                 return (
-                  <tr key={item._id || index} className="hover:bg-bg-subtle/40 transition-colors">
-                    <td className="py-3 px-3.5 text-center text-text-muted font-medium">
+                  <TableRow key={item._id || index}>
+                    <TableCell align="center" className="text-text-muted font-medium text-xs">
                       {toPersianDigits(index + 1)}
-                    </td>
-                    <td className="py-3 px-3.5">
+                    </TableCell>
+                    <TableCell>
                       <div
                         onClick={() => setSelectedStudentForProfile(item.user)}
                         className="flex items-center gap-2 cursor-pointer group select-none"
@@ -153,23 +225,29 @@ export default function EnrolledStudentsList({
                           {item.user?.fullName || "کاربر بدون نام"}
                         </span>
                       </div>
-                    </td>
-                    <td className="py-3 px-3.5 font-mono text-text-secondary" dir="ltr">
+                    </TableCell>
+                    <TableCell className="text-text-secondary" dir="ltr">
                       {item.user?.phoneNumber ? toPersianDigits(item.user.phoneNumber) : "—"}
-                    </td>
-                    <td className="py-3 px-3.5 font-semibold text-secondary">
-                      {price === 0 ? (
-                        <Badge variant="success" size="sm">دستی / رایگان</Badge>
+                    </TableCell>
+                    <TableCell className="font-semibold text-secondary">
+                      {isManualAdmin ? (
+                        <Badge variant="success" size="sm" className="whitespace-nowrap font-bold">
+                          رایگان (ثبت‌نام دستی)
+                        </Badge>
                       ) : (
                         `${toPersianDigits(price.toLocaleString("fa-IR"))} تومان`
                       )}
-                    </td>
-                    <td className="py-3 px-3.5">
-                      {hasCoupon ? (
+                    </TableCell>
+                    <TableCell>
+                      {isManualAdmin ? (
+                        <Badge variant="primary" size="sm" className="whitespace-nowrap font-bold">
+                          ثبت‌نام دستی ادمین
+                        </Badge>
+                      ) : isRealCoupon ? (
                         <div className="flex items-center gap-1.5 flex-wrap">
-                          <Badge variant="amber" size="sm" className="font-mono">
+                          <Badge variant="amber" size="sm">
                             <LocalOfferIcon style={{ fontSize: "0.8rem" }} />
-                            {item.couponCode}
+                            <span>{item.couponCode}</span>
                           </Badge>
                           {discount > 0 && (
                             <span className="text-[10px] text-text-muted">
@@ -184,16 +262,30 @@ export default function EnrolledStudentsList({
                       ) : (
                         <span className="text-text-muted">—</span>
                       )}
-                    </td>
-                    <td className="py-3 px-3.5 text-text-secondary">
+                    </TableCell>
+                    <TableCell className="text-text-secondary text-xs">
                       {formatJalaliDate(item.createdAt, { withTime: true })}
-                    </td>
-                  </tr>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Button
+                        variant="ghost"
+                        size="xs"
+                        className="!text-danger hover:!bg-danger/10 hover:!text-danger !px-2.5 !py-1 text-xs"
+                        icon={<DeleteOutlineIcon style={{ fontSize: "1rem" }} />}
+                        disabled={cancellingId === item._id}
+                        loading={cancellingId === item._id}
+                        onClick={() => handleCancelEnrollment(item)}
+                        title="لغو ثبت‌نام و عودت وجه به کیف پول"
+                      >
+                        لغو ثبت‌نام
+                      </Button>
+                    </TableCell>
+                  </TableRow>
                 );
               })}
-            </tbody>
-          </table>
-        </div>
+            </TableBody>
+          </Table>
+        </TableContainer>
       )}
 
       {/* User Profile Modal on Clicking Student Name */}
@@ -215,10 +307,7 @@ export default function EnrolledStudentsList({
           subtitle={`کد کلاس: ${sessionCode || ""}`}
           onConfirm={async (user) => {
             try {
-              const res = await axiosInstance.post(
-                `in-person-courses/${courseId}/sessions/${sessionId}/enrollments`,
-                { userId: user._id }
-              );
+              const res = await manualEnrollInPerson(courseId, sessionId, user._id);
               if (res && res.success !== false) {
                 Notify.success(res?.message || "دانش‌آموز با موفقیت ثبت‌نام شد");
                 setIsAddModalOpen(false);

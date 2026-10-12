@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import { useNavigate, useParams } from "react-router-dom";
 import Notify from "../../../../Utils/notify";
-import Loading from "../../../../Components/Loading";
-import { PageHeader } from "../../../../Components/UI";
+import { PageHeader, LoadingState } from "../../../../Components/UI";
 import { virtualCourseUpdateSchema } from "../schemas/virtualCourseSchema";
 import {
   fetchVirtualCourseById,
@@ -27,7 +26,7 @@ export default function UpdateVirtualCourse() {
     price: "",
     description: "",
     tags: [],
-    icon: "",
+    img: null,
     teachers: [],
     spotplayerCourseId: "",
     timedDiscount: {
@@ -58,7 +57,7 @@ export default function UpdateVirtualCourse() {
           price: course.price ?? "",
           description: course.description || "",
           tags: course.tags || [],
-          icon: course.icon || "",
+          img: course.img || null,
           teachers: (course.teachers || []).map((t) => (typeof t === "object" ? t._id : t)),
           spotplayerCourseId: course.spotplayerCourseId || "",
           timedDiscount: {
@@ -126,29 +125,25 @@ export default function UpdateVirtualCourse() {
     },
   });
 
-  if (loading) {
-    return (
-      <div dir="rtl" className="flex justify-center items-center min-h-[70vh] bg-background">
-        <Loading size={12} />
-      </div>
-    );
-  }
-
   return (
-    <div dir="rtl" className="p-6 md:p-8 w-full bg-background min-h-screen">
+    <div dir="rtl" className="p-3.5 sm:p-5 md:p-6 lg:p-8 pb-4 sm:pb-6 lg:pb-8 w-full bg-background min-h-full flex flex-col">
       <PageHeader
-        title={`ویرایش دوره مجازی: ${initialValues.title}`}
+        title={initialValues.title ? `ویرایش دوره مجازی: ${initialValues.title}` : "ویرایش دوره مجازی"}
         subtitle="ویرایش مشخصات، قیمت، تخفیف‌ها و شناسه دوره در اسپات‌پلیر"
         backTo="/virtual-courses"
       />
 
-      <VirtualCourseForm
-        formik={formik}
-        isSubmitting={isSubmitting}
-        submitLabel="ذخیره تغییرات دوره مجازی"
-        onToggleRemoteCode={handleToggleDiscount}
-        togglingCodeId={togglingCodeId}
-      />
+      {loading ? (
+        <LoadingState text="در حال دریافت اطلاعات دوره مجازی..." minHeight="min-h-[440px]" />
+      ) : (
+        <VirtualCourseForm
+          formik={formik}
+          isSubmitting={isSubmitting}
+          submitLabel="ذخیره تغییرات دوره مجازی"
+          onToggleRemoteCode={handleToggleDiscount}
+          togglingCodeId={togglingCodeId}
+        />
+      )}
     </div>
   );
 }

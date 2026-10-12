@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import { useNavigate, useParams } from "react-router-dom";
 import Notify from "../../../../Utils/notify";
-import Loading from "../../../../Components/Loading";
-import { PageHeader } from "../../../../Components/UI";
+import { PageHeader, LoadingState } from "../../../../Components/UI";
 import { inPersonCourseUpdateSchema } from "../schemas/inPersonCourseSchema";
 import {
   fetchInPersonCourseById,
@@ -27,7 +26,7 @@ export default function UpdateInPersonCourse() {
     price: "",
     description: "",
     tags: [],
-    icon: "",
+    img: null,
     teachers: [],
     timedDiscount: {
       percentage: "",
@@ -64,7 +63,7 @@ export default function UpdateInPersonCourse() {
           price: course.price ?? "",
           description: course.description || "",
           tags: course.tags || [],
-          icon: course.icon || "",
+          img: course.img || null,
           teachers: (course.teachers || []).map((t) => (typeof t === "object" ? t._id : t)),
           timedDiscount: {
             percentage: course.timedDiscount?.percentage ?? "",
@@ -138,31 +137,27 @@ export default function UpdateInPersonCourse() {
     },
   });
 
-  if (loading) {
-    return (
-      <div dir="rtl" className="flex justify-center items-center min-h-[70vh] bg-background">
-        <Loading size={12} />
-      </div>
-    );
-  }
-
   return (
-    <div dir="rtl" className="p-6 md:p-8 w-full bg-background min-h-screen">
+    <div dir="rtl" className="p-3.5 sm:p-5 md:p-6 lg:p-8 pb-4 sm:pb-6 lg:pb-8 w-full bg-background min-h-full flex flex-col">
       <PageHeader
-        title={`ویرایش دوره حضوری: ${initialValues.title}`}
+        title={initialValues.title ? `ویرایش دوره حضوری: ${initialValues.title}` : "ویرایش دوره حضوری"}
         subtitle="ویرایش مشخصات، قیمت، موقعیت مکانی و تخفیف‌ها"
         backTo="/in-person-courses"
       />
 
-      <InPersonCourseForm
-        formik={formik}
-        isSubmitting={isSubmitting}
-        submitLabel="ذخیره تغییرات دوره"
-        mode="update"
-        courseId={id}
-        onToggleRemoteCode={handleToggleDiscount}
-        togglingCodeId={togglingCodeId}
-      />
+      {loading ? (
+        <LoadingState text="در حال دریافت اطلاعات دوره حضوری..." minHeight="min-h-[440px]" />
+      ) : (
+        <InPersonCourseForm
+          formik={formik}
+          isSubmitting={isSubmitting}
+          submitLabel="ذخیره تغییرات دوره"
+          mode="update"
+          courseId={id}
+          onToggleRemoteCode={handleToggleDiscount}
+          togglingCodeId={togglingCodeId}
+        />
+      )}
     </div>
   );
 }

@@ -1,15 +1,28 @@
 import axiosInstance from "../../../../Utils/axiosInstance";
-import { prepareSharedCoursePayload } from "../../shared/courseSharedApi";
+import { prepareSharedCoursePayload } from "../../api/courseSharedApi";
 
 export const VIRTUAL_ENDPOINT = "virtual-courses";
 
 export async function fetchVirtualCourses(page = 1, query = "", filters = {}, limit = 12) {
+  let p = page;
+  let q = query;
+  let f = filters;
+  let l = limit;
+
+  // Support single options object: fetchVirtualCourses({ page, query, filters, limit })
+  if (typeof page === "object" && page !== null) {
+    p = page.page || 1;
+    q = page.query || page.q || "";
+    f = page.filters || {};
+    l = page.limit || 12;
+  }
+
   let filterParams = "";
-  if (filters.category) filterParams += `&category=${encodeURIComponent(filters.category)}`;
+  if (f && f.category) filterParams += `&category=${encodeURIComponent(f.category)}`;
 
   const response = await axiosInstance.get(
-    `${VIRTUAL_ENDPOINT}?limit=${limit}&page=${page}&sort=-_id${
-      query ? `&q=${encodeURIComponent(query)}` : ""
+    `${VIRTUAL_ENDPOINT}?limit=${l}&page=${p}&sort=-_id${
+      q ? `&q=${encodeURIComponent(q)}` : ""
     }${filterParams}`
   );
   return response;

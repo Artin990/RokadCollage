@@ -1,18 +1,18 @@
 /**
- * Helper to upload course icon if it's a File and format shared course fields.
+ * Helper to upload course image if it's a File and format shared course fields.
  */
 export async function prepareSharedCoursePayload(values, axiosInstance, isUpdate = false) {
-  let finalIcon = values.icon;
+  let finalImage = values.img;
 
-  if (values.icon instanceof File) {
+  if (values.img instanceof File) {
     const formData = new FormData();
-    formData.append("file", values.icon);
+    formData.append("file", values.img);
 
     const uploadData = await axiosInstance.post("upload", formData);
     if (!uploadData || !uploadData.success) {
-      throw new Error(uploadData?.message || "آپلود فایل آیکون با خطا مواجه شد");
+      throw new Error(uploadData?.message || "آپلود فایل تصویر با خطا مواجه شد");
     }
-    finalIcon = uploadData.data;
+    finalImage = uploadData.data;
   }
 
   const hasTimedDiscount =
@@ -74,7 +74,7 @@ export async function prepareSharedCoursePayload(values, axiosInstance, isUpdate
     price: values.price !== "" && values.price != null ? Number(values.price) : 0,
     description: values.description?.trim() || "",
     tags: tagsPayload,
-    icon: typeof finalIcon === "string" ? finalIcon.trim() : finalIcon,
+    img: typeof finalImage === "string" ? finalImage.trim() : finalImage,
     teachers: teachersPayload,
     discountCodes: discountCodesPayload,
     sprints: sprintsPayload,

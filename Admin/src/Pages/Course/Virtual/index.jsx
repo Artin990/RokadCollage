@@ -5,7 +5,7 @@ export default function VirtualCourseLayout() {
   return <Outlet />;
 }
 
-export { default as VirtualCourseListPage } from "./VirtualCourseListPage";
-export { default as CreateVirtualCourse } from "./CreateVirtualCourse";
-export { default as UpdateVirtualCourse } from "./UpdateVirtualCourse";
-export { default as SingleVirtualCourse } from "./SingleVirtualCourse";
+export { default as VirtualCourseListPage } from "./VirtualCourseListPage/index.jsx";
+export { default as CreateVirtualCourse } from "./CreateVirtualCourse/index.jsx";
+export { default as UpdateVirtualCourse } from "./UpdateVirtualCourse/index.jsx";
+export { default as SingleVirtualCourse } from "./SingleVirtualCourse/index.jsx";

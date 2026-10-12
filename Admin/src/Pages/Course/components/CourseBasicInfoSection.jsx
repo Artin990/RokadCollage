@@ -1,7 +1,7 @@
 import React from "react";
 import { useFormikContext } from "formik";
-import { Select, Input } from "../../../../Components/UI";
-import { categoryOptions } from "../courseCommonSchema";
+import { Select, Input } from "../../../Components/UI";
+import { categoryOptions } from "../schemas/courseCommonSchema";
 
 export default function CourseBasicInfoSection() {
   const { values, errors, touched, handleChange, handleBlur } = useFormikContext();
@@ -12,48 +12,52 @@ export default function CourseBasicInfoSection() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <Select
           label="دسته‌بندی دوره"
+          name="category"
           placeholder="انتخاب دسته‌بندی"
           options={categoryOptions}
-          name="category"
-          value={values.category}
+          value={values.category || ""}
           onChange={handleChange}
           onBlur={handleBlur}
           error={touched.category && errors.category}
+          required
         />
 
+        {/* Title */}
         <Input
           label="عنوان دوره"
-          placeholder="مثال: آموزش جامع ری‌اکت و نکست‌جی‌اس"
           name="title"
+          placeholder="مثال: آموزش جامع ری‌اکت و نکست‌جی‌اس"
           value={values.title}
           onChange={handleChange}
           onBlur={handleBlur}
           error={touched.title && errors.title}
+          required
         />
       </div>
 
-      {/* Duration & Base Price */}
+      {/* Duration & Price */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <Input
-          label="مدت دوره"
-          placeholder="مثال: ۱۲ هفته (یا ۳ ماه)"
+          label="طول مدت دوره"
           name="duration"
+          placeholder="مثال: ۴۰ ساعت یا ۳ ماه"
           value={values.duration}
           onChange={handleChange}
           onBlur={handleBlur}
           error={touched.duration && errors.duration}
+          required
         />
 
         <Input
-          label="قیمت پایه دوره (تومان)"
-          type="number"
-          min="0"
-          placeholder="مثال: ۲۵۰۰۰۰۰ (۰ برای رایگان)"
+          label="قیمت دوره (تومان)"
           name="price"
+          type="number"
+          placeholder="0 برای دوره رایگان"
           value={values.price}
           onChange={handleChange}
           onBlur={handleBlur}
           error={touched.price && errors.price}
+          helperText="در صورت رایگان بودن، 0 وارد کنید"
         />
       </div>
     </div>

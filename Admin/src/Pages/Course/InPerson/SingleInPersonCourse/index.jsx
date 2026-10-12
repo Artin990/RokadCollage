@@ -2,16 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import Notify from "../../../../Utils/notify";
-import Loading from "../../../../Components/Loading";
-import { Button, Card, PageHeader } from "../../../../Components/UI";
+import { Button, Card, PageHeader, LoadingState } from "../../../../Components/UI";
 import { fetchInPersonCourseById } from "../api/inPersonApi";
-import SingleCourseHero from "../../shared/singleCourse/SingleCourseHero";
-import SingleCourseDiscounts from "../../shared/singleCourse/SingleCourseDiscounts";
-import SingleCourseAbout from "../../shared/singleCourse/SingleCourseAbout";
-import SingleCourseSprints from "../../shared/singleCourse/SingleCourseSprints";
-import SingleCourseSessions from "../../shared/singleCourse/SingleCourseSessions";
-import SingleCourseLocation from "../../shared/singleCourse/SingleCourseLocation";
-import SingleCourseTeachers from "../../shared/singleCourse/SingleCourseTeachers";
+import SingleCourseHero from "../../components/SingleCourseHero";
+import SingleCourseDiscounts from "../../components/SingleCourseDiscounts";
+import SingleCourseAbout from "../../components/SingleCourseAbout";
+import SingleCourseSprints from "../../components/SingleCourseSprints";
+import SingleCourseSessions from "../components/SingleCourseSessions";
+import SingleCourseLocation from "../components/SingleCourseLocation";
+import SingleCourseTeachers from "../../components/SingleCourseTeachers";
 
 export default function SingleInPersonCourse() {
   const { id } = useParams();
@@ -49,32 +48,37 @@ export default function SingleInPersonCourse() {
 
   if (loading) {
     return (
-      <div dir="rtl" className="flex justify-center items-center min-h-[70vh] bg-background">
-        <Loading size={12} />
+      <div dir="rtl" className="p-3.5 sm:p-5 md:p-6 lg:p-8 pb-4 sm:pb-6 lg:pb-8 w-full bg-background min-h-full flex flex-col">
+        <PageHeader
+          title="مشخصات دوره حضوری"
+          subtitle="در حال بارگذاری اطلاعات دوره..."
+          backTo="/in-person-courses"
+        />
+        <LoadingState text="در حال دریافت اطلاعات دوره حضوری..." minHeight="min-h-[440px]" />
       </div>
     );
   }
 
   if (!course) {
     return (
-      <div dir="rtl" className="p-6 md:p-8 max-w-4xl mx-auto text-center">
-        <Card className="p-8">
-          <h2 className="text-xl font-bold text-secondary mb-3">دوره حضوری یافت نشد</h2>
-          <Button variant="primary" onClick={() => navigate("/in-person-courses")}>
-            بازگشت به لیست دوره‌های حضوری
-          </Button>
-        </Card>
+      <div dir="rtl" className="p-3.5 sm:p-5 md:p-6 lg:p-8 pb-4 sm:pb-6 lg:pb-8 w-full bg-background min-h-full flex flex-col">
+        <PageHeader
+          title="دوره یافت نشد"
+          backTo="/in-person-courses"
+        />
+        <div className="p-12 text-center text-text-secondary bg-surface rounded-2xl border border-dashed border-border mt-4">
+          اطلاعات دوره یافت نشد یا ممکن است حذف شده باشد.
+        </div>
       </div>
     );
   }
 
   return (
-    <div dir="rtl" className="p-6 md:p-8 w-full bg-background min-h-screen">
+    <div dir="rtl" className="p-3.5 sm:p-5 md:p-6 lg:p-8 pb-4 sm:pb-6 lg:pb-8 w-full bg-background min-h-full flex flex-col">
       <PageHeader
         title={course.title}
-        subtitle="صفحه اختصاصی و جزئیات کامل کارگاه حضوری"
+        subtitle="جزئیات کامل دوره حضوری، کدهای کلاس و موقعیت مکانی"
         backTo="/in-person-courses"
-        backLabel="بازگشت به دوره‌های حضوری"
         action={
           <Button
             variant="primary"
@@ -87,14 +91,20 @@ export default function SingleInPersonCourse() {
         }
       />
 
-      <div className="max-w-5xl mx-auto flex flex-col gap-8">
-        <SingleCourseHero course={course} />
+      <div className="max-w-5xl mx-auto flex flex-col gap-6">
+        <SingleCourseHero course={course} isVirtual={false} />
+
         <SingleCourseDiscounts course={course} />
+
         <SingleCourseAbout description={course.description} />
-        <SingleCourseSprints sprints={course.sprints} />
-        <SingleCourseSessions sessions={course.sessions} />
-        <SingleCourseLocation location={course.location} />
+
         <SingleCourseTeachers teachers={course.teachers} />
+
+        <SingleCourseSprints sprints={course.sprints} />
+
+        <SingleCourseSessions sessions={course.sessions} courseId={course._id} />
+
+        <SingleCourseLocation location={course.location} />
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import React from "react";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import { Card, Badge, CourseIcon } from "../../../../Components/UI";
+import { getImageUrl } from "../../../Utils/getImageUrl";
+import { Card, Badge } from "../../../Components/UI";
 
 export default function SingleCourseHero({ course }) {
   const getCategoryBadgeVariant = (category) => {
@@ -21,13 +22,18 @@ export default function SingleCourseHero({ course }) {
   return (
     <Card className="p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-sm border border-border">
       <div className="flex items-center gap-5">
-        {/* Course Icon */}
-        <div className="w-18 h-18 md:w-20 md:h-20 rounded-2xl bg-primary-light border-2 border-primary-border flex items-center justify-center p-3.5 shrink-0 shadow-2xs text-primary">
-          <CourseIcon
-            icon={course.icon}
-            title={course.title}
-            className="w-full h-full object-contain"
-          />
+        {/* Course Image */}
+        <div className="w-18 h-18 md:w-20 md:h-20 rounded-2xl bg-primary-light border-2 border-primary-border flex items-center justify-center overflow-hidden shrink-0 shadow-2xs text-primary">
+          {course.img ? (
+            <img
+              src={getImageUrl(course.img)}
+              alt={course.title}
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+          ) : (
+            <span className="text-xs text-text-muted">بدون تصویر</span>
+          )}
         </div>
 
         {/* Title, Category & Type */}

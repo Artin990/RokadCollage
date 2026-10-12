@@ -1,15 +1,18 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import Visibility from "@mui/icons-material/Visibility";
 import VpnKeyOutlinedIcon from "@mui/icons-material/VpnKeyOutlined";
 import OndemandVideoOutlinedIcon from "@mui/icons-material/OndemandVideoOutlined";
+import ForumOutlinedIcon from "@mui/icons-material/ForumOutlined";
 import { getImageUrl } from "../../../../Utils/getImageUrl";
-import { Card, Badge, Button, CourseIcon } from "../../../../Components/UI";
+import { Card, Badge, Button, IconButton } from "../../../../Components/UI";
 import { toPersianDigits } from "../../../../Utils/jalaliDate";
 
-export default function VirtualCourseCard({ course, onEdit, onDelete, onView }) {
+export default function VirtualCourseCard({ course, onEdit, onDelete, onView, onManageComments }) {
+  const navigate = useNavigate();
   const getCategoryBadgeVariant = (category) => {
     switch (category) {
       case "فناوری اطلاعات":
@@ -43,19 +46,23 @@ export default function VirtualCourseCard({ course, onEdit, onDelete, onView }) 
           </Badge>
         </div>
 
-        {/* Icon & Title */}
+        {/* Course Image & Title */}
         <div className="flex items-center gap-3.5 mb-3">
           <div
             onClick={() => onView && onView(course)}
-            className="w-13 h-13 rounded-2xl bg-purple-50 border border-purple-200 flex items-center justify-center p-2.5 shrink-0 group-hover:scale-105 transition-transform text-purple-600 cursor-pointer"
+            className="w-13 h-13 rounded-2xl bg-purple-50 border border-purple-200 flex items-center justify-center overflow-hidden shrink-0 group-hover:scale-105 transition-transform text-purple-600 cursor-pointer"
             title="مشاهده جزئیات دوره"
           >
-            <CourseIcon
-              icon={course.icon}
-              title={course.title}
-              className="w-full h-full object-contain"
-              fallbackIcon={<OndemandVideoOutlinedIcon className="text-purple-600" />}
-            />
+            {course.img ? (
+              <img
+                src={getImageUrl(course.img)}
+                alt={course.title}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            ) : (
+              <OndemandVideoOutlinedIcon className="text-purple-600" />
+            )}
           </div>
 
           <div className="flex-1 min-w-0">
@@ -73,14 +80,18 @@ export default function VirtualCourseCard({ course, onEdit, onDelete, onView }) 
           </div>
         </div>
 
-        {/* SpotPlayer Badge Indicator */}
-        <div className="mb-4 bg-purple-50/70 border border-purple-200/60 rounded-xl p-2.5 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-1.5 text-xs text-purple-900 font-medium">
-            <VpnKeyOutlinedIcon style={{ fontSize: "1rem" }} className="text-purple-600 shrink-0" />
+        {/* SpotPlayer Badge Indicator (Clickable to open single course page) */}
+        <div
+          onClick={() => onView && onView(course)}
+          className="mb-4 bg-purple-50/70 hover:bg-purple-100/80 border border-purple-200/60 hover:border-purple-300 rounded-xl p-2.5 flex items-center justify-between gap-2 cursor-pointer transition-all duration-200 group/spot hover:shadow-xs active:scale-[0.99]"
+          title="مشاهده صفحه تک دوره"
+        >
+          <div className="flex items-center gap-1.5 text-xs text-purple-900 font-medium group-hover/spot:text-purple-950">
+            <VpnKeyOutlinedIcon style={{ fontSize: "1rem" }} className="text-purple-600 shrink-0 group-hover/spot:scale-110 transition-transform" />
             <span>شناسه اسپات‌پلیر:</span>
           </div>
           <span
-            className="font-mono text-[11px] font-bold text-purple-700 truncate max-w-[140px]"
+            className="font-mono text-[11px] font-bold text-purple-700 group-hover/spot:text-purple-900 truncate max-w-[140px] group-hover/spot:underline underline-offset-2"
             title={course.spotplayerCourseId || "تعریف نشده"}
             dir="ltr"
           >
@@ -128,34 +139,52 @@ export default function VirtualCourseCard({ course, onEdit, onDelete, onView }) 
           )}
         </div>
 
-        <div className="flex items-center gap-2 pt-2 border-t border-border">
+        <div className="flex flex-col gap-2 pt-2 border-t border-border">
+          <div className="flex items-center gap-2">
+            <Button
+              variant="secondary"
+              size="sm"
+              className="flex-1"
+              icon={<Visibility fontSize="small" />}
+              onClick={() => onView && onView(course)}
+            >
+              مشاهده دوره
+            </Button>
+
+            <IconButton
+              variant="ghost"
+              size="sm"
+              icon={<EditIcon fontSize="small" />}
+              onClick={() => onEdit && onEdit(course)}
+              aria-label="ویرایش دوره"
+              title="ویرایش دوره"
+            />
+
+            <IconButton
+              variant="danger"
+              size="sm"
+              icon={<DeleteOutlineIcon fontSize="small" />}
+              onClick={() => onDelete && onDelete(course)}
+              aria-label="حذف دوره"
+              title="حذف دوره"
+            />
+          </div>
+
           <Button
             variant="outline"
             size="sm"
-            className="flex-1"
-            icon={<Visibility fontSize="small" />}
-            onClick={() => onView && onView(course)}
+            className="w-full text-xs font-bold py-1.5 hover:bg-primary/10 hover:border-primary hover:text-primary transition-all duration-200"
+            icon={<ForumOutlinedIcon style={{ fontSize: "1rem" }} />}
+            onClick={() => {
+              if (onManageComments) {
+                onManageComments(course);
+              } else {
+                navigate(`/virtual-courses/${course._id}/comments`);
+              }
+            }}
           >
-            مشاهده
+            مدیریت کامنت‌ها
           </Button>
-
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-text-muted hover:text-primary hover:bg-primary-light"
-            icon={<EditIcon fontSize="small" />}
-            onClick={() => onEdit && onEdit(course)}
-            title="ویرایش دوره"
-          />
-
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-text-muted hover:text-danger hover:bg-danger-light"
-            icon={<DeleteOutlineIcon fontSize="small" />}
-            onClick={() => onDelete && onDelete(course)}
-            title="حذف دوره"
-          />
         </div>
       </div>
     </Card>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Card } from "../../../../Components/UI";
+import { Card } from "../../../Components/UI";
 
 export default function SingleCourseAbout({ description }) {
   if (!description) return null;

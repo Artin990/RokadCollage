@@ -1,13 +1,13 @@
 import React from "react";
 import { FormikProvider } from "formik";
 import { Button, Card } from "../../../../Components/UI";
-import CourseBasicInfoSection from "../../shared/sections/CourseBasicInfoSection";
-import CourseDiscountSection from "../../shared/sections/CourseDiscountSection";
-import CourseTeachersSection from "../../shared/sections/CourseTeachersSection";
-import CourseDescriptionSection from "../../shared/sections/CourseDescriptionSection";
-import CourseIconSection from "../../shared/sections/CourseIconSection";
-import InPersonSprintsSection from "./InPersonSprintsSection";
-import InPersonSessionsSection from "./InPersonSessionsSection";
+import CourseBasicInfoSection from "../../components/CourseBasicInfoSection";
+import CourseDiscountSection from "../../components/CourseDiscountSection";
+import CourseTeachersSection from "../../components/CourseTeachersSection";
+import CourseDescriptionSection from "../../components/CourseDescriptionSection";
+import CourseImageSection from "../../components/CourseImageSection";
+import CourseSprintsSection from "../../components/CourseSprintsSection";
+import CourseSessionsManager from "./CourseSessionsManager/index.jsx";
 import InPersonLocationSection from "./InPersonLocationSection";
 
 export default function InPersonCourseForm({
@@ -20,7 +20,7 @@ export default function InPersonCourseForm({
   togglingCodeId,
 }) {
   return (
-    <Card className="p-6 md:p-8 max-w-4xl mx-auto shadow-sm">
+    <Card className="p-4 sm:p-6 md:p-8 max-w-4xl mx-auto shadow-sm">
       <FormikProvider value={formik}>
         <form onSubmit={formik.handleSubmit} className="flex flex-col gap-6">
           {/* Shared Basic Info */}
@@ -38,8 +38,8 @@ export default function InPersonCourseForm({
           {/* Shared Description & Tags */}
           <CourseDescriptionSection />
 
-          {/* Shared SVG Icon */}
-          <CourseIconSection />
+          {/* Shared Course Cover Image */}
+          <CourseImageSection />
 
           {/* In-Person Exclusive Sections */}
           <div className="flex flex-col gap-6 pt-5 border-t border-border/80">
@@ -57,9 +57,20 @@ export default function InPersonCourseForm({
               </span>
             </div>
 
-            <InPersonSprintsSection />
+            <CourseSprintsSection
+              title="سرفصل‌ها و اسپرینت‌های کارگاهی"
+              subtitle="تعریف اسپرینت‌ها و سرفصل‌های کارگاه حضوری"
+              emptyMessage="هنوز اسپرینتی برای این کارگاه ثبت نشده است. با زدن دکمه زیر می‌توانید اسپرینت جدید اضافه کنید."
+            />
 
-            <InPersonSessionsSection mode={mode} courseId={courseId} />
+            <CourseSessionsManager
+              mode={mode}
+              courseId={courseId}
+              sessions={formik.values.sessions || []}
+              onChange={(newSessions) => formik.setFieldValue("sessions", newSessions)}
+              errors={formik.errors}
+              touched={formik.touched}
+            />
 
             <InPersonLocationSection />
           </div>
@@ -71,6 +82,7 @@ export default function InPersonCourseForm({
               variant="primary"
               size="lg"
               isLoading={isSubmitting}
+              className="w-full sm:w-auto"
             >
               {submitLabel}
             </Button>

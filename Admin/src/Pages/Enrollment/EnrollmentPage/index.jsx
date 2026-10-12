@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { PageHeader } from "../../../Components/UI";
 import SchoolIcon from "@mui/icons-material/School";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
+import { PageHeader, Tabs } from "../../../Components/UI";
 import InPersonEnrollmentsTab from "../components/InPersonEnrollmentsTab";
 import VirtualEnrollmentsTab from "../components/VirtualEnrollmentsTab";
 
@@ -12,41 +12,35 @@ import VirtualEnrollmentsTab from "../components/VirtualEnrollmentsTab";
 export default function EnrollmentPage() {
   const [activeTab, setActiveTab] = useState("in-person"); // "in-person" | "virtual"
 
+  const tabs = [
+    {
+      id: "in-person",
+      key: "in-person",
+      label: "دوره‌های حضوری (کدهای کلاس)",
+      icon: <SchoolIcon fontSize="small" />,
+    },
+    {
+      id: "virtual",
+      key: "virtual",
+      label: "دوره‌های مجازی (لایسنس اسپات‌پلیر)",
+      icon: <OndemandVideoIcon fontSize="small" />,
+    },
+  ];
+
   return (
-    <div dir="rtl" className="p-6 md:p-8 w-full bg-background min-h-screen">
+    <div dir="rtl" className="p-3.5 sm:p-5 md:p-6 lg:p-8 pb-4 sm:pb-6 lg:pb-8 w-full bg-background min-h-full flex flex-col">
       <PageHeader
         title="مدیریت ثبت‌نام‌ها"
         subtitle="مشاهده و مدیریت فراگیران، کدهای کلاس و وضعیت لایسنس‌های اسپات‌پلیر"
       />
 
       {/* Tabs navigation */}
-      <div className="flex items-center gap-3 border-b border-border mb-6">
-        <button
-          type="button"
-          onClick={() => setActiveTab("in-person")}
-          className={`cursor-pointer pb-3 px-4 font-bold text-sm flex items-center gap-2 border-b-2 transition-all ${
-            activeTab === "in-person"
-              ? "border-primary text-primary"
-              : "border-transparent text-text-muted hover:text-secondary"
-          }`}
-        >
-          <SchoolIcon fontSize="small" />
-          <span>دوره‌های حضوری (کدهای کلاس)</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setActiveTab("virtual")}
-          className={`cursor-pointer pb-3 px-4 font-bold text-sm flex items-center gap-2 border-b-2 transition-all ${
-            activeTab === "virtual"
-              ? "border-primary text-primary"
-              : "border-transparent text-text-muted hover:text-secondary"
-          }`}
-        >
-          <OndemandVideoIcon fontSize="small" />
-          <span>دوره‌های مجازی (لایسنس اسپات‌پلیر)</span>
-        </button>
-      </div>
+      <Tabs
+        tabs={tabs}
+        activeTab={activeTab}
+        onChange={setActiveTab}
+        className="mb-6"
+      />
 
       {/* Active Tab Content */}
       {activeTab === "in-person" ? (

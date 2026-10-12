@@ -1,6 +1,6 @@
 import React from "react";
 import { useFormikContext } from "formik";
-import TeacherSelect from "../../../../Components/TeacherSelect";
+import TeacherSelect from "../../../Components/TeacherSelect";
 
 export default function CourseTeachersSection() {
   const { values, errors, touched, setFieldValue } = useFormikContext();

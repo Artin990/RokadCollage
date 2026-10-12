@@ -6,10 +6,61 @@ import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import ReplayIcon from "@mui/icons-material/Replay";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
+import SyncIcon from "@mui/icons-material/Sync";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import Loading from "../../../Components/Loading";
-import { Badge, Button, CourseIcon } from "../../../Components/UI";
+import {
+  Badge,
+  Button,
+  Table,
+  TableHead,
+  TableRow,
+  TableHeadCell,
+  TableCell,
+  TableBody,
+  TableSkeleton,
+} from "../../../Components/UI";
+import { getImageUrl } from "../../../Utils/getImageUrl";
 import { formatJalaliDate, toPersianDigits } from "../../../Utils/jalaliDate";
-import LicenseStatusBadge from "../shared/LicenseStatusBadge";
+
+/**
+ * Standardized status badge for SpotPlayer license issuance
+ */
+function LicenseStatusBadge({ status = "pending" }) {
+  switch (status) {
+    case "issued":
+      return (
+        <Badge variant="success" size="sm" className="flex items-center gap-1 font-bold">
+          <CheckCircleOutlineIcon style={{ fontSize: "0.9rem" }} />
+          <span>صادر شد</span>
+        </Badge>
+      );
+    case "processing":
+      return (
+        <Badge variant="info" size="sm" className="flex items-center gap-1 font-bold">
+          <SyncIcon className="animate-spin" style={{ fontSize: "0.9rem" }} />
+          <span>در حال صدور</span>
+        </Badge>
+      );
+    case "failed":
+      return (
+        <Badge variant="error" size="sm" className="flex items-center gap-1 font-bold">
+          <ErrorOutlineIcon style={{ fontSize: "0.9rem" }} />
+          <span>ناموفق</span>
+        </Badge>
+      );
+    case "pending":
+    default:
+      return (
+        <Badge variant="amber" size="sm" className="flex items-center gap-1 font-bold">
+          <HourglassEmptyIcon style={{ fontSize: "0.9rem" }} />
+          <span>در انتظار</span>
+        </Badge>
+      );
+  }
+}
 
 export default function VirtualCourseAccordionItem({
   course,
@@ -24,18 +75,25 @@ export default function VirtualCourseAccordionItem({
   retryingLicenseId,
 }) {
   return (
-    <div className="bg-surface rounded-2xl border border-border shadow-xs overflow-hidden transition-all duration-200">
+    <div className="bg-surface rounded-2xl border border-border shadow-xs overflow-hidden transition-shadow duration-150">
       {/* Course Accordion Header */}
       <div
         onClick={onToggle}
-        className={`p-4 md:p-5 flex items-center justify-between cursor-pointer select-none transition-colors ${
-          isExpanded ? "bg-bg-light/80 border-b border-border" : "hover:bg-bg-light/40"
+        className={`p-4 md:p-5 flex items-center justify-between cursor-pointer select-none transition-colors border-b ${
+          isExpanded
+            ? "bg-bg-light/60 border-border/60"
+            : "border-transparent hover:bg-bg-light/40"
         }`}
       >
         <div className="flex items-center gap-4 min-w-0">
-          <div className="w-12 h-12 rounded-xl bg-primary-light border border-primary-border flex items-center justify-center p-2 shrink-0">
-            {course.icon ? (
-              <CourseIcon icon={course.icon} alt={course.title} />
+          <div className="w-12 h-12 rounded-xl bg-primary-light border border-primary-border flex items-center justify-center overflow-hidden shrink-0">
+            {course.img ? (
+              <img
+                src={getImageUrl(course.img)}
+                alt={course.title}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             ) : (
               <OndemandVideoIcon className="text-primary" />
             )}
@@ -85,34 +143,32 @@ export default function VirtualCourseAccordionItem({
       {isExpanded && (
         <div className="p-4 md:p-6 bg-bg-light/20">
           {loadingStudents ? (
-            <div className="py-8 flex justify-center">
-              <Loading size={6} />
-            </div>
+            <TableSkeleton rows={3} cols={5} />
           ) : students.length === 0 ? (
             <div className="text-center py-8 text-text-muted text-xs md:text-sm">
               هیچ ثبت‌نامی برای این دوره مجازی یافت نشد.
             </div>
           ) : (
-            <div className="w-full overflow-x-auto bg-surface rounded-xl border border-border">
-              <table className="w-full text-right text-xs md:text-sm">
-                <thead className="bg-bg-light/60 text-text-secondary border-b border-border font-bold">
-                  <tr>
-                    <th className="py-3 px-3">نام و شماره کاربر</th>
-                    <th className="py-3 px-3">تاریخ ثبت‌نام</th>
-                    <th className="py-3 px-3">مبلغ پرداختی</th>
-                    <th className="py-3 px-3">وضعیت لایسنس</th>
-                    <th className="py-3 px-3 text-center">عملیات لایسنس</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border/60">
+            <div className="w-full overflow-x-auto bg-surface rounded-2xl border border-border/80 shadow-2xs">
+              <Table>
+                <TableHead>
+                  <TableRow isHeader hover={false}>
+                    <TableHeadCell>نام و شماره کاربر</TableHeadCell>
+                    <TableHeadCell>تاریخ ثبت‌نام</TableHeadCell>
+                    <TableHeadCell>مبلغ پرداختی</TableHeadCell>
+                    <TableHeadCell>وضعیت لایسنس</TableHeadCell>
+                    <TableHeadCell align="center">عملیات لایسنس</TableHeadCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
                   {students.map((enr) => {
                     const licenseStatus = enr.spotplayer?.status || "pending";
                     const canRetry = licenseStatus === "pending" || licenseStatus === "failed" || licenseStatus === "processing";
                     const isIssued = licenseStatus === "issued";
 
                     return (
-                      <tr key={enr._id} className="hover:bg-bg-light/40 transition-colors">
-                        <td className="py-3 px-3">
+                      <TableRow key={enr._id}>
+                        <TableCell>
                           <button
                             type="button"
                             onClick={() => onViewProfile(enr.user)}
@@ -124,30 +180,34 @@ export default function VirtualCourseAccordionItem({
                           <span className="text-[11px] text-text-muted font-mono mt-0.5 block">
                             {toPersianDigits(enr.user?.phoneNumber || "-")}
                           </span>
-                        </td>
+                        </TableCell>
 
-                        <td className="py-3 px-3 text-text-muted">
+                        <TableCell className="text-text-muted text-xs">
                           {formatJalaliDate(enr.createdAt, { withTime: true })}
-                        </td>
+                        </TableCell>
 
-                        <td className="py-3 px-3">
-                          <span className="font-bold text-secondary">
-                            {enr.pricePaid === 0
-                              ? "رایگان (ادمین)"
-                              : `${toPersianDigits(enr.pricePaid?.toLocaleString("fa-IR"))} تومان`}
-                          </span>
-                          {enr.couponCode && (
-                            <span className="text-[10px] text-primary block mt-0.5">
-                              کد: {enr.couponCode}
+                        <TableCell>
+                          {enr.pricePaid === 0 || enr.couponCode === "ثبت‌نام دستی ادمین" ? (
+                            <Badge variant="success" size="sm" className="whitespace-nowrap font-bold">
+                              رایگان (ثبت‌نام دستی ادمین)
+                            </Badge>
+                          ) : (
+                            <span className="font-bold text-secondary">
+                              {`${toPersianDigits(enr.pricePaid?.toLocaleString("fa-IR"))} تومان`}
                             </span>
                           )}
-                        </td>
+                          {enr.couponCode && enr.couponCode !== "ثبت‌نام دستی ادمین" && (
+                            <span className="text-[10px] text-primary block mt-0.5">
+                              کد تخفیف: {enr.couponCode}
+                            </span>
+                          )}
+                        </TableCell>
 
-                        <td className="py-3 px-3">
+                        <TableCell>
                           <LicenseStatusBadge status={licenseStatus} />
-                        </td>
+                        </TableCell>
 
-                        <td className="py-3 px-3 text-center">
+                        <TableCell align="center">
                           <div className="flex items-center justify-center gap-1.5">
                             {isIssued && (
                               <Button
@@ -172,12 +232,12 @@ export default function VirtualCourseAccordionItem({
                               </Button>
                             )}
                           </div>
-                        </td>
-                      </tr>
+                        </TableCell>
+                      </TableRow>
                     );
                   })}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             </div>
           )}
         </div>

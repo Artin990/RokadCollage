@@ -1,5 +1,5 @@
 import axiosInstance from "../../../../Utils/axiosInstance";
-import { prepareSharedCoursePayload } from "../../shared/courseSharedApi";
+import { prepareSharedCoursePayload } from "../../api/courseSharedApi";
 
 export const IN_PERSON_ENDPOINT = "in-person-courses";
 
@@ -62,4 +62,20 @@ export async function prepareInPersonPayload(values, isUpdate = false) {
   }
 
   return payload;
+}
+
+export async function fetchCourseSessions(courseId) {
+  return axiosInstance.get(`${IN_PERSON_ENDPOINT}/${courseId}/sessions`);
+}
+
+export async function createCourseSession(courseId, payload) {
+  return axiosInstance.post(`${IN_PERSON_ENDPOINT}/${courseId}/sessions`, payload);
+}
+
+export async function updateCourseSession(courseId, sessionId, payload) {
+  return axiosInstance.patch(`${IN_PERSON_ENDPOINT}/${courseId}/sessions/${sessionId}`, payload);
+}
+
+export async function deleteCourseSession(courseId, sessionId) {
+  return axiosInstance.delete(`${IN_PERSON_ENDPOINT}/${courseId}/sessions/${sessionId}`);
 }

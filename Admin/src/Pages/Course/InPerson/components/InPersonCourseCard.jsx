@@ -5,8 +5,9 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import Visibility from "@mui/icons-material/Visibility";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import ClassOutlinedIcon from "@mui/icons-material/ClassOutlined";
+import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 import { getImageUrl } from "../../../../Utils/getImageUrl";
-import { Card, Badge, Button, CourseIcon } from "../../../../Components/UI";
+import { Card, Badge, Button, IconButton } from "../../../../Components/UI";
 import { toPersianDigits } from "../../../../Utils/jalaliDate";
 
 export default function InPersonCourseCard({ course, onEdit, onDelete, onView }) {
@@ -43,18 +44,23 @@ export default function InPersonCourseCard({ course, onEdit, onDelete, onView })
           </Badge>
         </div>
 
-        {/* Icon & Title */}
+        {/* Course Image & Title */}
         <div className="flex items-center gap-3.5 mb-3">
           <div
             onClick={() => onView && onView(course)}
-            className="w-13 h-13 rounded-2xl bg-primary-light border border-primary-border flex items-center justify-center p-2.5 shrink-0 group-hover:scale-105 transition-transform text-primary cursor-pointer"
+            className="w-13 h-13 rounded-2xl bg-primary-light border border-primary-border flex items-center justify-center overflow-hidden shrink-0 group-hover:scale-105 transition-transform text-primary cursor-pointer"
             title="مشاهده جزئیات دوره"
           >
-            <CourseIcon
-              icon={course.icon}
-              title={course.title}
-              className="w-full h-full object-contain"
-            />
+            {course.img ? (
+              <img
+                src={getImageUrl(course.img)}
+                alt={course.title}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            ) : (
+              <SchoolOutlinedIcon className="text-primary" />
+            )}
           </div>
 
           <div className="flex-1 min-w-0">
@@ -126,7 +132,7 @@ export default function InPersonCourseCard({ course, onEdit, onDelete, onView })
 
         <div className="flex items-center gap-2 pt-2 border-t border-border">
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
             className="flex-1"
             icon={<Visibility fontSize="small" />}
@@ -135,21 +141,21 @@ export default function InPersonCourseCard({ course, onEdit, onDelete, onView })
             مشاهده
           </Button>
 
-          <Button
+          <IconButton
             variant="ghost"
             size="sm"
-            className="text-text-muted hover:text-primary hover:bg-primary-light"
             icon={<EditIcon fontSize="small" />}
             onClick={() => onEdit && onEdit(course)}
+            aria-label="ویرایش دوره"
             title="ویرایش دوره"
           />
 
-          <Button
-            variant="ghost"
+          <IconButton
+            variant="danger"
             size="sm"
-            className="text-text-muted hover:text-danger hover:bg-danger-light"
             icon={<DeleteOutlineIcon fontSize="small" />}
             onClick={() => onDelete && onDelete(course)}
+            aria-label="حذف دوره"
             title="حذف دوره"
           />
         </div>

@@ -1,9 +1,9 @@
 import * as Yup from "yup";
 import {
   commonCourseFields,
-  iconCreateValidation,
-  iconUpdateValidation,
-} from "../../shared/courseCommonSchema";
+  imgCreateValidation,
+  imgUpdateValidation,
+} from "../../schemas/courseCommonSchema";
 
 export const sessionItemSchema = Yup.object().shape({
   code: Yup.string().trim().required("کد کلاس الزامی است"),
@@ -31,11 +31,11 @@ export const inPersonCourseValidationSchema = Yup.object({
   sessions: Yup.array()
     .of(sessionItemSchema)
     .min(1, "حداقل یک کد کلاس برای دوره حضوری الزامی است"),
-  icon: iconCreateValidation,
+  img: imgCreateValidation,
 });
 
 export const inPersonCourseUpdateSchema = Yup.object({
   ...commonCourseFields,
   ...inPersonSpecificSchemaFields,
-  icon: iconUpdateValidation,
+  img: imgUpdateValidation,
 });
