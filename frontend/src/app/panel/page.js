@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import Dashboard from "@/legacy-pages/Panel/Dashboard.jsx";
 import Profile from "@/legacy-pages/Panel/Profile.jsx";
 import Assignments from "@/legacy-pages/Panel/Assignments.jsx";
@@ -12,6 +12,8 @@ import Events from "@/legacy-pages/Panel/Events.jsx";
 import Support from "@/legacy-pages/Panel/Support.jsx";
 import { isUserLoggedIn } from "@/data/panelStore.js";
 import { useRouter } from "next/navigation";
+
+const emptySubscribe = () => () => {};
 
 const PANEL_PAGES = {
   dashboard: Dashboard,
@@ -28,10 +30,9 @@ const PANEL_PAGES = {
 export default function PanelPage() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState("dashboard");
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
 
   useEffect(() => {
-    setMounted(true);
     if (!isUserLoggedIn()) {
       if (typeof window !== "undefined") {
         sessionStorage.setItem("rokad_auth_redirect", "panel");

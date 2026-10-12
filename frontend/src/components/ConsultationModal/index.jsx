@@ -4,7 +4,7 @@
    بوردر 2.5px ink، شدو آفست سخت 4px 4px، رادیوس کات‌کورنر،
    فرم تعاملی و ثبت آنی درخواست
    ============================================================ */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Check, ArrowLeft, X } from "lucide-react";
 import "./consultation.css";
 import { getPanelStore, createSupportTicket } from "../../data/panelStore.js";
@@ -17,27 +17,23 @@ const DEPARTMENTS = [
 ];
 
 export default function ConsultationModal({ isOpen, onClose }) {
-  const [name, setName] = useState("");
+  const [name, setName] = useState(() => getPanelStore()?.user?.fullName || "");
   const [phone, setPhone] = useState("");
   const [dept, setDept] = useState("it");
   const [note, setNote] = useState("");
   const [error, setError] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // لود نام و شماره در صورت وجود در استور
-  useEffect(() => {
-    if (isOpen) {
-      const s = getPanelStore();
-      if (s?.user?.fullName) setName(s.user.fullName);
-      setIsSubmitted(false);
-      setError("");
-    }
-  }, [isOpen]);
+  const handleClose = useCallback(() => {
+    setIsSubmitted(false);
+    setError("");
+    onClose();
+  }, [onClose]);
 
   useEffect(() => {
     if (!isOpen) return;
     const onKey = (e) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") handleClose();
     };
     window.addEventListener("keydown", onKey);
     const prevOverflow = document.body.style.overflow;
@@ -46,7 +42,7 @@ export default function ConsultationModal({ isOpen, onClose }) {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = prevOverflow;
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, handleClose]);
 
   if (!isOpen) return null;
 
@@ -75,10 +71,10 @@ export default function ConsultationModal({ isOpen, onClose }) {
   };
 
   return (
-    <div className="cmod-backdrop" onClick={onClose} role="dialog" aria-modal="true">
+    <div className="cmod-backdrop" onClick={handleClose} role="dialog" aria-modal="true">
       <div className="cmod-card" onClick={(e) => e.stopPropagation()}>
         {/* Close button */}
-        <button type="button" className="cmod-close" onClick={onClose} aria-label="بستن">
+        <button type="button" className="cmod-close" onClick={handleClose} aria-label="بستن">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: 18, height: 18 }}>
             <line x1="18" y1="6" x2="6" y2="18" />
             <line x1="6" y1="6" x2="18" y2="18" />
