@@ -8,6 +8,10 @@
   background: var(--bg-cream, #FFFDF8);
   color: var(--ink, #1F1E1D);
   direction: rtl;
+  --dp: var(--college, #F8A41D);
+  --dp-light: var(--college-light, #FFF4E5);
+  --dp-dark: var(--college-darker, #B45309);
+  --dp-text: var(--ink, #1F1E1D);
 }
 
 /* ========================================================
@@ -178,80 +182,7 @@
   padding: 38px 20px 72px;
 }
 
-.mc-filter-bar {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  background: #ffffff;
-  border: 2.5px solid var(--ink, #1F1E1D);
-  border-radius: 20px 0 20px 0;
-  box-shadow: 5px 5px 0 var(--ink, #1F1E1D);
-  padding: 20px 22px;
-  margin-bottom: 34px;
-}
 
-@media (min-width: 768px) {
-  .mc-filter-bar {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-}
-
-.mc-filter-group {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-}
-
-.mc-filter-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  font-size: 13px;
-  font-weight: 850;
-  border-radius: 12px 0 12px 0;
-  border: 2px solid var(--ink, #1F1E1D);
-  background: #ffffff;
-  color: var(--ink, #1F1E1D);
-  box-shadow: 2.5px 2.5px 0 var(--ink, #1F1E1D);
-  cursor: pointer;
-  transition: all 0.15s ease;
-  user-select: none;
-}
-
-.mc-filter-btn:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: 3.5px 3.5px 0 var(--ink, #1F1E1D);
-}
-
-.mc-filter-btn.active {
-  background: var(--college, #F8A41D);
-  color: #111;
-  box-shadow: 1.5px 1.5px 0 var(--ink, #1F1E1D);
-  transform: translate(1px, 1px);
-}
-
-.mc-filter-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 20px;
-  height: 20px;
-  padding: 0 5px;
-  border-radius: 999px;
-  background: rgba(31, 30, 29, 0.1);
-  font-size: 11px;
-  font-weight: 900;
-}
-
-.mc-filter-btn.active .mc-filter-badge {
-  background: #ffffff;
-  color: var(--ink, #1F1E1D);
-  border: 1px solid var(--ink, #1F1E1D);
-}
 
 /* ========================================================
    COURSE CARDS GRID (3 کارتی در هر ردیف)

@@ -1,43 +1,57 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
-import {
-  RotateCw,
-  BookOpen,
-  Filter,
-  CheckCircle2,
-  Clock,
-  Sparkles,
-  Layers,
-  Search,
-} from "lucide-react";
+import { RotateCw, BookOpen } from "lucide-react";
 import { getMyEnrollments } from "@/services/enrollmentService";
 import { getPanelStore } from "@/data/panelStore";
 import MyCourseCard from "./components/MyCourseCard";
 import SpotPlayerLicenseModal from "@/legacy-pages/CourseSingle/components/SpotPlayerLicenseModal";
+import "@/legacy-pages/DepartmentPage/department.css";
 import "./my-courses.css";
 
-const STATUS_FILTERS = [
-  { id: "all", label: "همه دوره‌ها" },
+const MODE_OPTIONS = [
+  { id: "all", label: "همه" },
+  { id: "in-person", label: "حضوری" },
+  { id: "online", label: "غیر حضوری" },
+];
+
+const STATUS_OPTIONS = [
+  { id: "all", label: "همه" },
   { id: "active", label: "در حال یادگیری" },
   { id: "recent", label: "تازه‌ها" },
   { id: "completed", label: "تکمیل‌شده" },
 ];
 
-const DEPT_FILTERS = [
+const DEPT_OPTIONS = [
   { id: "all", label: "همه حوزه‌ها" },
   { id: "it", label: "فناوری اطلاعات" },
   { id: "business", label: "کسب‌وکار" },
-  { id: "languages", label: "زبان‌های خارجی" },
+  { id: "languages", label: "زبان‌ها" },
+];
+
+const SORTS = [
+  { id: "default", label: "پیشفرض" },
+  { id: "newest", label: "جدیدترین" },
+  { id: "oldest", label: "قدیمی‌ترین" },
+  { id: "title", label: "عنوان دوره" },
 ];
 
 export default function MyCoursesClient() {
   const [enrollments, setEnrollments] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // فیلترها و مرتب‌سازی
+  const [modeFilter, setModeFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [deptFilter, setDeptFilter] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [sort, setSort] = useState("default");
+
+  // وضعیت باز بودن منو و مدال
+  const [sortOpen, setSortOpen] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const sortRef = useRef(null);
+  const filterRef = useRef(null);
 
   // لایسنس مودال اسپات‌پلیر
   const [licenseModal, setLicenseModal] = useState({
@@ -45,6 +59,17 @@ export default function MyCoursesClient() {
     courseId: null,
     courseTitle: "",
   });
+
+  // بستن دراپ‌داون سورت هنگام کلیک در بیرون
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (sortRef.current && !sortRef.current.contains(e.target)) {
+        setSortOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     async function loadData() {
@@ -64,7 +89,7 @@ export default function MyCoursesClient() {
                 _id: mc.id || mc._id || `course_${idx}`,
                 title: mc.title,
                 slug: mc.slug,
-                type: mc.type || "مجازی",
+                type: mc.type || "غیر حضوری",
                 duration: mc.sessions || "۴۰ ساعت",
                 category: mc.category || (idx % 2 === 0 ? "فناوری اطلاعات" : "کسب‌وکار"),
                 instructor: mc.inst || "اساتید کالج رکاد",
@@ -91,7 +116,7 @@ export default function MyCoursesClient() {
               _id: mc.id || mc._id || `course_${idx}`,
               title: mc.title,
               slug: mc.slug,
-              type: mc.type || "مجازی",
+              type: mc.type || "غیر حضوری",
               duration: mc.sessions || "۴۰ ساعت",
               category: mc.category || "فناوری اطلاعات",
               instructor: mc.inst || "اساتید کالج رکاد",
@@ -117,6 +142,7 @@ export default function MyCoursesClient() {
       const isVirtual =
         e.courseModel === "VirtualCourse" ||
         e.course?.type === "مجازی" ||
+        e.course?.type === "غیر حضوری" ||
         Boolean(e.spotplayer?.key) ||
         !e.session;
       if (isVirtual) virtualCount++;
@@ -135,21 +161,39 @@ export default function MyCoursesClient() {
     };
   }, [enrollments]);
 
-  // فیلتر دوره‌ها
+  // محاسبه تعداد فیلترهای فعال
+  const activeFilterCount = useMemo(() => {
+    let count = 0;
+    if (modeFilter !== "all") count++;
+    if (statusFilter !== "all") count++;
+    if (deptFilter !== "all") count++;
+    return count;
+  }, [modeFilter, statusFilter, deptFilter]);
+
+  // پاک کردن همه فیلترها
+  const resetFilters = () => {
+    setModeFilter("all");
+    setStatusFilter("all");
+    setDeptFilter("all");
+    setSort("default");
+  };
+
+  // فیلتر و مرتب‌سازی دوره‌ها
   const filteredCourses = useMemo(() => {
-    return enrollments.filter((item) => {
+    let result = enrollments.filter((item) => {
       const course = item.course || {};
       const title = (course.title || "").toLowerCase();
-      const instructor = (course.instructor || "").toLowerCase();
       const cat = (course.category || course.dept || "").toLowerCase();
+      const isVirtual =
+        item.courseModel === "VirtualCourse" ||
+        course.type === "مجازی" ||
+        course.type === "غیر حضوری" ||
+        Boolean(item.spotplayer?.key) ||
+        !item.session;
 
-      // جستجو
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase().trim();
-        if (!title.includes(q) && !instructor.includes(q)) {
-          return false;
-        }
-      }
+      // فیلتر نحوه برگزاری (حضوری / غیر حضوری)
+      if (modeFilter === "in-person" && isVirtual) return false;
+      if (modeFilter === "online" && !isVirtual) return false;
 
       // فیلتر وضعیت
       if (statusFilter === "completed") {
@@ -190,7 +234,18 @@ export default function MyCoursesClient() {
 
       return true;
     });
-  }, [enrollments, statusFilter, deptFilter, searchQuery]);
+
+    // مرتب‌سازی
+    if (sort === "newest") {
+      result.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+    } else if (sort === "oldest") {
+      result.sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
+    } else if (sort === "title") {
+      result.sort((a, b) => (a.course?.title || "").localeCompare(b.course?.title || "", "fa"));
+    }
+
+    return result;
+  }, [enrollments, modeFilter, statusFilter, deptFilter, sort]);
 
   const handleOpenLicense = (courseId, courseTitle) => {
     setLicenseModal({
@@ -240,7 +295,7 @@ export default function MyCoursesClient() {
             دوره‌های من | <span className="mc-hero-accent">مسیر رشد تخصصی شما</span>
           </h1>
 
-          {/* نوار آمار (دوره‌های من، تکمیل شده، نوع دسترسی) */}
+          {/* نوار آمار (دوره‌های من، غیر حضوری، کارگاه حضوری، تکمیل شده) */}
           <div className="mc-hero-stats">
             <div className="mc-hstat">
               <b>{stats.total.toLocaleString("fa-IR")}</b>
@@ -248,7 +303,7 @@ export default function MyCoursesClient() {
             </div>
             <div className="mc-hstat">
               <b>{stats.virtualCount.toLocaleString("fa-IR")}</b>
-              <span>مجازی و اسپات‌پلیر</span>
+              <span>غیر حضوری</span>
             </div>
             <div className="mc-hstat">
               <b>{stats.inPersonCount.toLocaleString("fa-IR")}</b>
@@ -266,37 +321,90 @@ export default function MyCoursesClient() {
           MAIN CONTENT AREA
           ======================================================== */}
       <main className="mc-content-wrap">
-        {/* نوار فیلترها (بدون سوئیچرهای اضافه تب) */}
-        <div className="mc-filter-bar">
-          {/* فیلترهای وضعیت */}
-          <div className="mc-filter-group">
-            {STATUS_FILTERS.map((f) => (
-              <button
-                key={f.id}
-                type="button"
-                className={`mc-filter-btn ${statusFilter === f.id ? "active" : ""}`}
-                onClick={() => setStatusFilter(f.id)}
-              >
-                <span>{f.label}</span>
-                {f.id === "all" && (
-                  <span className="mc-filter-badge">{enrollments.length}</span>
-                )}
-              </button>
-            ))}
+        {/* نوار فیلتر و مرتب‌سازی دقیقاً منطبق با استایل دپارتمان (dp-toolbar) */}
+        <div className="dp-toolbar">
+          <div className="dp-toolbar-start">
+            <div className="dp-count">
+              <b>{filteredCourses.length.toLocaleString("fa-IR")}</b> دوره
+            </div>
+            {activeFilterCount > 0 && (
+              <div className="dp-active-topic-badge">
+                <span>{activeFilterCount.toLocaleString("fa-IR")} فیلتر فعال</span>
+                <button
+                  type="button"
+                  className="dp-active-topic-clear"
+                  onClick={resetFilters}
+                  aria-label="حذف فیلترها"
+                >
+                  ×
+                </button>
+              </div>
+            )}
           </div>
 
-          {/* فیلترهای دپارتمان و حوزه */}
-          <div className="mc-filter-group">
-            {DEPT_FILTERS.map((d) => (
-              <button
-                key={d.id}
-                type="button"
-                className={`mc-filter-btn ${deptFilter === d.id ? "active" : ""}`}
-                onClick={() => setDeptFilter(d.id)}
+          <div className="dp-tools">
+            <button
+              type="button"
+              className="dp-filter-btn"
+              onClick={() => setFilterOpen(true)}
+              aria-haspopup="dialog"
+            >
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
               >
-                <span>{d.label}</span>
+                <line x1="4" y1="7" x2="20" y2="7"></line>
+                <line x1="7" y1="12" x2="17" y2="12"></line>
+                <line x1="10" y1="17" x2="14" y2="17"></line>
+              </svg>
+              <span>فیلترها</span>
+              {activeFilterCount > 0 && (
+                <span className="dp-filter-count">
+                  {activeFilterCount.toLocaleString("fa-IR")}
+                </span>
+              )}
+            </button>
+
+            <div className="dp-sort" ref={sortRef}>
+              <span className="dp-sort-lab">ترتیب:</span>
+              <button
+                type="button"
+                className="dp-sort-btn"
+                onClick={() => setSortOpen((v) => !v)}
+                aria-haspopup="listbox"
+                aria-expanded={sortOpen}
+              >
+                {SORTS.find((s) => s.id === sort)?.label} <span className="caret">▼</span>
               </button>
-            ))}
+
+              {sortOpen && (
+                <ul className="dp-sort-menu" role="listbox">
+                  {SORTS.map((s) => (
+                    <li key={s.id}>
+                      <button
+                        type="button"
+                        role="option"
+                        aria-selected={sort === s.id}
+                        className={sort === s.id ? "active" : ""}
+                        onClick={() => {
+                          setSort(s.id);
+                          setSortOpen(false);
+                        }}
+                      >
+                        {s.label}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
         </div>
 
@@ -317,14 +425,24 @@ export default function MyCoursesClient() {
             <h3 className="text-xl font-black text-stone-900">
               {enrollments.length === 0
                 ? "هنوز در دوره‌ای ثبت‌نام نکرده‌اید"
-                : "دوره‌ای با این فیلتر یافت نشد"}
+                : "دوره‌ای با این فیلترها یافت نشد"}
             </h3>
-            <Link
-              href="/courses"
-              className="mt-2 px-6 py-3 bg-[#f8a41d] hover:bg-[#e69415] text-stone-950 font-black text-sm border-2 border-stone-900 rounded-[10px_0_10px_0] shadow-[3.5px_3.5px_0_#292827] transition-transform active:translate-x-0.5 active:translate-y-0.5"
-            >
-              مشاهده دوره‌ها
-            </Link>
+            {activeFilterCount > 0 ? (
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="mt-2 px-6 py-2.5 bg-white hover:bg-stone-50 text-stone-950 font-black text-xs border-2 border-stone-900 rounded-[10px_0_10px_0] shadow-[2.5px_2.5px_0_#292827]"
+              >
+                پاک کردن فیلترها
+              </button>
+            ) : (
+              <Link
+                href="/courses"
+                className="mt-2 px-6 py-3 bg-[#f8a41d] hover:bg-[#e69415] text-stone-950 font-black text-sm border-2 border-stone-900 rounded-[10px_0_10px_0] shadow-[3.5px_3.5px_0_#292827] transition-transform active:translate-x-0.5 active:translate-y-0.5"
+              >
+                مشاهده دوره‌ها
+              </Link>
+            )}
           </div>
         )}
 
@@ -341,6 +459,131 @@ export default function MyCoursesClient() {
           </div>
         )}
       </main>
+
+      {/* ========================================================
+          مدال فیلترهای دوره‌ها (مشابه DepartmentFilterModal)
+          ======================================================== */}
+      {filterOpen && (
+        <div
+          className="dp-filter-scrim"
+          onClick={() => setFilterOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="فیلترها"
+        >
+          <div
+            className="dp-filter-modal"
+            ref={filterRef}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="dp-sheet-handle" aria-hidden="true" />
+            <div className="dp-filter-head">
+              <div className="dp-filter-head-title">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="4" y1="7" x2="20" y2="7"></line>
+                  <line x1="7" y1="12" x2="17" y2="12"></line>
+                  <line x1="10" y1="17" x2="14" y2="17"></line>
+                </svg>
+                <span>فیلترهای دوره‌ها</span>
+                {activeFilterCount > 0 && (
+                  <span className="dp-filter-count">
+                    {activeFilterCount.toLocaleString("fa-IR")}
+                  </span>
+                )}
+              </div>
+              <div className="dp-filter-actions">
+                {activeFilterCount > 0 && (
+                  <button type="button" className="dp-reset" onClick={resetFilters}>
+                    پاک کردن همه
+                  </button>
+                )}
+                <button
+                  type="button"
+                  className="dp-filter-close"
+                  onClick={() => setFilterOpen(false)}
+                  aria-label="بستن"
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div className="dp-filter-body">
+              {/* گروه نحوه برگزاری */}
+              <div className="dp-fgroup">
+                <div className="dp-fgroup-title">نحوه برگزاری</div>
+                <div className="dp-segment">
+                  {MODE_OPTIONS.map((m) => (
+                    <button
+                      key={m.id}
+                      type="button"
+                      className={modeFilter === m.id ? "on" : ""}
+                      onClick={() => setModeFilter(m.id)}
+                    >
+                      {m.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* گروه وضعیت دوره */}
+              <div className="dp-fgroup">
+                <div className="dp-fgroup-title">وضعیت دوره</div>
+                <div className="dp-segment">
+                  {STATUS_OPTIONS.map((s) => (
+                    <button
+                      key={s.id}
+                      type="button"
+                      className={statusFilter === s.id ? "on" : ""}
+                      onClick={() => setStatusFilter(s.id)}
+                    >
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* گروه دپارتمان و حوزه */}
+              <div className="dp-fgroup">
+                <div className="dp-fgroup-title">دپارتمان و حوزه</div>
+                <div className="dp-segment">
+                  {DEPT_OPTIONS.map((d) => (
+                    <button
+                      key={d.id}
+                      type="button"
+                      className={deptFilter === d.id ? "on" : ""}
+                      onClick={() => setDeptFilter(d.id)}
+                    >
+                      {d.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* مودال لایسنس اسپات‌پلیر */}
       <SpotPlayerLicenseModal

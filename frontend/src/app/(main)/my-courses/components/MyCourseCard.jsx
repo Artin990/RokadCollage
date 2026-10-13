@@ -148,7 +148,7 @@ export default function MyCourseCard({ item, onOpenLicense }) {
           ) : isVirtual ? (
             <>
               <Monitor size={12} strokeWidth={2.5} />
-              <span>مجازی (اسپات‌پلیر)</span>
+              <span>غیر حضوری</span>
             </>
           ) : (
             <>
