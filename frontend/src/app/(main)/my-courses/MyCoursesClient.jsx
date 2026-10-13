@@ -287,7 +287,7 @@ export default function MyCoursesClient() {
           {/* بج نشان وضعیت */}
           <div className="mc-badge">
             <span className="dot" />
-            <span>دوره‌های فعال و در حال یادگیری</span>
+            <span>دوره‌های فعال</span>
           </div>
 
           {/* عنوان اصلی همراه با هایلایتر نئوبروتالیست */}
