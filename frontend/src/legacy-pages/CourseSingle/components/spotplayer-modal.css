@@ -138,7 +138,61 @@
   font-weight: 900;
 }
 
-/* ردیف فیلد کلید و کپی */
+/* باکس لایسنس اسپات‌پلیر */
+.mc-spotplayer-box {
+  background: #FFFDF0;
+  border: 1.5px dashed var(--ink, #1F1E1D);
+  border-radius: 12px 0 12px 0;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  direction: rtl;
+}
+
+.mc-spotplayer-box-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 850;
+  color: var(--ink, #1F1E1D);
+  overflow: hidden;
+  min-width: 0;
+  flex: 1;
+}
+
+.mc-spotplayer-box-info span {
+  direction: ltr;
+  text-align: left;
+}
+
+.mc-copy-key-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 6px 0 6px 0;
+  border: 1.5px solid var(--ink, #1F1E1D);
+  background: #ffffff;
+  color: var(--ink, #1F1E1D);
+  font-size: 11.5px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 1.5px 1.5px 0 var(--ink, #1F1E1D);
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.mc-copy-key-btn:hover {
+  background: var(--college, #F8A41D);
+  color: var(--ink, #1F1E1D);
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--ink, #1F1E1D);
+}
+
+/* ردیف فیلد کلید و کپی (سازگاری قبلی) */
 .spm-key-row {
   display: flex;
   align-items: center;

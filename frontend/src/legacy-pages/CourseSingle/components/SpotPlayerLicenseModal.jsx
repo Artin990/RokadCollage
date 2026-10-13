@@ -11,6 +11,7 @@ import {
   RotateCw,
   KeyRound,
   ShieldCheck,
+  Key,
 } from "lucide-react";
 import { getCourseLicense, retrySpotPlayerLicense } from "@/services/enrollmentService";
 import "./spotplayer-modal.css";
@@ -129,20 +130,20 @@ export default function SpotPlayerLicenseModal({ isOpen, onClose, courseId, cour
                   <span>فعال و معتبر</span>
                 </span>
               </div>
-              <div className="spm-key-row">
-                <input
-                  type="text"
-                  readOnly
-                  value={licenseKey}
-                  dir="ltr"
-                  className="spm-key-input"
-                />
+              <div className="mc-spotplayer-box">
+                <div className="mc-spotplayer-box-info">
+                  <Key size={14} className="text-amber-600 flex-shrink-0" />
+                  <span className="font-mono text-[11px] sm:text-[12px] truncate select-all">
+                    {licenseKey}
+                  </span>
+                </div>
                 <button
                   type="button"
                   onClick={handleCopy}
-                  className="spm-copy-btn"
+                  className="mc-copy-key-btn"
+                  title="کپی کلید لایسنس"
                 >
-                  {copied ? <Check size={13} /> : <Copy size={13} />}
+                  {copied ? <Check size={12} /> : <Copy size={12} />}
                   <span>{copied ? "کپی شد" : "کپی"}</span>
                 </button>
               </div>

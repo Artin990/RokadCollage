@@ -11,8 +11,6 @@ import {
   MapPin,
   Clock,
   Key,
-  Copy,
-  Check,
   Calendar,
   CheckCircle2,
   ExternalLink,
@@ -88,12 +86,11 @@ function resolveDept(course = {}) {
 }
 
 export default function MyCourseCard({ item, onOpenLicense }) {
-  const [copied, setCopied] = useState(false);
-
   const course = item.course || {};
   const isVirtual =
     item.courseModel === "VirtualCourse" ||
     course.type === "مجازی" ||
+    course.type === "غیر حضوری" ||
     Boolean(item.spotplayer?.key) ||
     !item.session;
 
@@ -103,18 +100,6 @@ export default function MyCourseCard({ item, onOpenLicense }) {
 
   const courseSlug = course.slug || course._id;
   const courseHref = courseSlug ? `/courses/${courseSlug}` : "/courses";
-  const licenseKey = item.spotplayer?.key;
-
-  const handleCopyKey = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!licenseKey) return;
-    try {
-      navigator.clipboard.writeText(licenseKey);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (_) {}
-  };
 
   return (
     <article className="mc-card">
@@ -204,25 +189,6 @@ export default function MyCourseCard({ item, onOpenLicense }) {
             </span>
           )}
         </div>
-
-        {/* نوار دسترسی لایسنس اسپات‌پلیر در صورت مجازی بودن */}
-        {isVirtual && licenseKey && (
-          <div className="mc-spotplayer-box">
-            <div className="mc-spotplayer-box-info">
-              <Key size={14} className="text-amber-600 flex-shrink-0" />
-              <span className="font-mono text-[11px] truncate select-all">{licenseKey}</span>
-            </div>
-            <button
-              type="button"
-              className="mc-copy-key-btn"
-              onClick={handleCopyKey}
-              title="کپی کلید لایسنس"
-            >
-              {copied ? <Check size={12} className="text-emerald-600" /> : <Copy size={12} />}
-              <span>{copied ? "کپی شد" : "کپی"}</span>
-            </button>
-          </div>
-        )}
 
         {/* اکشن‌های فوتر کارت (حداکثر ۱ تا ۲ کلمه، فعل اول) */}
         <div className="mc-card-actions">
