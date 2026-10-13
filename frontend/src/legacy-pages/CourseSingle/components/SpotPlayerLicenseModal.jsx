@@ -97,43 +97,45 @@ export default function SpotPlayerLicenseModal({ isOpen, onClose, courseId, cour
       dir="rtl"
     >
       <div
-        className="w-full max-w-lg bg-white border-2 border-stone-900 rounded-[22px_0_22px_0] shadow-[6px_6px_0_#292827] p-6 sm:p-7 relative"
+        className="w-full max-w-xl bg-white border-2 border-stone-900 rounded-[22px_0_22px_0] shadow-[6px_6px_0_#292827] p-6 sm:p-8 relative"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-5 left-5 text-stone-500 hover:text-stone-900 transition-colors"
+          className="absolute top-5 left-5 sm:top-6 sm:left-6 w-9 h-9 rounded-lg border-2 border-transparent hover:border-stone-900 hover:bg-stone-100 text-stone-500 hover:text-stone-900 transition-all flex items-center justify-center cursor-pointer"
           aria-label="بستن"
         >
           <X size={20} strokeWidth={2.5} />
         </button>
 
-        <div className="flex items-center gap-2.5 mb-2">
-          <div className="w-10 h-10 rounded-[10px_0_10px_0] bg-amber-100 text-stone-900 border border-stone-900 shadow-[2px_2px_0_#000] grid place-items-center">
-            <KeyRound size={20} />
+        {/* هدر مدال با فاصله‌گذاری و تفکیک واضح */}
+        <div className="flex items-center gap-3.5 pb-4 border-b-2 border-stone-200">
+          <div className="w-12 h-12 rounded-[12px_0_12px_0] bg-amber-100 text-stone-900 border-2 border-stone-900 shadow-[3px_3px_0_#000] grid place-items-center flex-shrink-0">
+            <KeyRound size={22} />
           </div>
-          <div>
-            <h3 className="text-lg font-black text-stone-900">لایسنس اسپات‌پلیر دوره</h3>
-            <p className="text-xs font-bold text-stone-500">{courseTitle || "دوره تخصصی کالج رکاد"}</p>
+          <div className="pl-8">
+            <h3 className="text-xl font-black text-stone-900 leading-snug">لایسنس اسپات‌پلیر دوره</h3>
+            <p className="text-xs sm:text-sm font-bold text-stone-500 mt-0.5">{courseTitle || "دوره تخصصی کالج رکاد"}</p>
           </div>
         </div>
 
         {loading ? (
-          <div className="py-12 flex flex-col items-center justify-center gap-3">
+          <div className="py-14 flex flex-col items-center justify-center gap-3">
             <RotateCw className="w-8 h-8 text-stone-700 animate-spin" />
-            <span className="text-xs font-bold text-stone-600">در حال دریافت کلید لایسنس...</span>
+            <span className="text-xs sm:text-sm font-bold text-stone-600">در حال دریافت کلید لایسنس...</span>
           </div>
         ) : licenseKey ? (
-          <div className="space-y-5 mt-5">
-            <div className="bg-stone-50 border-2 border-stone-900 rounded-[14px_0_14px_0] p-4 sm:p-5 space-y-3.5">
-              <div className="flex justify-between items-center text-xs font-bold text-stone-600">
+          <div className="space-y-6 mt-6">
+            {/* کادر لایسنس */}
+            <div className="bg-stone-50 border-2 border-stone-900 rounded-[16px_0_16px_0] shadow-[3px_3px_0_#292827] p-5 sm:p-6 space-y-4">
+              <div className="flex justify-between items-center text-xs sm:text-sm font-bold text-stone-700">
                 <span>کلید لایسنس اختصاصی شما:</span>
-                <span className="text-emerald-700 flex items-center gap-1 font-black">
-                  <ShieldCheck size={14} /> فعال و معتبر
+                <span className="text-emerald-700 flex items-center gap-1.5 font-black">
+                  <ShieldCheck size={16} /> فعال و معتبر
                 </span>
               </div>
-              <div className="flex items-center gap-2.5 bg-white border-2 border-stone-900 rounded-lg p-2.5">
+              <div className="flex items-center gap-3 bg-white border-2 border-stone-900 rounded-xl p-3 shadow-xs">
                 <input
                   type="text"
                   readOnly
@@ -144,56 +146,57 @@ export default function SpotPlayerLicenseModal({ isOpen, onClose, courseId, cour
                 <button
                   type="button"
                   onClick={handleCopy}
-                  className="flex items-center gap-1.5 px-3.5 py-1.5 bg-stone-900 text-white font-bold text-xs rounded hover:bg-stone-800 transition-all flex-shrink-0 cursor-pointer"
+                  className="flex items-center gap-1.5 px-4 py-2 bg-stone-900 text-white font-black text-xs sm:text-sm rounded-lg hover:bg-stone-800 transition-all flex-shrink-0 cursor-pointer"
                 >
-                  {copied ? <Check size={13} /> : <Copy size={13} />}
+                  {copied ? <Check size={14} /> : <Copy size={14} />}
                   <span>{copied ? "کپی شد" : "کپی"}</span>
                 </button>
               </div>
             </div>
 
             {/* دانلود نرم‌افزار اسپات‌پلیر */}
-            <div className="border-2 border-stone-900 rounded-[14px_0_14px_0] p-4 sm:p-5 bg-amber-50/70 space-y-3">
-              <span className="block text-xs font-black text-stone-800">
+            <div className="border-2 border-stone-900 rounded-[16px_0_16px_0] shadow-[3px_3px_0_#292827] p-5 sm:p-6 bg-[#fffaf0] space-y-4">
+              <span className="block text-xs sm:text-sm font-black text-stone-900">
                 دانلود نرم‌افزار پخش‌کننده اسپات‌پلیر:
               </span>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {SPOTPLAYER_APPS.map((app) => (
                   <a
                     key={app.os}
                     href={app.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center justify-center gap-1.5 py-2 px-2.5 bg-white border border-stone-900 rounded text-xs font-bold text-stone-900 hover:bg-amber-100 transition-colors shadow-xs"
+                    className="flex items-center justify-center gap-2 py-2.5 px-3 bg-white border-2 border-stone-900 rounded-xl text-xs font-black text-stone-900 hover:bg-amber-100 transition-all shadow-[2px_2px_0_#292827] active:translate-x-0.5 active:translate-y-0.5"
                   >
-                    <Download size={13} />
+                    <Download size={14} />
                     <span>{app.name}</span>
                   </a>
                 ))}
               </div>
             </div>
 
-            <div className="flex gap-2.5 pt-2">
+            {/* دکمه‌های اکشن فوتر */}
+            <div className="flex flex-col sm:flex-row gap-3 pt-3">
               <a
                 href="https://app.spotplayer.ir"
                 target="_blank"
                 rel="noreferrer"
-                className="flex-1 py-2.5 bg-stone-900 text-white font-black text-xs sm:text-sm rounded-[8px_0_8px_0] shadow-[2.5px_2.5px_0_#000] flex items-center justify-center gap-1.5 hover:bg-stone-800 transition-all"
+                className="w-full sm:flex-1 py-3 px-5 bg-stone-900 text-white font-black text-xs sm:text-sm rounded-[10px_0_10px_0] shadow-[3px_3px_0_#000] flex items-center justify-center gap-2 hover:bg-stone-800 transition-all"
               >
                 <span>ورود به وب‌پلیر</span>
-                <ExternalLink size={14} />
+                <ExternalLink size={15} />
               </a>
               <button
                 type="button"
                 onClick={onClose}
-                className="px-5 py-2.5 bg-stone-100 text-stone-800 font-bold text-xs sm:text-sm border border-stone-900 rounded-[8px_0_8px_0] hover:bg-stone-200 transition-all"
+                className="w-full sm:w-auto px-6 py-3 bg-stone-100 hover:bg-stone-200 text-stone-900 font-black text-xs sm:text-sm border-2 border-stone-900 rounded-[10px_0_10px_0] shadow-[2.5px_2.5px_0_#292827] transition-all cursor-pointer"
               >
                 بستن
               </button>
             </div>
           </div>
         ) : (
-          <div className="py-8 text-center space-y-3">
+          <div className="py-10 text-center space-y-4">
             <p className="text-sm font-bold text-stone-700">
               {isFailed
                 ? "صدور لایسنس با خطا مواجه شد. می‌توانید درخواست صدور مجدد ارسال کنید."
@@ -204,7 +207,7 @@ export default function SpotPlayerLicenseModal({ isOpen, onClose, courseId, cour
                 type="button"
                 onClick={handleRetry}
                 disabled={retrying}
-                className="px-4 py-2 bg-stone-900 text-white font-bold text-xs rounded-[8px_0_8px_0] shadow"
+                className="px-5 py-2.5 bg-stone-900 text-white font-bold text-xs sm:text-sm rounded-[8px_0_8px_0] shadow-[2px_2px_0_#000] cursor-pointer"
               >
                 {retrying ? "در حال صدور مجدد..." : "تلاش مجدد"}
               </button>
