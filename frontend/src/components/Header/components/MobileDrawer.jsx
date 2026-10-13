@@ -78,7 +78,7 @@ export default function MobileDrawer({
               {user?.fullName || user?.firstName || "حساب کاربری"}
             </div>
             <Link
-              href="/panel?tab=courses"
+              href="/my-courses"
               className="hb1-cta"
               style={{
                 background: "var(--white)",
@@ -98,7 +98,7 @@ export default function MobileDrawer({
               <span>دوره‌های من</span>
             </Link>
             <Link
-              href="/panel?tab=profile"
+              href="/profile"
               className="hb1-cta"
               style={{
                 background: "var(--white)",

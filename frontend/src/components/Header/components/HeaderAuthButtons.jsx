@@ -88,7 +88,7 @@ export default function HeaderAuthButtons({ user, store, unreadCount, onRequestL
           {dropdownOpen && (
             <div className="header-user-dropdown" role="menu">
               <Link
-                href="/panel?tab=courses"
+                href="/my-courses"
                 className="header-dropdown-item"
                 onClick={() => setDropdownOpen(false)}
                 role="menuitem"
@@ -97,7 +97,7 @@ export default function HeaderAuthButtons({ user, store, unreadCount, onRequestL
                 <span>دوره‌های من</span>
               </Link>
               <Link
-                href="/panel?tab=profile"
+                href="/profile"
                 className="header-dropdown-item"
                 onClick={() => setDropdownOpen(false)}
                 role="menuitem"

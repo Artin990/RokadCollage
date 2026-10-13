@@ -1,0 +1,577 @@
+/* ========================================================
+   MY COURSES DASHBOARD - NEO-BRUTALIST STYLING
+   ======================================================== */
+
+.mc-page {
+  position: relative;
+  min-height: 100vh;
+  background: var(--bg-cream, #FFFDF8);
+  color: var(--ink, #1F1E1D);
+  direction: rtl;
+}
+
+/* ========================================================
+   HERO SECTION (مطابق الگوی تک‌صفحه دپارتمان‌ها)
+   ======================================================== */
+.mc-hero {
+  position: relative;
+  background: linear-gradient(180deg, #FFF4E5 0%, #FFFDF8 100%);
+  border-bottom: 2.5px solid var(--ink, #1F1E1D);
+  overflow: hidden;
+}
+
+.mc-hero-pattern {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.22;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
+}
+
+.mc-hero-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 44px 20px 52px;
+}
+
+.mc-crumb {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink-subtle, #62605B);
+  margin-bottom: 18px;
+}
+
+.mc-crumb a {
+  color: var(--ink-subtle, #62605B);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.mc-crumb a:hover {
+  color: var(--ink, #1F1E1D);
+}
+
+.mc-crumb .sep {
+  color: var(--college, #F8A41D);
+  font-weight: 900;
+}
+
+.mc-crumb .cur {
+  color: var(--ink, #1F1E1D);
+  font-weight: 900;
+}
+
+.mc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 2px solid var(--ink, #1F1E1D);
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-weight: 900;
+  font-size: 13px;
+  color: var(--ink, #1F1E1D);
+  box-shadow: 3px 3px 0 var(--college, #F8A41D);
+  transform: rotate(-1deg);
+  width: fit-content;
+  margin-bottom: 14px;
+}
+
+.mc-badge .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #10B981;
+  border: 2px solid var(--ink, #1F1E1D);
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.mc-hero-title {
+  font-size: clamp(26px, 4.5vw, 44px);
+  font-weight: 950;
+  line-height: 1.35;
+  color: var(--ink, #1F1E1D);
+  margin: 12px 0 16px;
+  letter-spacing: -0.01em;
+  max-width: 780px;
+}
+
+.mc-hero-accent {
+  position: relative;
+  z-index: 0;
+  display: inline-block;
+  color: var(--ink, #1F1E1D);
+  padding: 0 6px;
+}
+
+.mc-hero-accent::after {
+  content: "";
+  position: absolute;
+  right: -0.1em;
+  left: -0.1em;
+  top: 55%;
+  height: 0.44em;
+  margin-top: -0.22em;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--college, #F8A41D);
+  border-radius: 4px 9px 5px 10px;
+  transform: rotate(-2deg);
+}
+
+.mc-hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin-top: 30px;
+  background: #ffffff;
+  border: 2px solid var(--ink, #1F1E1D);
+  border-radius: 20px 0 20px 0;
+  box-shadow: 5px 5px 0 var(--ink, #1F1E1D);
+  width: fit-content;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.mc-hstat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 14px 24px;
+  min-width: 130px;
+}
+
+.mc-hstat + .mc-hstat {
+  border-inline-start: 2px dashed rgba(31, 30, 29, 0.25);
+}
+
+.mc-hstat b {
+  font-weight: 950;
+  font-size: 22px;
+  line-height: 1.2;
+  color: var(--ink, #1F1E1D);
+}
+
+.mc-hstat span {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-subtle, #62605B);
+}
+
+/* ========================================================
+   MAIN CONTENT & FILTER BAR
+   ======================================================== */
+.mc-content-wrap {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 38px 20px 72px;
+}
+
+.mc-filter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #ffffff;
+  border: 2.5px solid var(--ink, #1F1E1D);
+  border-radius: 20px 0 20px 0;
+  box-shadow: 5px 5px 0 var(--ink, #1F1E1D);
+  padding: 20px 22px;
+  margin-bottom: 34px;
+}
+
+@media (min-width: 768px) {
+  .mc-filter-bar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.mc-filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.mc-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 850;
+  border-radius: 12px 0 12px 0;
+  border: 2px solid var(--ink, #1F1E1D);
+  background: #ffffff;
+  color: var(--ink, #1F1E1D);
+  box-shadow: 2.5px 2.5px 0 var(--ink, #1F1E1D);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.mc-filter-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3.5px 3.5px 0 var(--ink, #1F1E1D);
+}
+
+.mc-filter-btn.active {
+  background: var(--college, #F8A41D);
+  color: #111;
+  box-shadow: 1.5px 1.5px 0 var(--ink, #1F1E1D);
+  transform: translate(1px, 1px);
+}
+
+.mc-filter-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: rgba(31, 30, 29, 0.1);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.mc-filter-btn.active .mc-filter-badge {
+  background: #ffffff;
+  color: var(--ink, #1F1E1D);
+  border: 1px solid var(--ink, #1F1E1D);
+}
+
+/* ========================================================
+   COURSE CARDS GRID (3 کارتی در هر ردیف)
+   ======================================================== */
+.mc-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 26px;
+}
+
+@media (min-width: 640px) {
+  .mc-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .mc-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ========================================================
+   CARD DESIGN (مطابق ch-flag-visual و کارت‌های پیشنهادی)
+   ======================================================== */
+.mc-card {
+  position: relative;
+  background: #ffffff;
+  border: 2.5px solid var(--ink, #1F1E1D);
+  border-radius: 22px 0 22px 0;
+  box-shadow: 5px 5px 0 var(--ink, #1F1E1D);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mc-card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 8px 8px 0 var(--ink, #1F1E1D);
+}
+
+/* بخش بصری بالای کارت */
+.mc-card-visual {
+  position: relative;
+  height: 185px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 2.5px solid var(--ink, #1F1E1D);
+  overflow: hidden;
+}
+
+.mc-card-pattern {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.24;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.mc-dept-chip {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  font-size: 11.5px;
+  font-weight: 850;
+  padding: 4px 11px;
+  border: 1.5px solid var(--ink, #1F1E1D);
+  border-radius: 8px 0 8px 0;
+  background: #ffffff;
+  color: var(--ink, #1F1E1D);
+  box-shadow: 2px 2px 0 var(--ink, #1F1E1D);
+}
+
+.mc-icon-wrap {
+  position: relative;
+  z-index: 1;
+  width: 82px;
+  height: 82px;
+  border-radius: 18px 0 18px 0;
+  border: 2.5px solid var(--ink, #1F1E1D);
+  background: #ffffff;
+  display: grid;
+  place-items: center;
+  box-shadow: 4px 4px 0 var(--ink, #1F1E1D);
+  margin-bottom: 12px;
+  transition: transform 0.2s ease;
+}
+
+.mc-card:hover .mc-icon-wrap {
+  transform: scale(1.05);
+}
+
+.mc-badge-pill {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1.5px solid var(--ink, #1F1E1D);
+  border-radius: 999px;
+  padding: 3px 12px;
+  font-size: 11.5px;
+  font-weight: 850;
+  box-shadow: 2px 2px 0 var(--ink, #1F1E1D);
+}
+
+.mc-badge-inperson {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.mc-badge-virtual {
+  background: #E0F2FE;
+  color: #0369A1;
+}
+
+.mc-badge-completed {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+/* تم‌های رنگی بخش ویژوال بر اساس دپارتمان */
+.mc-theme-it {
+  background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%);
+}
+
+.mc-theme-business {
+  background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+}
+
+.mc-theme-languages {
+  background: linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 100%);
+}
+
+.mc-theme-default {
+  background: linear-gradient(135deg, #FFE4E6 0%, #FECDD3 100%);
+}
+
+/* محتوای متنی و مشخصات کارت */
+.mc-card-body {
+  padding: 22px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.mc-card-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-subtle, #62605B);
+}
+
+.mc-card-title {
+  font-size: 17.5px;
+  font-weight: 950;
+  line-height: 1.45;
+  color: var(--ink, #1F1E1D);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 50px;
+}
+
+.mc-card-title a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.mc-card-title a:hover {
+  color: #D97706;
+}
+
+.mc-pills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.mc-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #F5F5F4;
+  border: 1.5px solid var(--ink, #1F1E1D);
+  border-radius: 8px 0 8px 0;
+  padding: 4px 9px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--ink, #1F1E1D);
+}
+
+/* باکس لایسنس اسپات‌پلیر داخل کارت */
+.mc-spotplayer-box {
+  background: #FFFDF0;
+  border: 1.5px dashed var(--ink, #1F1E1D);
+  border-radius: 12px 0 12px 0;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mc-spotplayer-box-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 850;
+  color: var(--ink, #1F1E1D);
+  overflow: hidden;
+}
+
+.mc-copy-key-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 9px;
+  border-radius: 6px 0 6px 0;
+  border: 1.5px solid var(--ink, #1F1E1D);
+  background: #ffffff;
+  color: var(--ink, #1F1E1D);
+  font-size: 11px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 1.5px 1.5px 0 var(--ink, #1F1E1D);
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.mc-copy-key-btn:hover {
+  background: var(--college, #F8A41D);
+}
+
+/* اکشن‌های فوتر کارت */
+.mc-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 2px solid var(--ink, #1F1E1D);
+}
+
+.mc-btn-primary {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 14px;
+  border-radius: 10px 0 10px 0;
+  border: 2px solid var(--ink, #1F1E1D);
+  background: var(--ink, #1F1E1D);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 900;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--college, #F8A41D);
+  transition: all 0.15s ease;
+}
+
+.mc-btn-primary:hover {
+  background: var(--college, #F8A41D);
+  color: var(--ink, #1F1E1D);
+  box-shadow: 1.5px 1.5px 0 var(--ink, #1F1E1D);
+  transform: translate(1px, 1px);
+}
+
+.mc-btn-license {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 10px 14px;
+  border-radius: 10px 0 10px 0;
+  border: 2px solid var(--ink, #1F1E1D);
+  background: #ffffff;
+  color: var(--ink, #1F1E1D);
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 2.5px 2.5px 0 var(--ink, #1F1E1D);
+  transition: all 0.15s ease;
+}
+
+.mc-btn-license:hover {
+  background: #FEF3C7;
+  transform: translate(1px, 1px);
+  box-shadow: 1.5px 1.5px 0 var(--ink, #1F1E1D);
+}
+
+/* حالت خالی */
+.mc-empty-box {
+  background: #ffffff;
+  border: 2.5px solid var(--ink, #1F1E1D);
+  border-radius: 22px 0 22px 0;
+  box-shadow: 5px 5px 0 var(--ink, #1F1E1D);
+  padding: 56px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  max-width: 600px;
+  margin: 30px auto;
+}
