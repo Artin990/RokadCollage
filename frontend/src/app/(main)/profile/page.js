@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { BookOpen, UserCog } from "lucide-react";
 import UserProfileSettings from "../panel/components/UserProfileSettings";
 import { isUserLoggedIn } from "@/data/panelStore";
 import "./profile.css";
@@ -62,18 +61,6 @@ export default function ProfilePage() {
           <h1 className="prof-hero-title">
             تنظیمات پروفایل | <span className="prof-hero-accent">مدیریت حساب کاربری</span>
           </h1>
-
-          {/* تب‌های جابجایی بین بخش‌های پنل */}
-          <div className="prof-tabs">
-            <Link href="/my-courses" className="prof-tab-btn">
-              <BookOpen size={15} />
-              <span>دوره‌های من</span>
-            </Link>
-            <div className="prof-tab-btn active">
-              <UserCog size={15} />
-              <span>تنظیمات پروفایل</span>
-            </div>
-          </div>
         </div>
       </header>
 
