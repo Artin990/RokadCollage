@@ -296,20 +296,20 @@ export default function MyCoursesClient() {
           </h1>
 
           {/* نوار آمار (دوره‌های من، غیر حضوری، کارگاه حضوری، تکمیل شده) */}
-          <div className="mc-hero-stats">
-            <div className="mc-hstat">
+          <div className="dp-hero-stats">
+            <div className="dp-hstat">
               <b>{stats.total.toLocaleString("fa-IR")}</b>
               <span>دوره‌های ثبت‌نام‌شده</span>
             </div>
-            <div className="mc-hstat">
+            <div className="dp-hstat">
               <b>{stats.virtualCount.toLocaleString("fa-IR")}</b>
               <span>غیر حضوری</span>
             </div>
-            <div className="mc-hstat">
+            <div className="dp-hstat">
               <b>{stats.inPersonCount.toLocaleString("fa-IR")}</b>
               <span>کارگاه حضوری</span>
             </div>
-            <div className="mc-hstat">
+            <div className="dp-hstat">
               <b>{stats.completedCount.toLocaleString("fa-IR")}</b>
               <span>تکمیل‌شده</span>
             </div>
