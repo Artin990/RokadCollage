@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { logoutUser } from "../../../data/panelStore.js";
-import { ChevronDown, LogOut, BookOpen, UserCog } from "lucide-react";
+import { ChevronDown, LogOut, BookOpen, UserCog, User } from "lucide-react";
 
 export default function HeaderAuthButtons({ user, store, unreadCount, onRequestLogout }) {
   const [mounted, setMounted] = useState(false);
@@ -77,11 +77,9 @@ export default function HeaderAuthButtons({ user, store, unreadCount, onRequestL
             title="منوی حساب کاربری"
           >
             <span className="header-user-avatar">
-              {user.initial || user.firstName?.charAt(0) || "پ"}
+              <User size={14} strokeWidth={2.4} />
             </span>
-            <span className="header-user-name">
-              {user.fullName || user.firstName || "حساب کاربری"}
-            </span>
+            <span className="header-user-name">پروفایل</span>
             <ChevronDown className="header-user-chevron" />
           </button>
 

@@ -75,7 +75,7 @@ export default function MobileDrawer({
                 fontWeight: 900,
               }}
             >
-              {user?.fullName || user?.firstName || "حساب کاربری"}
+              پروفایل
             </div>
             <Link
               href="/my-courses"
