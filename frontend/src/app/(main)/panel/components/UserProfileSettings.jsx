@@ -1,7 +1,18 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { User, Phone, Lock, Calendar, CheckCircle2, AlertCircle, Save, RotateCw } from "lucide-react";
+import {
+  User,
+  Phone,
+  Lock,
+  Calendar,
+  CheckCircle2,
+  AlertCircle,
+  Save,
+  RotateCw,
+  ShieldCheck,
+  KeyRound,
+} from "lucide-react";
 import { getMyProfile, updateMyProfile } from "@/services/userService";
 import { getPanelStore, updateProfile } from "@/data/panelStore";
 
@@ -108,9 +119,9 @@ export default function UserProfileSettings() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 gap-3 text-stone-500 font-bold">
-        <RotateCw className="w-7 h-7 animate-spin text-[#f8a41d]" />
-        <span>در حال بارگذاری اطلاعات حساب...</span>
+      <div className="prof-loading">
+        <RotateCw className="w-8 h-8 animate-spin text-[#f8a41d]" />
+        <span>در حال دریافت اطلاعات حساب...</span>
       </div>
     );
   }
@@ -118,153 +129,175 @@ export default function UserProfileSettings() {
   const initialLetter = formData.fullName ? formData.fullName.trim()[0] : "پ";
 
   return (
-    <div className="bg-white border-2 border-stone-900 rounded-[20px_0_20px_0] shadow-[5px_5px_0_#292827] p-6 sm:p-8 max-w-2xl mx-auto">
-      {/* سربرگ آواتار کاربر */}
-      <div className="flex items-center gap-4 pb-6 mb-6 border-b-2 border-stone-100">
-        <div className="w-16 h-16 rounded-[14px_0_14px_0] bg-[#f8a41d] text-stone-950 border-2 border-stone-900 shadow-[3px_3px_0_#292827] flex items-center justify-center text-2xl font-black">
-          {initialLetter}
+    <div className="prof-card">
+      {/* سربرگ کاربر */}
+      <div className="prof-user-banner">
+        <div className="prof-user-meta">
+          <div className="prof-avatar">
+            {initialLetter}
+          </div>
+          <div>
+            <h2 className="prof-user-name">
+              {formData.fullName || "حساب کاربری"}
+            </h2>
+            <div className="prof-user-phone">
+              <Phone size={13} />
+              <span>{formData.phoneNumber || "---"}</span>
+            </div>
+          </div>
         </div>
-        <div>
-          <h2 className="text-xl font-black text-stone-900">
-            {formData.fullName || "حساب کاربری"}
-          </h2>
-          <span className="text-xs font-bold text-stone-500 font-mono mt-0.5 block" dir="ltr">
-            {formData.phoneNumber}
-          </span>
+
+        <div className="prof-status-chip">
+          <ShieldCheck size={14} />
+          <span>عضو کالج رکاد</span>
         </div>
       </div>
 
-      {/* پیام بازخورد */}
+      {/* پیام بازخورد موفقیت / خطا */}
       {successMsg && (
-        <div className="mb-5 bg-emerald-50 border-2 border-emerald-800 text-emerald-900 rounded-[10px_0_10px_0] p-3 text-sm font-bold flex items-center gap-2">
-          <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-emerald-700" />
+        <div className="prof-alert success">
+          <CheckCircle2 size={18} className="flex-shrink-0" />
           <span>{successMsg}</span>
         </div>
       )}
 
       {errorMsg && (
-        <div className="mb-5 bg-rose-50 border-2 border-rose-800 text-rose-900 rounded-[10px_0_10px_0] p-3 text-sm font-bold flex items-center gap-2">
-          <AlertCircle className="w-5 h-5 flex-shrink-0 text-rose-700" />
+        <div className="prof-alert error">
+          <AlertCircle size={18} className="flex-shrink-0" />
           <span>{errorMsg}</span>
         </div>
       )}
 
       {/* فرم ویرایش */}
-      <form onSubmit={handleSubmit} className="space-y-5">
-        {/* نام و نام خانوادگی */}
-        <div>
-          <label className="block text-xs font-black text-stone-800 mb-1.5">
-            نام و نام خانوادگی
-          </label>
-          <div className="relative">
-            <input
-              type="text"
-              name="fullName"
-              value={formData.fullName}
-              onChange={handleChange}
-              placeholder="مثال: آرین احمدی"
-              className="w-full bg-stone-50 border-2 border-stone-900 rounded-[10px_0_10px_0] px-3.5 py-2.5 text-sm font-bold text-stone-900 focus:outline-none focus:bg-white focus:shadow-[3px_3px_0_#292827] transition-all"
-            />
-            <User className="w-4 h-4 text-stone-400 absolute left-3 top-3 pointer-events-none" />
+      <form onSubmit={handleSubmit}>
+        {/* اطلاعات فردی */}
+        <div className="prof-section">
+          <div className="prof-section-head">
+            <User size={16} className="text-[#f8a41d]" />
+            <span>مشخصات فردی</span>
           </div>
-        </div>
 
-        {/* شماره موبایل */}
-        <div>
-          <label className="block text-xs font-black text-stone-800 mb-1.5">
-            شماره موبایل
-          </label>
-          <div className="relative">
-            <input
-              type="text"
-              name="phoneNumber"
-              value={formData.phoneNumber}
-              readOnly
-              disabled
-              dir="ltr"
-              className="w-full bg-stone-100 border-2 border-stone-300 rounded-[10px_0_10px_0] px-3.5 py-2.5 text-sm font-bold text-stone-500 cursor-not-allowed font-mono"
-            />
-            <Phone className="w-4 h-4 text-stone-400 absolute left-3 top-3 pointer-events-none" />
+          <div className="prof-grid-2">
+            {/* نام و نام خانوادگی */}
+            <div className="prof-field">
+              <label className="prof-label">
+                <span>نام و نام خانوادگی</span>
+              </label>
+              <div className="prof-input-wrap">
+                <input
+                  type="text"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  placeholder="مثال: آرین احمدی"
+                  className="prof-input"
+                />
+                <User size={16} className="prof-input-icon" />
+              </div>
+            </div>
+
+            {/* تاریخ تولد */}
+            <div className="prof-field">
+              <label className="prof-label">
+                <span>تاریخ تولد</span>
+              </label>
+              <div className="prof-input-wrap">
+                <input
+                  type="text"
+                  name="birthDate"
+                  value={formData.birthDate}
+                  onChange={handleChange}
+                  placeholder="مثال: ۱۳۷۸/۰۶/۱۵"
+                  className="prof-input"
+                />
+                <Calendar size={16} className="prof-input-icon" />
+              </div>
+            </div>
           </div>
-        </div>
 
-        {/* تاریخ تولد */}
-        <div>
-          <label className="block text-xs font-black text-stone-800 mb-1.5">
-            تاریخ تولد
-          </label>
-          <div className="relative">
-            <input
-              type="text"
-              name="birthDate"
-              value={formData.birthDate}
-              onChange={handleChange}
-              placeholder="مثال: ۱۳۷۸/۰۶/۱۵"
-              className="w-full bg-stone-50 border-2 border-stone-900 rounded-[10px_0_10px_0] px-3.5 py-2.5 text-sm font-bold text-stone-900 focus:outline-none focus:bg-white focus:shadow-[3px_3px_0_#292827] transition-all"
-            />
-            <Calendar className="w-4 h-4 text-stone-400 absolute left-3 top-3 pointer-events-none" />
+          {/* شماره موبایل */}
+          <div className="prof-field">
+            <label className="prof-label">
+              <span>شماره موبایل</span>
+              <span className="prof-readonly-badge">غیرقابل ویرایش</span>
+            </label>
+            <div className="prof-input-wrap">
+              <input
+                type="text"
+                name="phoneNumber"
+                value={formData.phoneNumber}
+                readOnly
+                disabled
+                dir="ltr"
+                className="prof-input"
+              />
+              <Phone size={16} className="prof-input-icon" />
+            </div>
           </div>
         </div>
 
         {/* بخش تغییر رمز عبور */}
-        <div className="pt-4 border-t-2 border-stone-100 space-y-4">
-          <div className="font-black text-sm text-stone-900">
-            تغییر رمز عبور (اختیاری)
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-bold text-stone-700 mb-1">
-                رمز عبور جدید
-              </label>
-              <div className="relative">
-                <input
-                  type="password"
-                  name="newPassword"
-                  value={formData.newPassword}
-                  onChange={handleChange}
-                  placeholder="حداقل ۶ کاراکتر"
-                  className="w-full bg-stone-50 border-2 border-stone-900 rounded-[10px_0_10px_0] px-3.5 py-2 text-sm font-bold text-stone-900 focus:outline-none focus:bg-white focus:shadow-[3px_3px_0_#292827] transition-all"
-                />
-                <Lock className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-2.5 pointer-events-none" />
-              </div>
+        <div className="prof-section">
+          <div className="prof-sub-box">
+            <div className="prof-section-head">
+              <KeyRound size={16} className="text-[#f8a41d]" />
+              <span>تغییر رمز عبور (اختیاری)</span>
             </div>
 
-            <div>
-              <label className="block text-xs font-bold text-stone-700 mb-1">
-                تکرار رمز عبور جدید
-              </label>
-              <div className="relative">
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  placeholder="تکرار رمز"
-                  className="w-full bg-stone-50 border-2 border-stone-900 rounded-[10px_0_10px_0] px-3.5 py-2 text-sm font-bold text-stone-900 focus:outline-none focus:bg-white focus:shadow-[3px_3px_0_#292827] transition-all"
-                />
-                <Lock className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-2.5 pointer-events-none" />
+            <div className="prof-grid-2 mt-2">
+              <div className="prof-field">
+                <label className="prof-label">
+                  <span>رمز عبور جدید</span>
+                </label>
+                <div className="prof-input-wrap">
+                  <input
+                    type="password"
+                    name="newPassword"
+                    value={formData.newPassword}
+                    onChange={handleChange}
+                    placeholder="حداقل ۶ کاراکتر"
+                    className="prof-input"
+                  />
+                  <Lock size={15} className="prof-input-icon" />
+                </div>
+              </div>
+
+              <div className="prof-field">
+                <label className="prof-label">
+                  <span>تکرار رمز عبور جدید</span>
+                </label>
+                <div className="prof-input-wrap">
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="تکرار رمز"
+                    className="prof-input"
+                  />
+                  <Lock size={15} className="prof-input-icon" />
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* دکمه ذخیره */}
-        <div className="pt-4 flex justify-end">
+        {/* دکمه اقدام ذخیره */}
+        <div className="prof-actions">
           <button
             type="submit"
             disabled={saving}
-            className="inline-flex items-center justify-center gap-2 px-7 py-3 bg-[#f8a41d] hover:bg-[#e69415] text-stone-950 font-black text-sm border-2 border-stone-900 rounded-[10px_0_10px_0] shadow-[3.5px_3.5px_0_#292827] transition-all active:translate-x-0.5 active:translate-y-0.5 disabled:opacity-50 cursor-pointer"
+            className="prof-submit-btn"
           >
             {saving ? (
               <>
-                <RotateCw className="w-4 h-4 animate-spin" />
+                <RotateCw size={15} className="animate-spin" />
                 <span>در حال ذخیره...</span>
               </>
             ) : (
               <>
-                <Save className="w-4 h-4" />
-                <span>ذخیره تغییرات</span>
+                <Save size={15} />
+                <span>ذخیره</span>
               </>
             )}
           </button>
