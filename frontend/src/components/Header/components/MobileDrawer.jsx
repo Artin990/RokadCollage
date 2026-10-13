@@ -65,18 +65,6 @@ export default function MobileDrawer({
       >
         {mounted && store.auth?.isLoggedIn ? (
           <>
-            <div
-              className="hb1-cta"
-              style={{
-                background: "var(--college-light)",
-                color: "var(--college-darker)",
-                borderColor: "var(--ink)",
-                textAlign: "center",
-                fontWeight: 900,
-              }}
-            >
-              پروفایل
-            </div>
             <Link
               href="/my-courses"
               className="hb1-cta"
