@@ -153,7 +153,7 @@ export default function PaymentCallbackClient() {
                 <span className="pc-receipt-label">وضعیت تراکنش:</span>
                 <span className="pc-receipt-pill">
                   <Check size={12} strokeWidth={2.5} />
-                  <span>موفق (تایید نهایی)</span>
+                  <span>موفق</span>
                 </span>
               </div>
               {result?.amount !== undefined && (
