@@ -25,26 +25,26 @@ const DEPT_CONFIG = {
   it: {
     name: "دپارتمان فناوری اطلاعات",
     icon: Code,
-    pattern: "/assets/StatCard/blue.png",
-    themeClass: "mc-theme-it",
+    pattern: "/assets/StatCard/yellow.png",
+    themeClass: "mc-theme-college",
   },
   business: {
     name: "دپارتمان کسب‌وکار",
     icon: Briefcase,
     pattern: "/assets/StatCard/yellow.png",
-    themeClass: "mc-theme-business",
+    themeClass: "mc-theme-college",
   },
   languages: {
     name: "دپارتمان زبان‌های خارجی",
     icon: Globe,
-    pattern: "/assets/StatCard/pink.png",
-    themeClass: "mc-theme-languages",
+    pattern: "/assets/StatCard/yellow.png",
+    themeClass: "mc-theme-college",
   },
   default: {
     name: "کالج رکاد",
     icon: Sparkles,
     pattern: "/assets/StatCard/yellow.png",
-    themeClass: "mc-theme-default",
+    themeClass: "mc-theme-college",
   },
 };
 

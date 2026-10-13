@@ -315,21 +315,13 @@
   color: #065F46;
 }
 
-/* تم‌های رنگی بخش ویژوال بر اساس دپارتمان */
-.mc-theme-it {
-  background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%);
-}
-
-.mc-theme-business {
-  background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
-}
-
-.mc-theme-languages {
-  background: linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 100%);
-}
-
+/* تم رنگی بخش ویژوال: رنگ اختصاصی کالج رکاد (زرد برند و پترن زرد کسب و کار) */
+.mc-theme-college,
+.mc-theme-it,
+.mc-theme-business,
+.mc-theme-languages,
 .mc-theme-default {
-  background: linear-gradient(135deg, #FFE4E6 0%, #FECDD3 100%);
+  background: linear-gradient(135deg, #FFF4E5 0%, #FDE68A 100%);
 }
 
 /* محتوای متنی و مشخصات کارت */

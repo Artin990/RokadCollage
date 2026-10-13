@@ -270,7 +270,7 @@ export default function MyCoursesClient() {
           ======================================================== */}
       <header className="mc-hero">
         <img
-          src="/assets/StatCard/blue.png"
+          src="/assets/StatCard/yellow.png"
           alt=""
           aria-hidden="true"
           className="mc-hero-pattern"
