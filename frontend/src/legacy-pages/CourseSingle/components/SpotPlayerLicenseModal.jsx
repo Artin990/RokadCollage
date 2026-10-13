@@ -13,6 +13,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { getCourseLicense, retrySpotPlayerLicense } from "@/services/enrollmentService";
+import "./spotplayer-modal.css";
 
 const SPOTPLAYER_APPS = [
   { name: "ویندوز", os: "Windows", url: "https://dl.spotplayer.ir/spotplayer.exe" },
@@ -90,98 +91,91 @@ export default function SpotPlayerLicenseModal({ isOpen, onClose, courseId, cour
   };
 
   const modal = (
-    <div
-      className="fixed inset-0 z-[99999] bg-[rgba(14,21,58,0.65)] backdrop-blur-md grid place-items-center p-4"
-      style={{ fontFamily: "var(--font-iransans), 'IRANSansX', system-ui, -apple-system, sans-serif" }}
-      onClick={onClose}
-      dir="rtl"
-    >
-      <div
-        className="w-full max-w-xl bg-white border-2 border-stone-900 rounded-[22px_0_22px_0] shadow-[6px_6px_0_#292827] p-6 sm:p-8 relative"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className="spm-backdrop" onClick={onClose} dir="rtl">
+      <div className="spm-card" onClick={(e) => e.stopPropagation()}>
+        {/* دکمه بستن */}
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-5 left-5 sm:top-6 sm:left-6 w-9 h-9 rounded-lg border-2 border-transparent hover:border-stone-900 hover:bg-stone-100 text-stone-500 hover:text-stone-900 transition-all flex items-center justify-center cursor-pointer"
+          className="spm-close-btn"
           aria-label="بستن"
         >
-          <X size={20} strokeWidth={2.5} />
+          <X size={18} strokeWidth={2.4} />
         </button>
 
-        {/* هدر مدال با فاصله‌گذاری و تفکیک واضح */}
-        <div className="flex items-center gap-3.5 pb-4 border-b-2 border-stone-200">
-          <div className="w-12 h-12 rounded-[12px_0_12px_0] bg-amber-100 text-stone-900 border-2 border-stone-900 shadow-[3px_3px_0_#000] grid place-items-center flex-shrink-0">
-            <KeyRound size={22} />
+        {/* هدر مودال */}
+        <div className="spm-head">
+          <div className="spm-badge">
+            <KeyRound size={13} strokeWidth={2.4} />
+            <span>لایسنس دوره</span>
           </div>
-          <div className="pl-8">
-            <h3 className="text-xl font-black text-stone-900 leading-snug">لایسنس اسپات‌پلیر دوره</h3>
-            <p className="text-xs sm:text-sm font-bold text-stone-500 mt-0.5">{courseTitle || "دوره تخصصی کالج رکاد"}</p>
-          </div>
+          <h3 className="spm-title">کلید دسترسی اسپات‌پلیر</h3>
+          <p className="spm-subtitle">{courseTitle || "دوره تخصصی کالج رکاد"}</p>
         </div>
 
         {loading ? (
           <div className="py-14 flex flex-col items-center justify-center gap-3">
-            <RotateCw className="w-8 h-8 text-stone-700 animate-spin" />
+            <RotateCw className="w-8 h-8 text-[#f8a41d] animate-spin" />
             <span className="text-xs sm:text-sm font-bold text-stone-600">در حال دریافت کلید لایسنس...</span>
           </div>
         ) : licenseKey ? (
-          <div className="space-y-6 mt-6">
+          <div>
             {/* کادر لایسنس */}
-            <div className="bg-stone-50 border-2 border-stone-900 rounded-[16px_0_16px_0] shadow-[3px_3px_0_#292827] p-5 sm:p-6 space-y-4">
-              <div className="flex justify-between items-center text-xs sm:text-sm font-bold text-stone-700">
+            <div className="spm-box">
+              <div className="spm-box-head">
                 <span>کلید لایسنس اختصاصی شما:</span>
-                <span className="text-emerald-700 flex items-center gap-1.5 font-black">
-                  <ShieldCheck size={16} /> فعال و معتبر
+                <span className="spm-status-pill">
+                  <ShieldCheck size={14} />
+                  <span>فعال و معتبر</span>
                 </span>
               </div>
-              <div className="flex items-center gap-3 bg-white border-2 border-stone-900 rounded-xl p-3 shadow-xs">
+              <div className="spm-key-row">
                 <input
                   type="text"
                   readOnly
                   value={licenseKey}
                   dir="ltr"
-                  className="flex-1 font-mono text-xs sm:text-sm bg-transparent outline-none select-all text-stone-900 font-bold overflow-hidden text-ellipsis"
+                  className="spm-key-input"
                 />
                 <button
                   type="button"
                   onClick={handleCopy}
-                  className="flex items-center gap-1.5 px-4 py-2 bg-stone-900 text-white font-black text-xs sm:text-sm rounded-lg hover:bg-stone-800 transition-all flex-shrink-0 cursor-pointer"
+                  className="spm-copy-btn"
                 >
-                  {copied ? <Check size={14} /> : <Copy size={14} />}
+                  {copied ? <Check size={13} /> : <Copy size={13} />}
                   <span>{copied ? "کپی شد" : "کپی"}</span>
                 </button>
               </div>
             </div>
 
             {/* دانلود نرم‌افزار اسپات‌پلیر */}
-            <div className="border-2 border-stone-900 rounded-[16px_0_16px_0] shadow-[3px_3px_0_#292827] p-5 sm:p-6 bg-[#fffaf0] space-y-4">
-              <span className="block text-xs sm:text-sm font-black text-stone-900">
-                دانلود نرم‌افزار پخش‌کننده اسپات‌پلیر:
-              </span>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="spm-box">
+              <div className="spm-apps-title">
+                <Download size={14} />
+                <span>دانلود نرم‌افزار پخش‌کننده اسپات‌پلیر:</span>
+              </div>
+              <div className="spm-apps-grid">
                 {SPOTPLAYER_APPS.map((app) => (
                   <a
                     key={app.os}
                     href={app.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center justify-center gap-2 py-2.5 px-3 bg-white border-2 border-stone-900 rounded-xl text-xs font-black text-stone-900 hover:bg-amber-100 transition-all shadow-[2px_2px_0_#292827] active:translate-x-0.5 active:translate-y-0.5"
+                    className="spm-app-btn"
                   >
-                    <Download size={14} />
                     <span>{app.name}</span>
                   </a>
                 ))}
               </div>
             </div>
 
-            {/* دکمه‌های اکشن فوتر */}
-            <div className="flex flex-col sm:flex-row gap-3 pt-3">
+            {/* دکمه‌های اقدام فوتر */}
+            <div className="spm-actions">
               <a
                 href="https://app.spotplayer.ir"
                 target="_blank"
                 rel="noreferrer"
-                className="w-full sm:flex-1 py-3 px-5 bg-stone-900 text-white font-black text-xs sm:text-sm rounded-[10px_0_10px_0] shadow-[3px_3px_0_#000] flex items-center justify-center gap-2 hover:bg-stone-800 transition-all"
+                className="spm-btn-webplayer"
               >
                 <span>ورود به وب‌پلیر</span>
                 <ExternalLink size={15} />
@@ -189,7 +183,7 @@ export default function SpotPlayerLicenseModal({ isOpen, onClose, courseId, cour
               <button
                 type="button"
                 onClick={onClose}
-                className="w-full sm:w-auto px-6 py-3 bg-stone-100 hover:bg-stone-200 text-stone-900 font-black text-xs sm:text-sm border-2 border-stone-900 rounded-[10px_0_10px_0] shadow-[2.5px_2.5px_0_#292827] transition-all cursor-pointer"
+                className="spm-btn-close"
               >
                 بستن
               </button>
@@ -207,7 +201,7 @@ export default function SpotPlayerLicenseModal({ isOpen, onClose, courseId, cour
                 type="button"
                 onClick={handleRetry}
                 disabled={retrying}
-                className="px-5 py-2.5 bg-stone-900 text-white font-bold text-xs sm:text-sm rounded-[8px_0_8px_0] shadow-[2px_2px_0_#000] cursor-pointer"
+                className="spm-copy-btn"
               >
                 {retrying ? "در حال صدور مجدد..." : "تلاش مجدد"}
               </button>
