@@ -21,19 +21,19 @@ import {
  */
 const DEPT_CONFIG = {
   it: {
-    name: "دپارتمان فناوری اطلاعات",
+    name: "فناوری اطلاعات",
     icon: Code,
     pattern: "/assets/StatCard/yellow.png",
     themeClass: "mc-theme-college",
   },
   business: {
-    name: "دپارتمان کسب‌وکار",
+    name: "کسب‌وکار",
     icon: Briefcase,
     pattern: "/assets/StatCard/yellow.png",
     themeClass: "mc-theme-college",
   },
   languages: {
-    name: "دپارتمان زبان‌های خارجی",
+    name: "زبان‌های خارجی",
     icon: Globe,
     pattern: "/assets/StatCard/yellow.png",
     themeClass: "mc-theme-college",
@@ -108,7 +108,7 @@ export default function MyCourseCard({ item, onOpenLicense }) {
         <img src={dept.pattern} alt="" className="mc-card-pattern" aria-hidden="true" />
 
         {/* برچسب دپارتمان در گوشه بالا */}
-        <span className="mc-dept-chip">{dept.name}</span>
+        <span className="mc-dept-chip">{(dept.name || "").replace(/^دپارتمان\s+/, "")}</span>
 
         {/* باکس آیکون نئوبروتالیست مرکزی */}
         <div className="mc-icon-wrap">
