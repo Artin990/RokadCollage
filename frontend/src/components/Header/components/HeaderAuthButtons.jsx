@@ -75,11 +75,11 @@ export default function HeaderAuthButtons({ user, store, unreadCount, onRequestL
             aria-expanded={dropdownOpen}
             aria-haspopup="true"
             title="منوی حساب کاربری"
+            style={{ padding: "5px 8px", gap: 6 }}
           >
             <span className="header-user-avatar">
               <User size={14} strokeWidth={2.4} />
             </span>
-            <span className="header-user-name">پروفایل</span>
             <ChevronDown className="header-user-chevron" />
           </button>
 
