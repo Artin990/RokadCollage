@@ -65,46 +65,56 @@ export default function MobileDrawer({
       >
         {mounted && store.auth?.isLoggedIn ? (
           <>
-            <Link
-              href="/my-courses"
-              className="hb1-cta"
-              style={{
-                background: "var(--white)",
-                color: "var(--navy)",
-                borderColor: "var(--ink)",
-                textAlign: "center",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 8,
-                textDecoration: "none",
-                fontWeight: 800,
-              }}
-              onClick={() => setMobileOpen(false)}
-            >
-              <BookOpen size={16} />
-              <span>دوره‌های من</span>
-            </Link>
-            <Link
-              href="/profile"
-              className="hb1-cta"
-              style={{
-                background: "var(--white)",
-                color: "var(--navy)",
-                borderColor: "var(--ink)",
-                textAlign: "center",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 8,
-                textDecoration: "none",
-                fontWeight: 800,
-              }}
-              onClick={() => setMobileOpen(false)}
-            >
-              <UserCog size={16} />
-              <span>تنظیمات پروفایل</span>
-            </Link>
+            <div style={{ display: "flex", gap: 8, width: "100%" }}>
+              <Link
+                href="/my-courses"
+                className="hb1-cta"
+                style={{
+                  flex: 1,
+                  background: "var(--white)",
+                  color: "var(--navy)",
+                  borderColor: "var(--ink)",
+                  textAlign: "center",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 6,
+                  textDecoration: "none",
+                  fontWeight: 800,
+                  whiteSpace: "nowrap",
+                  padding: "11px 6px",
+                  fontSize: 12,
+                }}
+                onClick={() => setMobileOpen(false)}
+              >
+                <BookOpen size={15} style={{ flexShrink: 0 }} />
+                <span style={{ whiteSpace: "nowrap" }}>دوره‌های من</span>
+              </Link>
+              <Link
+                href="/profile"
+                className="hb1-cta"
+                style={{
+                  flex: 1,
+                  background: "var(--white)",
+                  color: "var(--navy)",
+                  borderColor: "var(--ink)",
+                  textAlign: "center",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 6,
+                  textDecoration: "none",
+                  fontWeight: 800,
+                  whiteSpace: "nowrap",
+                  padding: "11px 6px",
+                  fontSize: 12,
+                }}
+                onClick={() => setMobileOpen(false)}
+              >
+                <UserCog size={15} style={{ flexShrink: 0 }} />
+                <span style={{ whiteSpace: "nowrap" }}>تنظیمات پروفایل</span>
+              </Link>
+            </div>
             <button
               type="button"
               className="hb1-cta"
