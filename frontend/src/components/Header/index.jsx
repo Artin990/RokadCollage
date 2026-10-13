@@ -8,6 +8,7 @@ import { matchItem } from "./searchData.jsx";
 import SearchOverlay from "./components/SearchOverlay.jsx";
 import MobileDrawer from "./components/MobileDrawer.jsx";
 import HeaderAuthButtons from "./components/HeaderAuthButtons.jsx";
+import LogoutConfirmModal from "./components/LogoutConfirmModal.jsx";
 import { getAllCourses } from "@/services/courseService.js";
 import { getBlogs } from "@/services/blogService.js";
 
@@ -15,6 +16,7 @@ export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
@@ -199,7 +201,12 @@ export default function Header() {
                 </svg>
               </button>
 
-              <HeaderAuthButtons user={user} store={store} unreadCount={unreadCount} />
+              <HeaderAuthButtons
+                user={user}
+                store={store}
+                unreadCount={unreadCount}
+                onRequestLogout={() => setLogoutModalOpen(true)}
+              />
 
               <button
                 className="mobile-menu-btn"
@@ -239,6 +246,12 @@ export default function Header() {
         setActive={setActive}
         store={store}
         user={user}
+        onRequestLogout={() => setLogoutModalOpen(true)}
+      />
+
+      <LogoutConfirmModal
+        isOpen={logoutModalOpen}
+        onClose={() => setLogoutModalOpen(false)}
       />
     </>
   );

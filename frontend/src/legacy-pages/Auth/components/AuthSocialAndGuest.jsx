@@ -8,7 +8,7 @@ export default function AuthSocialAndGuest() {
         type="button"
         className="auth-google"
         onClick={() => {
-          window.location.hash = "panel";
+          window.location.href = "/";
         }}
       >
         <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -19,13 +19,13 @@ export default function AuthSocialAndGuest() {
         </svg>
         ورود با گوگل
       </button>
-      <a href="#panel" className="auth-guest">
+      <a href="/" className="auth-guest">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
           <path d="M10 17l5-5-5-5" />
           <path d="M15 12H3" />
         </svg>
-        ورود مهمان (ورود مستقیم به پنل)
+        ورود به عنوان مهمان
       </a>
     </div>
   );

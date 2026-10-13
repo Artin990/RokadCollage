@@ -2,16 +2,24 @@ import { getPanelStore, savePanelStore } from "./storeCore.js";
 
 /** ثبت‌نام در دوره */
 export function enrollInCourse(courseInfo) {
+  if (!courseInfo) return { enrolled: false };
   const state = getPanelStore();
-  const existing = state.myCourses.find(
-    (c) => c.slug === courseInfo.slug || c.id === courseInfo.id
+  const existing = (state.myCourses || []).find(
+    (c) =>
+      (courseInfo.slug && c.slug === courseInfo.slug) ||
+      (courseInfo.id && (c.id === courseInfo.id || c._id === courseInfo.id)) ||
+      (courseInfo._id && (c.id === courseInfo._id || c._id === courseInfo._id))
   );
   if (existing) {
+    if (courseInfo._id && !existing._id) existing._id = courseInfo._id;
+    if (courseInfo.slug && !existing.slug) existing.slug = courseInfo.slug;
+    savePanelStore(state);
     return { enrolled: true, isNew: false, course: existing };
   }
 
   const newCourse = {
-    id: Date.now(),
+    id: courseInfo._id || courseInfo.id || Date.now(),
+    _id: courseInfo._id || courseInfo.id,
     slug: courseInfo.slug || "new-course-" + Date.now(),
     title: courseInfo.title || "دوره آموزشی جدید",
     teacher:

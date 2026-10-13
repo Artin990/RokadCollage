@@ -19,11 +19,19 @@ export function getPanelStore() {
   if (typeof window === "undefined") return DEFAULT_STATE;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
+    let state = DEFAULT_STATE;
     if (!raw) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_STATE));
-      return DEFAULT_STATE;
+    } else {
+      state = JSON.parse(raw);
     }
-    return JSON.parse(raw);
+    const token = localStorage.getItem("rokad_token");
+    if (token) {
+      if (!state.auth) state.auth = {};
+      state.auth.isLoggedIn = true;
+      if (!state.auth.token) state.auth.token = token;
+    }
+    return state;
   } catch (err) {
     console.error("Error reading panelStore:", err);
     return DEFAULT_STATE;

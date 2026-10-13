@@ -50,7 +50,11 @@ export async function apiRequest(endpoint, options = {}) {
 
     return data;
   } catch (err) {
-    console.error(`API Error on [${options.method || "GET"} ${endpoint}]:`, err.message);
+    if (!err.status || err.status >= 500) {
+      console.error(`API Error on [${options.method || "GET"} ${endpoint}]:`, err.message);
+    } else {
+      console.warn(`API client error [${err.status} on ${options.method || "GET"} ${endpoint}]:`, err.message);
+    }
     throw err;
   }
 }

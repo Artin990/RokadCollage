@@ -175,8 +175,8 @@ export default function AuthPage({ initialMode, onLoginSuccess }) {
             return;
           }
         } catch (err) {
-          // If user hasn't set password or requires OTP, fallback to sending OTP
-          if (err.status === 400 || err.message?.includes("رمز عبور")) {
+          // If user hasn't set password yet, fallback to sending OTP
+          if (err.message?.includes("تنظیم نشده")) {
             await sendOtp(phone);
             setStep("otp");
             return;
@@ -239,13 +239,13 @@ export default function AuthPage({ initialMode, onLoginSuccess }) {
         return;
       }
 
-      if (savedRedirect) {
+      if (savedRedirect && !savedRedirect.includes("panel")) {
         window.location.hash = savedRedirect.startsWith("#") ? savedRedirect : `#${savedRedirect}`;
       } else {
-        window.location.hash = "panel";
+        window.location.href = "/";
       }
     } catch (_) {
-      window.location.hash = "panel";
+      window.location.href = "/";
     }
   };
 
@@ -537,10 +537,10 @@ export default function AuthPage({ initialMode, onLoginSuccess }) {
                   className="auth-reg-secondary-btn"
                   onClick={() => {
                     setRegSuccessModalOpen(false);
-                    proceedToNextPage("panel");
+                    window.location.href = "/";
                   }}
                 >
-                  ورود به پنل کاربری
+                  صفحه اصلی
                 </button>
               </div>
             )}

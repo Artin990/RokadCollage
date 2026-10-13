@@ -217,7 +217,7 @@ export const getMyEnrollments = catchAsync(async (req, res, next) => {
   const enrollments = await Enrollment.find({ user: req.userId })
     .select("+spotplayer.key")
     .sort({ createdAt: -1 })
-    .populate("course", "title type category price duration img sprints location spotplayerCourseId")
+    .populate("course", "title type category price duration img sprints location spotplayerCourseId slug")
     .populate("session", "code scheduleDays scheduleHours capacity")
     .lean();
 
@@ -246,7 +246,7 @@ export const checkEnrollmentStatus = catchAsync(async (req, res, next) => {
     course: courseId,
   })
     .select("+spotplayer.key")
-    .populate("course", "title type category price img duration spotplayerCourseId")
+    .populate("course", "title type category price img duration spotplayerCourseId slug")
     .populate("session", "code scheduleDays scheduleHours")
     .lean();
 

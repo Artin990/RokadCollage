@@ -5,7 +5,6 @@ import BlogFeatured from "./components/BlogFeatured.jsx";
 import BlogCategories from "./components/BlogCategories.jsx";
 import BlogGrid from "./components/BlogGrid.jsx";
 import BlogTrending from "./components/BlogTrending.jsx";
-import BlogAuthors from "./components/BlogAuthors.jsx";
 
 export default function BlogIndex() {
   const [activeCategory, setActiveCategory] = useState("all");
@@ -48,7 +47,6 @@ export default function BlogIndex() {
       <BlogCategories active={activeCategory} setActive={setActiveCategory} />
       <BlogGrid activeCategory={activeCategory} searchQuery={searchQuery} />
       <BlogTrending />
-      <BlogAuthors />
     </>
   );
 }

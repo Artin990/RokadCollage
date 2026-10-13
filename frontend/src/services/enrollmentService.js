@@ -30,3 +30,53 @@ export async function retrySpotPlayerLicense(enrollmentId) {
   });
   return res?.data || res;
 }
+
+/**
+ * درخواست خرید دوره از طریق درگاه پرداخت آنلاین زرین‌پال یا ثبت‌نام مستقیم
+ * @param {Object} payload { courseId, sessionId, couponCode }
+ */
+export async function checkoutCourse({ courseId, sessionId, couponCode, callbackUrl }) {
+  const res = await apiRequest("/payment/checkout-request", {
+    method: "POST",
+    body: { courseId, sessionId, couponCode, callbackUrl },
+  });
+  return res;
+}
+
+/**
+ * اعتبارسنجی تراکنش بازگشتی از زرین‌پال و صدور لایسنس اسپات‌پلیر
+ * @param {Object} payload { authority, status, courseId }
+ */
+export async function verifyCheckout({ authority, status, courseId }) {
+  const res = await apiRequest("/payment/checkout-verify", {
+    method: "POST",
+    body: { authority, status, courseId },
+  });
+  return res;
+}
+
+export async function getCourseLicense(courseId) {
+  try {
+    const res = await apiRequest(`/payment/license/${courseId}`);
+    const isEnrolled = Boolean(
+      res?.isEnrolled === true ||
+      res?.data?.isEnrolled === true ||
+      Boolean(res?.data && res?.data?._id)
+    );
+    const enrollmentData = res?.data?._id ? res.data : (res?.data || res);
+    const spotplayerData = res?.spotplayer || res?.data?.spotplayer || null;
+
+    return {
+      success: res?.success ?? true,
+      isEnrolled,
+      data: enrollmentData,
+      spotplayer: spotplayerData,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      isEnrolled: false,
+      error: err?.message,
+    };
+  }
+}

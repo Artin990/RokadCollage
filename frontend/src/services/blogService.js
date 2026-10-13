@@ -8,7 +8,11 @@ export async function getBlogs(params = {}) {
   if (params.page) query.append("page", params.page);
   if (params.limit) query.append("limit", params.limit);
   if (params.category && params.category !== "all") query.append("category", params.category);
-  if (params.search) query.append("search", params.search);
+  if (params.search) {
+    query.append("search", params.search);
+    query.append("q", params.search);
+  }
+  if (params.sort) query.append("sort", params.sort);
 
   const qs = query.toString();
   const endpoint = `/blogs${qs ? `?${qs}` : ""}`;
@@ -51,5 +55,18 @@ export async function getBlogBySlugOrId(identifier) {
     const full = await getBlogById(match._id || match.id).catch(() => null);
     return full || match;
   }
+
+  // If not found in top 50, query backend with search keyword
+  try {
+    const searchRes = await getBlogs({ search: identifier, limit: 5 });
+    const sList = Array.isArray(searchRes) ? searchRes : searchRes.data || [];
+    if (sList.length > 0) {
+      const full = await getBlogById(sList[0]._id || sList[0].id).catch(() => null);
+      return full || sList[0];
+    }
+  } catch (e) {
+    // Ignore fallback failure
+  }
+
   return null;
 }

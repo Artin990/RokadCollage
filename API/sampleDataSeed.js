@@ -54,6 +54,26 @@ async function seedData() {
           price: 4500000,
           img: "/assets/StatCard/blue.png",
           spotplayerCourseId: "650000000000000000000001",
+          resources: [
+            {
+              title: "فایل‌های پروژه عملی و قالب‌ها",
+              type: "ZIP",
+              size: "۴۲ مگابایت",
+              url: "/downloads/wp-starter-pack.zip",
+            },
+            {
+              title: "چک‌لیست راه‌اندازی و کتابچه راهنما",
+              type: "PDF",
+              size: "۸ مگابایت",
+              url: "/downloads/wp-guidebook.pdf",
+            },
+            {
+              title: "مخزن افزونه‌ها و کدهای سفارشی",
+              type: "لینک",
+              size: "گیت‌هاب",
+              url: "https://github.com/rokadcollege/wordpress-starter",
+            },
+          ],
         },
         {
           title: "دوره جامع سئو و بهینه‌سازی موتورهای جستجو",
@@ -64,6 +84,20 @@ async function seedData() {
           price: 3800000,
           img: "/assets/StatCard/green.png",
           spotplayerCourseId: "650000000000000000000002",
+          resources: [
+            {
+              title: "چک‌لیست جامع ممیزی سئو تکنیکال",
+              type: "PDF",
+              size: "۱۴ مگابایت",
+              url: "/downloads/seo-technical-audit.pdf",
+            },
+            {
+              title: "شیت استراتژی کلمات کلیدی و رصد رقبا",
+              type: "ZIP",
+              size: "۵ مگابایت",
+              url: "/downloads/seo-keywords-template.zip",
+            },
+          ],
         },
       ]);
       console.log("✅ Sample Virtual courses seeded.");
@@ -81,6 +115,7 @@ async function seedData() {
           content: "<p>شروع مسیر یادگیری برنامه‌نویسی نیازمند نقشه راه شفاف و تمرین پروژه‌محور است...</p>",
           img: "/assets/Blogs/1.png",
           readTime: "۷ دقیقه",
+          views: 18200,
         },
         {
           title: "چرا یادگیری پروژه‌محور مسیر شغلی را تا ۳ برابر کوتاه‌تر می‌کند؟",
@@ -90,6 +125,17 @@ async function seedData() {
           content: "<p>در کالج رکاد تمرکز اصلی روی حل مسائل دنیای واقعی و ساخت پورتفولیو است...</p>",
           img: "/assets/Blogs/2.png",
           readTime: "۵ دقیقه",
+          views: 14700,
+        },
+        {
+          title: "اصول طراحی رابط کاربری مدرن و پرسونای مخاطب",
+          slug: "modern-ui-design-and-user-persona",
+          category: "گرافیک",
+          description: "بررسی فرآیند طراحی تجربه کاربری استاندارد و متدهای ساخت پروتوتایپ حرفه‌ای",
+          content: "<p>طراحی محصول دیجیتال قبل از خطوط رنگی، شناخت رفتار انسان‌هاست...</p>",
+          img: "/assets/Blogs/1.png",
+          readTime: "۸ دقیقه",
+          views: 11900,
         },
       ]);
       console.log("✅ Sample Blog articles seeded.");

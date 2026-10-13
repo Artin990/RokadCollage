@@ -2,18 +2,22 @@ import React, { useState, useEffect } from "react";
 import "./course.css";
 import "./courseInPerson.css";
 import PatternLayer from "../../components/PatternLayer";
-import { getPanelStore, toggleWishlist } from "../../data/panelStore.js";
+import { getPanelStore, toggleWishlist, enrollInCourse } from "../../data/panelStore.js";
 import { isEnrolledIn, isWishlisted as checkWishlisted } from "../../data/selectors.js";
+import { getCourseLicense } from "@/services/enrollmentService.js";
 import CheckoutModal from "../Checkout/CheckoutModal.jsx";
 import InPersonHero from "./components/InPersonHero.jsx";
 import InPersonSprints from "./components/InPersonSprints.jsx";
 import InPersonVenue from "./components/InPersonVenue.jsx";
 import { InPersonAbout, InPersonTeacher } from "./components/InPersonTeacher.jsx";
+import { CheckCircle2, MapPin, Calendar, Clock, X } from "lucide-react";
 
 export default function CourseSingleInPerson({ course, slug }) {
   const [store, setStore] = useState(getPanelStore);
   const [openSprint, setOpenSprint] = useState(0);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [serverEnrolled, setServerEnrolled] = useState(false);
+  const [infoModalOpen, setInfoModalOpen] = useState(false);
 
   useEffect(() => {
     const handleStoreChange = (e) => {
@@ -24,8 +28,35 @@ export default function CourseSingleInPerson({ course, slug }) {
   }, []);
 
   const courseSlug = course.slug || slug;
-  const isLoggedIn = Boolean(store?.auth?.isLoggedIn);
-  const isEnrolled = isEnrolledIn(courseSlug, store);
+  const isLoggedIn = Boolean(
+    store?.auth?.isLoggedIn || (typeof window !== "undefined" && localStorage.getItem("rokad_token"))
+  );
+
+  useEffect(() => {
+    const targetId = course?._id || course?.id || slug;
+    if (!isLoggedIn || !targetId) return;
+
+    getCourseLicense(targetId)
+      .then((res) => {
+        if (res?.isEnrolled) {
+          setServerEnrolled(true);
+          enrollInCourse({
+            id: course?._id || course?.id,
+            _id: course?._id || course?.id,
+            slug: courseSlug,
+            title: course?.title,
+            teacher: course?.teacher?.name || course?.teachers?.[0]?.name,
+          });
+        }
+      })
+      .catch(() => {});
+  }, [isLoggedIn, course?._id, course?.id, slug, courseSlug]);
+
+  const isEnrolled =
+    serverEnrolled ||
+    isEnrolledIn(courseSlug, store) ||
+    (course._id && isEnrolledIn(course._id, store)) ||
+    (slug && isEnrolledIn(slug, store));
   const isWished = isLoggedIn && checkWishlisted(courseSlug, store);
 
   const venue = {
@@ -123,8 +154,8 @@ export default function CourseSingleInPerson({ course, slug }) {
         isWished={isWished}
         onBookmarkClick={handleBookmarkClick}
         onCheckoutOpen={handleCheckoutOpen}
+        onOpenEnrollmentInfo={() => setInfoModalOpen(true)}
       />
-
 
       <div className="container">
         <div className="cs-ip-sections-stack">
@@ -152,6 +183,79 @@ export default function CourseSingleInPerson({ course, slug }) {
         onClose={() => setCheckoutOpen(false)}
         course={course}
       />
+
+      {infoModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          onClick={() => setInfoModalOpen(false)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="w-full max-w-lg bg-white border-2 border-stone-900 rounded-[20px_0_20px_0] shadow-[6px_6px_0_#292827] p-6 text-right"
+            style={{ fontFamily: "var(--font-iransans), 'IRANSansX', system-ui, -apple-system, sans-serif" }}
+            onClick={(e) => e.stopPropagation()}
+            dir="rtl"
+          >
+            <div className="flex items-center justify-between border-b border-stone-200 pb-3 mb-4">
+              <div className="flex items-center gap-2 text-emerald-700 font-black text-lg">
+                <CheckCircle2 size={20} />
+                <span>ثبت‌نام نهایی شده</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setInfoModalOpen(false)}
+                className="w-8 h-8 rounded-full border border-stone-300 flex items-center justify-center hover:bg-stone-100 transition-colors"
+                aria-label="بستن"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <h3 className="font-black text-lg text-stone-900 mb-2">{course.title}</h3>
+            <p className="text-sm font-semibold text-stone-600 mb-4 leading-relaxed">
+              ثبت‌نام شما در این کارگاه حضوری تکمیل گردیده است. مشخصات حضور در کارگاه به شرح زیر است:
+            </p>
+
+            <div className="space-y-3 bg-stone-50 border border-stone-200 rounded-xl p-4 text-sm font-bold text-stone-800">
+              <div className="flex items-start gap-2.5">
+                <MapPin size={16} className="text-stone-500 mt-0.5 flex-shrink-0" />
+                <div>
+                  <div className="text-xs text-stone-500">محل برگزاری:</div>
+                  <div>{venue.name} — {venue.room}</div>
+                  <div className="text-xs text-stone-600 font-normal mt-0.5">{venue.address}</div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2.5 pt-2 border-t border-stone-200">
+                <Calendar size={16} className="text-stone-500 flex-shrink-0" />
+                <div>
+                  <span className="text-xs text-stone-500">روزهای برگزاری: </span>
+                  <span>{schedule.days}</span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2.5 pt-2 border-t border-stone-200">
+                <Clock size={16} className="text-stone-500 flex-shrink-0" />
+                <div>
+                  <span className="text-xs text-stone-500">ساعت کلاس: </span>
+                  <span>{schedule.hours}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-5">
+              <button
+                type="button"
+                onClick={() => setInfoModalOpen(false)}
+                className="w-full py-2.5 bg-stone-900 text-white font-black text-sm rounded-[10px_0_10px_0] shadow-[3px_3px_0_#000] hover:bg-stone-800 transition-all text-center"
+              >
+                متوجه شدم
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

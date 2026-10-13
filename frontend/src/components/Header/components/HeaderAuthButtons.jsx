@@ -1,11 +1,16 @@
 import React, { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 import { logoutUser } from "../../../data/panelStore.js";
-import { ChevronDown, LayoutDashboard, LogOut, User } from "lucide-react";
+import { ChevronDown, LogOut, BookOpen, UserCog } from "lucide-react";
 
-export default function HeaderAuthButtons({ user, store, unreadCount }) {
+export default function HeaderAuthButtons({ user, store, unreadCount, onRequestLogout }) {
+  const [mounted, setMounted] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Close dropdown on click outside
   useEffect(() => {
@@ -19,18 +24,45 @@ export default function HeaderAuthButtons({ user, store, unreadCount }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [dropdownOpen]);
 
-  const handleConfirmLogout = () => {
-    setShowLogoutConfirm(false);
+  const handleLogout = () => {
     setDropdownOpen(false);
-    logoutUser();
-    window.location.hash = "";
+    if (onRequestLogout) {
+      onRequestLogout();
+    }
   };
 
-  const handleGoPanel = (e) => {
-    e.preventDefault();
-    setDropdownOpen(false);
-    window.location.hash = "panel";
-  };
+  if (!mounted) {
+    return (
+      <>
+        <a href="#auth" className="login-pill desktop-only">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4" />
+            <path d="M10 17l5-5-5-5" />
+            <path d="M15 12H3" />
+          </svg>
+          ورود / ثبت‌نام
+        </a>
+        <a href="#consult" className="cta-pill desktop-only">
+          مشاورهٔ رایگان
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M15 6l-6 6 6 6" />
+          </svg>
+        </a>
+      </>
+    );
+  }
 
   return (
     <>
@@ -50,90 +82,39 @@ export default function HeaderAuthButtons({ user, store, unreadCount }) {
             <span className="header-user-name">
               {user.fullName || user.firstName || "حساب کاربری"}
             </span>
-            {unreadCount > 0 && (
-              <span className="header-user-badge">
-                {unreadCount}
-              </span>
-            )}
             <ChevronDown className="header-user-chevron" />
           </button>
 
           {dropdownOpen && (
             <div className="header-user-dropdown" role="menu">
-              <a
-                href="#panel"
+              <Link
+                href="/panel?tab=courses"
                 className="header-dropdown-item"
-                onClick={handleGoPanel}
+                onClick={() => setDropdownOpen(false)}
                 role="menuitem"
               >
-                <LayoutDashboard size={16} />
-                <span>پنل من</span>
-              </a>
-
-              <a
-                href="#panel/profile"
+                <BookOpen size={16} />
+                <span>دوره‌های من</span>
+              </Link>
+              <Link
+                href="/panel?tab=profile"
                 className="header-dropdown-item"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setDropdownOpen(false);
-                  window.location.hash = "panel/profile";
-                }}
+                onClick={() => setDropdownOpen(false)}
                 role="menuitem"
               >
-                <User size={16} />
-                <span>پروفایل و تنظیمات</span>
-              </a>
-
-              <div className="header-dropdown-divider" />
-
+                <UserCog size={16} />
+                <span>تنظیمات پروفایل</span>
+              </Link>
+              <div style={{ height: 1, background: "var(--ink-light)", margin: "4px 0" }} />
               <button
                 type="button"
                 className="header-dropdown-item header-dropdown-logout"
-                onClick={() => {
-                  setDropdownOpen(false);
-                  setShowLogoutConfirm(true);
-                }}
+                onClick={handleLogout}
                 role="menuitem"
               >
                 <LogOut size={16} />
                 <span>خروج از حساب</span>
               </button>
-            </div>
-          )}
-
-          {/* مودال تأیید خروج در هدر */}
-          {showLogoutConfirm && (
-            <div className="auth-modal-backdrop" onClick={() => setShowLogoutConfirm(false)}>
-              <div
-                className="auth-modal-card pnl-logout-modal-card"
-                onClick={(e) => e.stopPropagation()}
-                role="dialog"
-                aria-modal="true"
-              >
-                <div className="pnl-logout-ic">
-                  <LogOut size={26} strokeWidth={2.4} />
-                </div>
-                <h3 className="pnl-logout-title">خروج از حساب کاربری</h3>
-                <p className="pnl-logout-desc">
-                  آیا برای خروج از حساب کاربری خود اطمینان دارید؟
-                </p>
-                <div className="pnl-logout-actions">
-                  <button
-                    type="button"
-                    className="pnl-logout-confirm"
-                    onClick={handleConfirmLogout}
-                  >
-                    بله، خروج از حساب
-                  </button>
-                  <button
-                    type="button"
-                    className="pnl-logout-cancel"
-                    onClick={() => setShowLogoutConfirm(false)}
-                  >
-                    انصراف
-                  </button>
-                </div>
-              </div>
             </div>
           )}
         </div>

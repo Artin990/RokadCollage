@@ -24,6 +24,7 @@ import enrollmentRouter from "./Modules/Enrollment/Enrollment.js";
 import commentRouter from "./Modules/Comment/Comment.js";
 import blogRouter from "./Modules/Blog/Blog.js";
 import seoRouter from "./Modules/Seo/Seo.js";
+import paymentRouter from "./Modules/Payment/PaymentRoutes.js";
 import courseCommentRouter from "./Modules/CourseComment/CourseComment.js";
 import InPersonCourse from "./Modules/InPersonCourse/InPersonCourseMd.js";
 import VirtualCourse from "./Modules/VirtualCourse/VirtualCourseMd.js";
@@ -130,6 +131,7 @@ app.use(["/api/enrollment", "/api/enrollments", "/enrollments", "/enrollment"], 
 app.use(["/api/comment", "/api/comments", "/comments", "/comment"], commentRouter);
 app.use(["/api/blog", "/api/blogs", "/blogs", "/blog"], blogRouter);
 app.use(["/api/seo", "/seo"], seoRouter);
+app.use(["/api/payment", "/payment"], paymentRouter);
 
 // Virtual Course Comments & Discussions
 app.use(["/api/course-comments", "/course-comments"], courseCommentRouter);

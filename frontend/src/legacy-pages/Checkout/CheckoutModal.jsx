@@ -6,11 +6,10 @@
 import { useState, useEffect } from "react";
 import { CreditCard, Building2, Lock, CheckCircle2, X, ArrowLeft } from "lucide-react";
 import "./checkout.css";
-import { validateCoupon, createOrder } from "../../data/panelStore.js";
+import { checkoutCourse } from "@/services/enrollmentService";
 
 const GATEWAYS = [
   { id: "zarinpal", name: "درگاه پرداخت زرین‌پال", desc: "کارت‌های عضو شتاب · پرداخت سریع", icon: CreditCard },
-  { id: "saman", name: "درگاه پرداخت الکترونیک سامان (سپ)", desc: "دارای نماد اعتماد الکترونیکی شاپرک", icon: Building2 },
 ];
 
 export default function CheckoutModal({ isOpen, onClose, course }) {
@@ -64,25 +63,35 @@ export default function CheckoutModal({ isOpen, onClose, course }) {
     }
   };
 
-  const handleProceedToPayment = () => {
-    if (isProcessing) return; // جلوگیری از دابل سابمیت
+  const handleProceedToPayment = async () => {
+    if (isProcessing) return;
     setIsProcessing(true);
+    setCouponError("");
 
-    const order = createOrder({
-      courseSlug: course.slug || "course-" + Date.now(),
-      courseTitle: course.title,
-      price: rawPrice,
-      discountPrice: finalAmount,
-      couponCode: couponResult?.code || null,
-      teacher: course.teacher?.name || course.teacher || "اساتید کالج رکاد",
-      sessions: course.sessions || "۱۲ فصل · ۳۲ ساعت",
-    });
+    try {
+      const res = await checkoutCourse({
+        courseId: course._id || course.id,
+        couponCode: couponResult?.code || couponCode.trim() || undefined,
+        callbackUrl: typeof window !== "undefined" ? `${window.location.origin}/payment/callback` : undefined,
+      });
 
-    // شبیه‌سازی اتصال به درگاه شاپرک و بازگشت به کال‌بک
-    setTimeout(() => {
-      onClose();
-      window.location.hash = `payment-callback?orderId=${order.id}&status=success`;
-    }, 1200);
+      if (res?.isFree) {
+        onClose();
+        window.location.href = `/payment/callback?Authority=FREE_${Date.now()}&Status=OK&courseId=${course._id || course.id}`;
+        return;
+      }
+
+      if (res?.paymentUrl) {
+        window.location.href = res.paymentUrl;
+        return;
+      }
+
+      setCouponError(res?.message || "خطا در اتصال به درگاه پرداخت");
+      setIsProcessing(false);
+    } catch (err) {
+      setCouponError(err?.message || "خطا در اتصال به درگاه پرداخت");
+      setIsProcessing(false);
+    }
   };
 
   return (

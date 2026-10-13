@@ -70,13 +70,25 @@ export async function getCourseBySlugOrId(identifier) {
   if (!identifier) return null;
   const all = await getAllCourses();
   const clean = String(identifier).trim().toLowerCase();
-  const found = all.find(
+  let found = all.find(
     (c) =>
       c.slug === clean ||
       c.id === clean ||
       c._id === clean ||
       (c.title && c.title.toLowerCase().includes(clean))
   );
+
+  if (!found) {
+    if (clean.includes("react") || clean.includes("front")) {
+      found = all.find((c) => (c.slug && c.slug.includes("react")) || (c.title && c.title.includes("React")));
+    } else if (clean.includes("ux") || clean.includes("ui") || clean.includes("figma")) {
+      found = all.find((c) => (c.slug && (c.slug.includes("ux") || c.slug.includes("ui"))) || (c.title && c.title.includes("UI/UX")));
+    } else if (clean.includes("seo") || clean.includes("سئو")) {
+      found = all.find((c) => (c.slug && c.slug.includes("seo")) || (c.title && c.title.includes("سئو")));
+    } else if (clean.includes("word") || clean.includes("وردپرس")) {
+      found = all.find((c) => (c.slug && c.slug.includes("word")) || (c.title && c.title.includes("وردپرس")));
+    }
+  }
   if (found) {
     if (found.isVirtual) {
       const details = await getVirtualCourseById(found._id || found.id).catch(() => null);
@@ -86,5 +98,16 @@ export async function getCourseBySlugOrId(identifier) {
       return { ...found, ...(details || {}) };
     }
   }
+
+  // Fallback if identifier is a direct MongoDB ObjectId
+  if (/^[0-9a-fA-F]{24}$/.test(clean)) {
+    const [inP, virt] = await Promise.all([
+      getInPersonCourseById(clean).catch(() => null),
+      getVirtualCourseById(clean).catch(() => null),
+    ]);
+    if (inP) return { ...inP, isVirtual: false, mode: "in-person" };
+    if (virt) return { ...virt, isVirtual: true, mode: "online" };
+  }
+
   return null;
 }

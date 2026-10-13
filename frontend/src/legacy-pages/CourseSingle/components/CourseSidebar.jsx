@@ -37,6 +37,7 @@ export function CourseSidebar({
   isWishlisted,
   enrollToast,
   onStartPurchase,
+  onOpenLicense,
   onWishlistToggle,
   onOpenVideo,
 }) {
@@ -83,14 +84,15 @@ export function CourseSidebar({
         )}
 
         {isEnrolled ? (
-          <Link
-            href="/panel"
+          <button
+            type="button"
+            onClick={onOpenLicense}
             className="cs-btn"
-            style={{ background: "var(--teal-dark)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}
+            style={{ background: "var(--teal-dark)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, cursor: "pointer" }}
           >
             <CheckCircle2 size={16} />
-            <span>مشاهده در پنل</span>
-          </Link>
+            <span>مشاهده لایسنس دوره</span>
+          </button>
         ) : (
           <button type="button" className="cs-btn" onClick={onStartPurchase}>
             {isFree ? "ثبت‌نام دوره" : "خرید دوره"}

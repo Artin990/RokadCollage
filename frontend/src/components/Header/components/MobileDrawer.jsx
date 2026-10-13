@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import Logo from "../../Logo.jsx";
 import { logoutUser } from "../../../data/panelStore.js";
-import { LogOut } from "lucide-react";
+import { BookOpen, UserCog, LogOut } from "lucide-react";
 
 const ROTS = [-1, 0.5, -0.5, 1, -1, 0.5];
 
@@ -12,14 +13,19 @@ export default function MobileDrawer({
   setActive,
   store,
   user,
+  onRequestLogout,
 }) {
-  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  const handleConfirmLogout = () => {
-    setShowLogoutConfirm(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const handleLogout = () => {
     setMobileOpen(false);
-    logoutUser();
-    window.location.hash = "";
+    if (onRequestLogout) {
+      onRequestLogout();
+    }
   };
 
   return (
@@ -57,20 +63,60 @@ export default function MobileDrawer({
         className="hb1-actions"
         style={{ display: "flex", flexDirection: "column", gap: 10 }}
       >
-        {store.auth?.isLoggedIn ? (
+        {mounted && store.auth?.isLoggedIn ? (
           <>
-            <a
-              href="#panel"
+            <div
               className="hb1-cta"
               style={{
                 background: "var(--college-light)",
                 color: "var(--college-darker)",
                 borderColor: "var(--ink)",
+                textAlign: "center",
+                fontWeight: 900,
+              }}
+            >
+              {user?.fullName || user?.firstName || "حساب کاربری"}
+            </div>
+            <Link
+              href="/panel?tab=courses"
+              className="hb1-cta"
+              style={{
+                background: "var(--white)",
+                color: "var(--navy)",
+                borderColor: "var(--ink)",
+                textAlign: "center",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
+                textDecoration: "none",
+                fontWeight: 800,
               }}
               onClick={() => setMobileOpen(false)}
             >
-              پنل کاربری ({user?.firstName || "هنرجو"})
-            </a>
+              <BookOpen size={16} />
+              <span>دوره‌های من</span>
+            </Link>
+            <Link
+              href="/panel?tab=profile"
+              className="hb1-cta"
+              style={{
+                background: "var(--white)",
+                color: "var(--navy)",
+                borderColor: "var(--ink)",
+                textAlign: "center",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
+                textDecoration: "none",
+                fontWeight: 800,
+              }}
+              onClick={() => setMobileOpen(false)}
+            >
+              <UserCog size={16} />
+              <span>تنظیمات پروفایل</span>
+            </Link>
             <button
               type="button"
               className="hb1-cta"
@@ -80,10 +126,15 @@ export default function MobileDrawer({
                 borderColor: "#dc2626",
                 cursor: "pointer",
                 fontFamily: "inherit",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
               }}
-              onClick={() => setShowLogoutConfirm(true)}
+              onClick={handleLogout}
             >
-              خروج از حساب
+              <LogOut size={16} />
+              <span>خروج از حساب</span>
             </button>
           </>
         ) : (
@@ -108,42 +159,6 @@ export default function MobileDrawer({
           مشاورهٔ رایگان
         </a>
       </div>
-
-      {/* مودال تأیید خروج در موبایل */}
-      {showLogoutConfirm && (
-        <div className="auth-modal-backdrop" onClick={() => setShowLogoutConfirm(false)}>
-          <div
-            className="auth-modal-card pnl-logout-modal-card"
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-          >
-            <div className="pnl-logout-ic">
-              <LogOut size={26} strokeWidth={2.4} />
-            </div>
-            <h3 className="pnl-logout-title">خروج از حساب کاربری</h3>
-            <p className="pnl-logout-desc">
-              آیا برای خروج از حساب کاربری خود اطمینان دارید؟
-            </p>
-            <div className="pnl-logout-actions">
-              <button
-                type="button"
-                className="pnl-logout-confirm"
-                onClick={handleConfirmLogout}
-              >
-                بله، خروج از حساب
-              </button>
-              <button
-                type="button"
-                className="pnl-logout-cancel"
-                onClick={() => setShowLogoutConfirm(false)}
-              >
-                انصراف
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

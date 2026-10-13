@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 
 const CheckoutModal = dynamic(() => import("../Checkout/CheckoutModal.jsx"), { ssr: false });
 const VideoPlayerModal = dynamic(() => import("../../components/VideoPlayerModal/index.jsx"), { ssr: false });
+const SpotPlayerLicenseModal = dynamic(() => import("./components/SpotPlayerLicenseModal.jsx"), { ssr: false });
 import CourseSingleInPerson from "./CourseSingleInPerson.jsx";
 import CourseSingleNotFound from "./components/CourseSingleNotFound.jsx";
 import { CourseTopbar, CourseSidebar } from "./components/CourseSidebar.jsx";
@@ -20,6 +21,7 @@ import {
 } from "./components/CoursePanels.jsx";
 
 import { getCourseBySlugOrId } from "@/services/courseService.js";
+import { getCourseLicense } from "@/services/enrollmentService.js";
 
 export default function CourseSingle({ slug, initialCourse }) {
   const [tab, setTab] = useState(0);
@@ -34,6 +36,8 @@ export default function CourseSingle({ slug, initialCourse }) {
   const [store, setStore] = useState(getPanelStore);
   const [enrollToast, setEnrollToast] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [licenseModalOpen, setLicenseModalOpen] = useState(false);
+  const [serverEnrolled, setServerEnrolled] = useState(false);
 
   useEffect(() => {
     async function fetchCourse() {
@@ -64,7 +68,7 @@ export default function CourseSingle({ slug, initialCourse }) {
   }, []);
 
   if (!course && loading) {
-    return <div className="min-h-screen flex items-center justify-center font-['IRANSansX'] text-stone-500">در حال بارگذاری دوره...</div>;
+    return <div className="min-h-screen flex items-center justify-center font-sans text-stone-500">در حال بارگذاری دوره...</div>;
   }
 
   if (!course) {
@@ -81,8 +85,35 @@ export default function CourseSingle({ slug, initialCourse }) {
   }
 
   const courseSlug = course.slug || slug;
-  const isEnrolled = isEnrolledIn(courseSlug, store);
+  const isEnrolled =
+    serverEnrolled ||
+    isEnrolledIn(courseSlug, store) ||
+    (course._id && isEnrolledIn(course._id, store)) ||
+    (slug && isEnrolledIn(slug, store));
   const isWishlisted = Boolean(store?.auth?.isLoggedIn) && checkWishlisted(courseSlug, store);
+
+  useEffect(() => {
+    const hasToken = typeof window !== "undefined" && Boolean(localStorage.getItem("rokad_token"));
+    const isLoggedIn = Boolean(store?.auth?.isLoggedIn || hasToken);
+    const targetId = course?._id || course?.id || slug;
+
+    if (!isLoggedIn || !targetId) return;
+
+    getCourseLicense(targetId)
+      .then((res) => {
+        if (res?.isEnrolled) {
+          setServerEnrolled(true);
+          enrollInCourse({
+            id: course?._id || course?.id,
+            _id: course?._id || course?.id,
+            slug: courseSlug,
+            title: course?.title,
+            teacher: course?.teacher?.name || course?.teachers?.[0]?.name,
+          });
+        }
+      })
+      .catch(() => {});
+  }, [store?.auth?.isLoggedIn, course?._id, course?.id, courseSlug, slug]);
 
   const courseTabs = ["توضیحات", ...(course.tabs || ["سرفصل‌ها", "نظرات", "پرسش و پاسخ", "منابع"]).filter((t) => t !== "توضیحات")];
 
@@ -203,10 +234,18 @@ export default function CourseSingle({ slug, initialCourse }) {
           isWishlisted={isWishlisted}
           enrollToast={enrollToast}
           onStartPurchase={handleStartPurchase}
+          onOpenLicense={() => setLicenseModalOpen(true)}
           onWishlistToggle={handleWishlistToggle}
           onOpenVideo={() => handleOpenVideo()}
         />
       </div>
+
+      <SpotPlayerLicenseModal
+        isOpen={licenseModalOpen}
+        onClose={() => setLicenseModalOpen(false)}
+        courseId={course._id || course.id}
+        courseTitle={course.title}
+      />
 
       <CheckoutModal
         isOpen={checkoutOpen}

@@ -13,7 +13,8 @@ export function isEnrolledIn(slug, customStore) {
   return (store.myCourses || []).some((c) => {
     const cSlug = String(c.slug || "").toLowerCase().trim();
     const cId = String(c.id || "").toLowerCase().trim();
-    return cSlug === cleanSlug || cId === cleanSlug;
+    const cMongoId = String(c._id || "").toLowerCase().trim();
+    return cSlug === cleanSlug || cId === cleanSlug || cMongoId === cleanSlug;
   });
 }
 
@@ -38,7 +39,8 @@ export function getCourseEnrollment(slug, customStore) {
   return (store.myCourses || []).find((c) => {
     const cSlug = String(c.slug || "").toLowerCase().trim();
     const cId = String(c.id || "").toLowerCase().trim();
-    return cSlug === cleanSlug || cId === cleanSlug;
+    const cMongoId = String(c._id || "").toLowerCase().trim();
+    return cSlug === cleanSlug || cId === cleanSlug || cMongoId === cleanSlug;
   }) || null;
 }
 

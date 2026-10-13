@@ -14,6 +14,7 @@ export default function InPersonHero({
   isWished,
   onBookmarkClick,
   onCheckoutOpen,
+  onOpenEnrollmentInfo,
 }) {
   const numPrice = course.finalPrice !== undefined ? course.finalPrice : course.price;
   const isFree = !numPrice || numPrice === 0 || numPrice === "رایگان";
@@ -117,13 +118,14 @@ export default function InPersonHero({
 
                 <div className="cs-ip-btns-row">
                   {isEnrolled ? (
-                    <Link
-                      href="/panel"
+                    <button
+                      type="button"
                       className="cs-ip-btn-main enrolled"
+                      onClick={onOpenEnrollmentInfo}
                     >
                       <CheckCircle2 size={16} />
-                      <span>مشاهده در پنل</span>
-                    </Link>
+                      <span>ثبت‌نام شده</span>
+                    </button>
                   ) : (
                     <button
                       type="button"

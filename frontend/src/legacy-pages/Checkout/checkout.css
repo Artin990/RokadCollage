@@ -13,6 +13,8 @@
   place-items: center;
   padding: 1rem;
   animation: chkFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  font-family: var(--font-iransans), "IRANSansX", system-ui, -apple-system, sans-serif;
+  direction: rtl;
 }
 
 @keyframes chkFadeIn {
@@ -32,6 +34,12 @@
   max-height: calc(100vh - 2rem);
   overflow-y: auto;
   animation: chkSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  font-family: var(--font-iransans), "IRANSansX", system-ui, -apple-system, sans-serif;
+  direction: rtl;
+}
+
+.chk-card * {
+  font-family: inherit;
 }
 
 @keyframes chkSlideUp {
@@ -234,18 +242,24 @@
 .chk-invoice {
   background: #f8fafc;
   border: 2px solid var(--ink);
-  border-radius: 10px 0 10px 0;
-  padding: 0.85rem 1rem;
-  margin-bottom: 1.3rem;
-  box-shadow: 2px 2px 0 var(--ink);
+  border-radius: 12px 0 12px 0;
+  padding: 1.1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 3px 3px 0 var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
 }
 
 .chk-row {
   display: flex;
   justify-content: space-between;
-  font-size: 0.85rem;
+  align-items: center;
+  font-size: 0.88rem;
   color: var(--ink-muted);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px dashed #e2e8f0;
 }
 
 .chk-row.discount {
@@ -254,17 +268,18 @@
 }
 
 .chk-row.total {
-  border-top: 1.5px dashed var(--ink-light);
-  padding-top: 0.5rem;
-  margin-top: 0.4rem;
-  margin-bottom: 0;
+  border-top: 1.5px dashed var(--ink);
+  border-bottom: none;
+  padding-top: 0.65rem;
+  margin-top: 0.2rem;
+  padding-bottom: 0;
   font-size: 1rem;
   color: var(--ink);
 }
 
 .chk-row.total b {
   color: var(--accent);
-  font-size: 1.15rem;
+  font-size: 1.2rem;
 }
 
 /* اکشن */

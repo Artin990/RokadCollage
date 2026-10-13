@@ -42,7 +42,7 @@ export default function HashRouterListener() {
 
       // 4. Panel & Auth
       if (hash.startsWith("#panel")) {
-        router.push("/panel");
+        router.push("/");
         return;
       }
       if (hash === "#auth" || hash === "#auth/register") {
