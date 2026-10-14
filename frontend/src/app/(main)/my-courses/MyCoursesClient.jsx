@@ -13,7 +13,7 @@ import {
 import { getMyEnrollments } from "@/services/enrollmentService";
 import { getAllCourses } from "@/services/courseService";
 import { getPanelStore } from "@/data/panelStore";
-import { isWishlisted } from "@/data/selectors";
+import { isWishlisted, isEnrolledIn, isCourseInPerson } from "@/data/selectors";
 import { useHorizontalDragScroll } from "@/legacy-pages/CoursesPage/hooks/useHorizontalDragScroll.js";
 import MyCourseCard from "./components/MyCourseCard";
 import SpotPlayerLicenseModal from "@/legacy-pages/CourseSingle/components/SpotPlayerLicenseModal";
@@ -133,14 +133,27 @@ export default function MyCoursesClient() {
       const cSlug = String(c.slug || "").trim();
       const isSaved = isWishlisted(cSlug, store) || isWishlisted(cId, store);
 
-      if (isSaved && !enrolledMap.has(cId) && !enrolledMap.has(cSlug)) {
+      if (isSaved) {
+        const isPurchased =
+          enrolledMap.has(cId) ||
+          enrolledMap.has(cSlug) ||
+          isEnrolledIn(cSlug, store) ||
+          (cId && isEnrolledIn(cId, store));
+
+        const existingEnrollment = enrolled.find((e) => {
+          const eId = String(e.course?._id || e.course?.id || "").trim();
+          const eSlug = String(e.course?.slug || "").trim();
+          return (cId && eId === cId) || (cSlug && eSlug === cSlug);
+        });
+
         saved.push({
+          ...(existingEnrollment || {}),
           _id: c._id || c.id,
-          isPurchased: false,
+          isPurchased: Boolean(isPurchased),
           purchaseStatus: "saved",
           course: c,
-          createdAt: c.createdAt || new Date().toISOString(),
-          status: "saved",
+          createdAt: existingEnrollment?.createdAt || c.createdAt || new Date().toISOString(),
+          status: isPurchased ? (existingEnrollment?.status || "purchased") : "saved",
           price: c.price || 0,
         });
       }
@@ -158,14 +171,9 @@ export default function MyCoursesClient() {
     let inPersonCount = 0;
 
     [...enrolledItems, ...savedItems].forEach((e) => {
-      const isVirtual =
-        e.courseModel === "VirtualCourse" ||
-        e.course?.type === "مجازی" ||
-        e.course?.type === "غیر حضوری" ||
-        Boolean(e.spotplayer?.key) ||
-        !e.session;
-      if (isVirtual) virtualCount++;
-      else inPersonCount++;
+      const isInPerson = isCourseInPerson(e.course, e);
+      if (isInPerson) inPersonCount++;
+      else virtualCount++;
     });
 
     return {
@@ -195,12 +203,7 @@ export default function MyCoursesClient() {
     let result = list.filter((item) => {
       const course = item.course || {};
       const title = (course.title || "").toLowerCase();
-      const isVirtual =
-        item.courseModel === "VirtualCourse" ||
-        course.type === "مجازی" ||
-        course.type === "غیر حضوری" ||
-        Boolean(item.spotplayer?.key) ||
-        !item.session;
+      const isInPerson = isCourseInPerson(course, item);
 
       // فیلتر جستجو
       if (searchQuery.trim()) {
@@ -211,8 +214,8 @@ export default function MyCoursesClient() {
       }
 
       // فیلتر نحوه برگزاری
-      if (modeFilter === "in-person" && isVirtual) return false;
-      if (modeFilter === "online" && !isVirtual) return false;
+      if (modeFilter === "in-person" && !isInPerson) return false;
+      if (modeFilter === "online" && isInPerson) return false;
 
       // فیلتر وضعیت پیشرفت (فقط برای دوره‌های خریداری‌شده)
       if (!isSavedList) {

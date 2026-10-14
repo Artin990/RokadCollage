@@ -17,7 +17,7 @@ import {
   Bookmark,
 } from "lucide-react";
 import { toggleWishlist } from "@/data/panelStore.js";
-import { isWishlisted } from "@/data/selectors.js";
+import { isWishlisted, isEnrolledIn, isCourseInPerson } from "@/data/selectors.js";
 
 /**
  * دپارتمان‌ها و کانفیگ آیکون و تم
@@ -90,19 +90,24 @@ function resolveDept(course = {}) {
 
 export default function MyCourseCard({ item, onOpenLicense, store }) {
   const course = item.course || {};
-  const isPurchased = item.isPurchased !== false;
-  const isVirtual =
-    item.courseModel === "VirtualCourse" ||
-    course.type === "مجازی" ||
-    course.type === "غیر حضوری" ||
-    Boolean(item.spotplayer?.key) ||
-    !item.session;
+  const courseSlug = course.slug || course._id || course.id;
+  const courseId = course._id || course.id;
+
+  // تشخیص دقیق وضعیت خریداری بر اساس آیتم و استور ثبت‌نام‌ها
+  const isPurchased =
+    item.isPurchased === true ||
+    item.purchaseStatus === "purchased" ||
+    isEnrolledIn(courseSlug, store) ||
+    (courseId && isEnrolledIn(courseId, store));
+
+  // تشخیص دقیق حضوری یا غیرحضوری بودن
+  const isInPerson = isCourseInPerson(course, item);
+  const isVirtual = !isInPerson;
 
   const isCompleted = isPurchased && (item.status === "completed" || item.progress === 100);
   const dept = resolveDept(course);
   const DeptIcon = dept.icon;
 
-  const courseSlug = course.slug || course._id || course.id;
   const courseHref = courseSlug ? `/courses/${courseSlug}` : "/courses";
   const isSaved = isWishlisted(courseSlug, store) || item.purchaseStatus === "saved";
 
@@ -148,9 +153,9 @@ export default function MyCourseCard({ item, onOpenLicense, store }) {
           className={`mc-badge-pill ${
             isCompleted
               ? "mc-badge-completed"
-              : isVirtual
-              ? "mc-badge-virtual"
-              : "mc-badge-inperson"
+              : isInPerson
+              ? "mc-badge-inperson"
+              : "mc-badge-virtual"
           }`}
         >
           {isCompleted ? (
@@ -158,15 +163,15 @@ export default function MyCourseCard({ item, onOpenLicense, store }) {
               <CheckCircle2 size={12} strokeWidth={2.5} />
               <span>تکمیل‌شده</span>
             </>
-          ) : isVirtual ? (
-            <>
-              <Monitor size={12} strokeWidth={2.5} />
-              <span>غیر حضوری</span>
-            </>
-          ) : (
+          ) : isInPerson ? (
             <>
               <MapPin size={12} strokeWidth={2.5} />
               <span>کارگاه حضوری</span>
+            </>
+          ) : (
+            <>
+              <Monitor size={12} strokeWidth={2.5} />
+              <span>غیر حضوری</span>
             </>
           )}
         </span>
@@ -194,8 +199,18 @@ export default function MyCourseCard({ item, onOpenLicense, store }) {
           <Link href={courseHref}>{course.title || "عنوان دوره تخصصی"}</Link>
         </h3>
 
-        {/* اگر دوره هنوز خریداری نشده است، نمایش ردیف قیمت */}
-        {!isPurchased && (
+        {/* نمایش وضعیت یا شهریه دوره: اگر خریداری شده باشد در علاقه‌مندی‌ها بج خریداری‌شده می‌زند */}
+        {isPurchased ? (
+          item.purchaseStatus === "saved" && (
+            <div className="mc-card-price-row is-purchased">
+              <span className="mc-price-label">وضعیت:</span>
+              <span className="mc-purchased-badge">
+                <CheckCircle2 size={13} strokeWidth={2.5} />
+                <span>خریداری‌شده</span>
+              </span>
+            </div>
+          )
+        ) : (
           <div className="mc-card-price-row">
             <span className="mc-price-label">شهریه دوره:</span>
             <b className="mc-price-val">
@@ -213,14 +228,14 @@ export default function MyCourseCard({ item, onOpenLicense, store }) {
             </span>
           )}
 
-          {!isVirtual && item.session && (
+          {isInPerson && (
             <span className="mc-pill">
               <Calendar size={12} />
-              <span>{item.session.scheduleDays || "جلسات کلاسی"}</span>
+              <span>{item.session?.scheduleDays || "کارگاه حضوری"}</span>
             </span>
           )}
 
-          {isVirtual && (
+          {!isInPerson && (
             <span className="mc-pill">
               <Sparkles size={12} />
               <span>دسترسی دائم</span>

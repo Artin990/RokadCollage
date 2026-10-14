@@ -895,6 +895,20 @@
   font-size: 12px;
 }
 
+.mc-card-price-row.is-purchased {
+  background: #F0FDF4;
+  border: 1.5px solid #059669;
+}
+
+.mc-purchased-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #047857;
+  font-weight: 900;
+  font-size: 12px;
+}
+
 .mc-price-label {
   color: var(--ink-subtle, #62605B);
   font-weight: 700;

@@ -18,6 +18,59 @@ export function isEnrolledIn(slug, customStore) {
   });
 }
 
+/** تشخیص حضوری یا آنلاین بودن دوره */
+export function isCourseInPerson(course = {}, item = {}) {
+  const c = course || {};
+  const itm = item || {};
+
+  // ۱. بررسی صریح فیلدهای دوره‌های حضوری
+  if (
+    itm.courseModel === "InPersonCourse" ||
+    c.courseModel === "InPersonCourse" ||
+    c.type === "حضوری" ||
+    c.mode === "in-person" ||
+    c.isInPerson === true ||
+    c.displayType === "حضوری"
+  ) {
+    return true;
+  }
+
+  // ۲. بررسی صریح فیلدهای دوره‌های غیرحضوری / مجازی
+  if (
+    itm.courseModel === "VirtualCourse" ||
+    c.courseModel === "VirtualCourse" ||
+    c.type === "مجازی" ||
+    c.type === "غیر حضوری" ||
+    c.mode === "online" ||
+    c.isInPerson === false ||
+    Boolean(itm.spotplayer?.key)
+  ) {
+    return false;
+  }
+
+  // ۳. اگر دوره جلسات کلاسی حضوری داشته باشد
+  if (itm.session) {
+    return true;
+  }
+
+  // ۴. بررسی بر اساس عبارات کلیدی عنوان یا اسلاگ
+  const slug = String(c.slug || c._id || "").toLowerCase();
+  const title = String(c.title || "").toLowerCase();
+  if (
+    slug.includes("bootcamp") ||
+    slug.includes("حضوری") ||
+    slug.includes("in-person") ||
+    title.includes("کارگاه") ||
+    title.includes("حضوری") ||
+    title.includes("بوت کمپ") ||
+    title.includes("بوت‌کمپ")
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
 /** بررسی نشان شدن دوره در Wishlist */
 export function isWishlisted(slug, customStore) {
   if (!slug) return false;

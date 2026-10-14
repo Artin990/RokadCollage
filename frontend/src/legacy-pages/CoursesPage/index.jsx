@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import "./courses-hub.css";
 import { getPanelStore } from "@/data/panelStore.js";
-import { isWishlisted } from "@/data/selectors.js";
+import { isWishlisted, isEnrolledIn, isCourseInPerson } from "@/data/selectors.js";
 import { getAllCourses } from "@/services/courseService.js";
 import { getTeachers } from "@/services/teacherService.js";
 import { useHorizontalDragScroll } from "./hooks/useHorizontalDragScroll.js";
@@ -114,7 +114,7 @@ export default function CoursesPage() {
       deptName: c.category || deptInfo.deptName,
       themeClass: deptInfo.themeClass,
       pattern: deptInfo.pattern,
-      badge: c.isInPerson || c.mode === "in-person" ? "دوره حضوری و کارگاهی" : "دوره آنلاین و پروژه محور",
+      badge: isCourseInPerson(c) ? "دوره حضوری و کارگاهی" : "دوره آنلاین و پروژه محور",
       title: c.title,
       inst: c.instructor?.fullName || c.instructor?.name || "استاد کالج رکاد",
       desc: c.description || c.headline || "آموزش جامع و پروژه محور متناسب با نیازهای بازار کار ایران و بین‌الملل.",
@@ -123,7 +123,7 @@ export default function CoursesPage() {
       rating: "۴.۹",
       price: c.price ? `${Number(c.price).toLocaleString("fa-IR")} تومان` : "رایگان",
       slug: c.slug || c.id || c._id,
-      mode: c.isInPerson || c.mode === "in-person" ? "in-person" : "online",
+      mode: isCourseInPerson(c) ? "in-person" : "online",
       deptHref: `/dept/${deptInfo.deptId}`,
       deptBtnText: `مشاهده دپارتمان ${c.category || deptInfo.deptName}`,
       icon: deptInfo.icon,
@@ -154,10 +154,10 @@ export default function CoursesPage() {
       students: `${Number(c.studentCount || 85).toLocaleString("fa-IR")} هنرجو`,
       rating: "۴.۸",
       price: c.price ? `${Number(c.price).toLocaleString("fa-IR")} تومان` : "رایگان",
-      tag: c.isInPerson || c.mode === "in-person" ? "حضوری" : "آنلاین",
+      tag: isCourseInPerson(c) ? "حضوری" : "آنلاین",
       tagType: "hot",
       slug: c.slug || c.id || c._id,
-      mode: c.isInPerson || c.mode === "in-person" ? "in-person" : "online",
+      mode: isCourseInPerson(c) ? "in-person" : "online",
     });
   });
 
@@ -249,9 +249,10 @@ export default function CoursesPage() {
                 {savedCourses.map((c) => {
                   const deptInfo = DEPT_CONFIG[c.category] || DEPT_CONFIG["فناوری اطلاعات"];
                   const DeptIcon = deptInfo.icon || Code;
-                  const isHp = c.isInPerson || c.mode === "in-person";
+                  const isHp = isCourseInPerson(c);
                   const instructorName = c.instructor?.fullName || c.instructor?.name || (c.teachers && c.teachers[0]?.name) || "استاد کالج";
                   const priceNum = c.price;
+                  const isPurchased = isEnrolledIn(c.slug || c._id || c.id, store);
 
                   return (
                     <Link
@@ -302,10 +303,14 @@ export default function CoursesPage() {
 
                         <div className="ch-card-foot">
                           <div className="ch-card-price">
-                            <b>{priceNum ? `${Number(priceNum).toLocaleString("fa-IR")} تومان` : "رایگان"}</b>
+                            {isPurchased ? (
+                              <b style={{ color: "#047857" }}>خریداری‌شده</b>
+                            ) : (
+                              <b>{priceNum ? `${Number(priceNum).toLocaleString("fa-IR")} تومان` : "رایگان"}</b>
+                            )}
                           </div>
                           <span className="ch-card-btn">
-                            <span>مشاهده</span>
+                            <span>{isPurchased ? "ورود" : "مشاهده"}</span>
                             <ArrowLeft size={13} />
                           </span>
                         </div>
