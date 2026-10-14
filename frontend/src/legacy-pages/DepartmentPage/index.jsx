@@ -207,11 +207,11 @@ export default function DepartmentPage({ deptId, initialCourses = [] }) {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const activePersona = currentId === "counseling" ? DEPT_PERSONA.counseling : DEPT_PERSONA.business;
+  const collegePersona = DEPT_PERSONA.business;
   const styleVars = {
-    "--dp": activePersona.colorVar,
-    "--dp-light": activePersona.lightVar,
-    "--dp-dark": activePersona.darkVar,
+    "--dp": collegePersona.colorVar,
+    "--dp-light": collegePersona.lightVar,
+    "--dp-dark": collegePersona.darkVar,
     "--dp-text": "var(--ink)",
   };
 
@@ -240,7 +240,7 @@ export default function DepartmentPage({ deptId, initialCourses = [] }) {
 
   return (
     <div className="dp-page" style={styleVars} data-dept={currentId} key={currentId}>
-      <DepartmentHero dept={dept} persona={activePersona} onScrollTo={scrollToSection} />
+      <DepartmentHero dept={dept} persona={collegePersona} onScrollTo={scrollToSection} />
 
       <main className="dp-main container">
         <DepartmentSuggestedRow
@@ -279,7 +279,7 @@ export default function DepartmentPage({ deptId, initialCourses = [] }) {
         <DepartmentCtaSection
           dept={dept}
           currentId={currentId}
-          persona={activePersona}
+          persona={collegePersona}
           onScrollTo={scrollToSection}
         />
       </main>
