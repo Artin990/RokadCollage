@@ -943,11 +943,19 @@
   margin: 0;
 }
 
+.mc-saved-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 .mc-saved-nav-btns {
   display: flex;
   align-items: center;
   gap: 8px;
 }
+
 
 .mc-saved-nav-btn {
   width: 40px;
