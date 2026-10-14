@@ -504,6 +504,68 @@
 }
 
 /* ========================================================
+   SEARCH BOX IN TOOLBAR (جستجوی زنده دوره‌ها)
+   ======================================================== */
+.mc-search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 2px solid var(--ink, #1F1E1D);
+  border-radius: 10px 0 10px 0;
+  box-shadow: 2px 2px 0 var(--ink, #1F1E1D);
+  padding: 0 10px 0 6px;
+  height: 38px;
+  min-width: 220px;
+  transition: all 0.18s ease;
+}
+
+.mc-search-box:focus-within {
+  border-color: var(--ink, #1F1E1D);
+  box-shadow: 3px 3px 0 var(--college, #F8A41D);
+}
+
+.mc-search-icon {
+  color: var(--ink-subtle, #62605B);
+  flex-shrink: 0;
+  margin-inline-end: 6px;
+}
+
+.mc-search-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink, #1F1E1D);
+  width: 100%;
+}
+
+.mc-search-input::placeholder {
+  color: #8c8985;
+  font-weight: 600;
+}
+
+.mc-search-clear {
+  background: none;
+  border: none;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--ink-subtle, #62605B);
+  cursor: pointer;
+  padding: 0 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+}
+
+.mc-search-clear:hover {
+  color: var(--ink, #1F1E1D);
+}
+
+/* ========================================================
    RESPONSIVE DESIGN (موبایل و تبلت)
    ======================================================== */
 @media (max-width: 768px) {
@@ -630,13 +692,16 @@
     height: 17px !important;
     font-size: 10px !important;
   }
-  .dp-sort {
-    flex: 1 !important;
-  }
-  .dp-sort-btn {
+  .dp-tools {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
     width: 100% !important;
-    height: 38px !important;
-    justify-content: space-between !important;
+  }
+  .mc-search-box {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    width: auto !important;
   }
 }
 

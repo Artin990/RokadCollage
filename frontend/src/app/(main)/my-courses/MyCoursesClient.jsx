@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
-import { RotateCw, BookOpen } from "lucide-react";
+import { RotateCw, BookOpen, Search } from "lucide-react";
 import { getMyEnrollments } from "@/services/enrollmentService";
 import MyCourseCard from "./components/MyCourseCard";
 import SpotPlayerLicenseModal from "@/legacy-pages/CourseSingle/components/SpotPlayerLicenseModal";
@@ -22,7 +22,6 @@ const STATUS_OPTIONS = [
   { id: "completed", label: "تکمیل‌شده" },
 ];
 
-
 const SORTS = [
   { id: "default", label: "پیشفرض" },
   { id: "newest", label: "جدیدترین" },
@@ -34,16 +33,15 @@ export default function MyCoursesClient() {
   const [enrollments, setEnrollments] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // فیلترها و مرتب‌سازی
+  // جستجو، فیلترها و مرتب‌سازی
+  const [searchQuery, setSearchQuery] = useState("");
   const [modeFilter, setModeFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [deptFilter, setDeptFilter] = useState("all");
   const [sort, setSort] = useState("default");
 
-  // وضعیت باز بودن منو و مدال
-  const [sortOpen, setSortOpen] = useState(false);
+  // وضعیت باز بودن مدال فیلتر
   const [filterOpen, setFilterOpen] = useState(false);
-  const sortRef = useRef(null);
   const filterRef = useRef(null);
 
   // لایسنس مودال اسپات‌پلیر
@@ -52,17 +50,6 @@ export default function MyCoursesClient() {
     courseId: null,
     courseTitle: "",
   });
-
-  // بستن دراپ‌داون سورت هنگام کلیک در بیرون
-  useEffect(() => {
-    function handleClickOutside(e) {
-      if (sortRef.current && !sortRef.current.contains(e.target)) {
-        setSortOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   useEffect(() => {
     async function loadData() {
@@ -148,8 +135,10 @@ export default function MyCoursesClient() {
     if (modeFilter !== "all") count++;
     if (statusFilter !== "all") count++;
     if (deptFilter !== "all") count++;
+    if (sort !== "default") count++;
+    if (searchQuery.trim()) count++;
     return count;
-  }, [modeFilter, statusFilter, deptFilter]);
+  }, [modeFilter, statusFilter, deptFilter, sort, searchQuery]);
 
   // پاک کردن همه فیلترها
   const resetFilters = () => {
@@ -157,6 +146,7 @@ export default function MyCoursesClient() {
     setStatusFilter("all");
     setDeptFilter("all");
     setSort("default");
+    setSearchQuery("");
   };
 
   // فیلتر و مرتب‌سازی دوره‌ها
@@ -170,6 +160,14 @@ export default function MyCoursesClient() {
         course.type === "غیر حضوری" ||
         Boolean(item.spotplayer?.key) ||
         !item.session;
+
+      // فیلتر جستجوی زنده بر اساس عنوان دوره یا دسته‌بندی
+      if (searchQuery.trim()) {
+        const q = searchQuery.trim().toLowerCase();
+        const matchesTitle = title.includes(q);
+        const matchesCategory = (course.category || "").toLowerCase().includes(q);
+        if (!matchesTitle && !matchesCategory) return false;
+      }
 
       // فیلتر نحوه برگزاری (حضوری / غیر حضوری)
       if (modeFilter === "in-person" && isVirtual) return false;
@@ -205,7 +203,7 @@ export default function MyCoursesClient() {
     }
 
     return result;
-  }, [enrollments, modeFilter, statusFilter, deptFilter, sort]);
+  }, [enrollments, modeFilter, statusFilter, deptFilter, sort, searchQuery]);
 
   const handleOpenLicense = (courseId, courseTitle) => {
     setLicenseModal({
@@ -303,6 +301,30 @@ export default function MyCoursesClient() {
           </div>
 
           <div className="dp-tools">
+            {/* اینپوت جستجوی دوره */}
+            <div className="mc-search-box">
+              <Search size={15} className="mc-search-icon" aria-hidden="true" />
+              <input
+                type="text"
+                placeholder="جستجوی دوره..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="mc-search-input"
+                aria-label="جستجوی دوره‌ها"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  className="mc-search-clear"
+                  onClick={() => setSearchQuery("")}
+                  aria-label="پاک کردن جستجو"
+                >
+                  ×
+                </button>
+              )}
+            </div>
+
+            {/* دکمه فیلترها (شامل فیلترها و ترتیب نمایش) */}
             <button
               type="button"
               className="dp-filter-btn"
@@ -331,40 +353,6 @@ export default function MyCoursesClient() {
                 </span>
               )}
             </button>
-
-            <div className="dp-sort" ref={sortRef}>
-              <span className="dp-sort-lab">ترتیب:</span>
-              <button
-                type="button"
-                className="dp-sort-btn"
-                onClick={() => setSortOpen((v) => !v)}
-                aria-haspopup="listbox"
-                aria-expanded={sortOpen}
-              >
-                {SORTS.find((s) => s.id === sort)?.label} <span className="caret">▼</span>
-              </button>
-
-              {sortOpen && (
-                <ul className="dp-sort-menu" role="listbox">
-                  {SORTS.map((s) => (
-                    <li key={s.id}>
-                      <button
-                        type="button"
-                        role="option"
-                        aria-selected={sort === s.id}
-                        className={sort === s.id ? "active" : ""}
-                        onClick={() => {
-                          setSort(s.id);
-                          setSortOpen(false);
-                        }}
-                      >
-                        {s.label}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
           </div>
         </div>
 
@@ -536,6 +524,23 @@ export default function MyCoursesClient() {
                       onClick={() => setDeptFilter(d.id)}
                     >
                       {d.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* گروه ترتیب نمایش */}
+              <div className="dp-fgroup">
+                <div className="dp-fgroup-title">ترتیب نمایش</div>
+                <div className="dp-segment">
+                  {SORTS.map((s) => (
+                    <button
+                      key={s.id}
+                      type="button"
+                      className={sort === s.id ? "on" : ""}
+                      onClick={() => setSort(s.id)}
+                    >
+                      {s.label}
                     </button>
                   ))}
                 </div>
