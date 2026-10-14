@@ -216,9 +216,7 @@ export const getOneEnrollment = catchAsync(async (req, res, next) => {
 export const getMyEnrollments = catchAsync(async (req, res, next) => {
   const enrollments = await Enrollment.find({
     user: req.userId,
-    $nor: [
-      { courseModel: "VirtualCourse", "spotplayer.status": "failed" },
-    ],
+    "spotplayer.status": { $ne: "failed" },
   })
     .select("+spotplayer.key")
     .sort({ createdAt: -1 })
@@ -232,10 +230,12 @@ export const getMyEnrollments = catchAsync(async (req, res, next) => {
     if (enr.transactionId && enr.transactionId.status === "failed") {
       return false;
     }
-    // For virtual courses, exclude if license failed or not active
-    if (enr.courseModel === "VirtualCourse") {
-      if (enr.spotplayer?.status === "failed") return false;
-      if (!enr.spotplayer?.key && enr.spotplayer?.status !== "issued") return false;
+    // Only courses with an active license should appear in my-courses
+    const hasActiveLicense = Boolean(
+      enr.spotplayer?.key || (enr.spotplayer?.licenseId && enr.spotplayer?.status === "issued")
+    );
+    if (!hasActiveLicense || enr.spotplayer?.status === "failed") {
+      return false;
     }
     return true;
   });
