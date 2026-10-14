@@ -44,8 +44,6 @@ const SORTS = [
   { id: "newest", label: "جدیدترین" },
   { id: "oldest", label: "قدیمی‌ترین" },
   { id: "title", label: "عنوان دوره" },
-  { id: "price-low", label: "ارزان‌ترین" },
-  { id: "price-high", label: "گران‌ترین" },
 ];
 
 export default function MyCoursesClient() {
@@ -271,17 +269,15 @@ export default function MyCoursesClient() {
     sort,
   ]);
 
-  // تعداد فیلترهای فعال
   const activeFilterCount = useMemo(() => {
     let count = 0;
-    if (purchaseFilter !== "all") count++;
     if (modeFilter !== "all") count++;
     if (statusFilter !== "all") count++;
     if (deptFilter !== "all") count++;
     if (sort !== "default") count++;
     if (searchQuery.trim()) count++;
     return count;
-  }, [purchaseFilter, modeFilter, statusFilter, deptFilter, sort, searchQuery]);
+  }, [modeFilter, statusFilter, deptFilter, sort, searchQuery]);
 
   const resetFilters = () => {
     setPurchaseFilter("all");
@@ -630,22 +626,7 @@ export default function MyCoursesClient() {
             </div>
 
             <div className="dp-filter-body">
-              {/* گروه وضعیت خریداری */}
-              <div className="dp-fgroup">
-                <div className="dp-fgroup-title">وضعیت خریداری</div>
-                <div className="dp-segment">
-                  {PURCHASE_OPTIONS.map((p) => (
-                    <button
-                      key={p.id}
-                      type="button"
-                      className={purchaseFilter === p.id ? "on" : ""}
-                      onClick={() => setPurchaseFilter(p.id)}
-                    >
-                      {p.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
+
 
               {/* گروه دپارتمان و حوزه */}
               <div className="dp-fgroup">
