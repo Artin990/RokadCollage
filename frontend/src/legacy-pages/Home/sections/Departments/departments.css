@@ -15,7 +15,7 @@
 .dept5-inner {
   @apply relative;
   z-index: 10;
-  max-width: 1200px;
+  max-width: 1360px;
   margin: 0 auto;
   padding: 80px var(--space-6);
 }
@@ -52,24 +52,33 @@
 .dept5-cta-top:hover { transform: rotate(-1.5deg) translateY(-3px) scale(1.02); box-shadow: 5px 5px 0 0 var(--ink); }
 .dept5-cta-top svg { width: 16px; height: 16px; }
 
-/* ---- Grid: ۲ بالا + ۱ عریض پایین ---- */
-.dept5-grid {
+/* ---- Grid: ۴ ستونه در یک ردیف در دسکتاپ ---- */
+.dept5-grid,
+.dept5-grid.row3,
+.dept5-grid.row4 {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 3rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
 }
 .dept5-stack.wide {
-  grid-column: 1 / -1;
+  grid-column: auto;
 }
-@media (max-width: 1024px) { .dept5-grid { grid-template-columns: 1fr; gap: 2rem; } .dept5-stack.wide { grid-column: auto; } }
-
-/* ---- واریانت ۳ ستونه کنار هم (row3) ---- */
-.dept5-grid.row3 {
-  grid-template-columns: repeat(3, 1fr);
-  gap: 3rem;
+@media (max-width: 1160px) {
+  .dept5-grid,
+  .dept5-grid.row3,
+  .dept5-grid.row4 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
 }
-.dept5-grid.row3 .dept5-stack.wide { grid-column: auto; }
-@media (max-width: 1024px) { .dept5-grid.row3 { grid-template-columns: 1fr; gap: 2rem; } }
+@media (max-width: 640px) {
+  .dept5-grid,
+  .dept5-grid.row3,
+  .dept5-grid.row4 {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+}
 
 /* ---- Stack (OffsetCard دو لایه) ---- */
 .dept5-stack {
@@ -105,10 +114,10 @@
 .dept5-header {
   background: var(--dept, var(--ink));
   border-bottom: 2.5px solid var(--ink);
-  padding: 1.1rem 1.25rem;
+  padding: .85rem 1.1rem;
   display: flex; align-items: center; justify-content: flex-end;
   position: relative; overflow: hidden;
-  min-height: 68px;
+  min-height: 58px;
 }
 .dept5-pattern {
   position: absolute; inset: 0;
@@ -122,85 +131,89 @@
 
 /* Icon box (سفید) */
 .dept5-icon-box {
-  width: 48px; height: 48px;
+  width: 42px; height: 42px;
   background: var(--white);
   border: 2px solid var(--ink);
-  border-radius: 0 .75rem 0 .75rem;
+  border-radius: 0 .7rem 0 .7rem;
   corner-shape: squircle; -webkit-corner-shape: squircle;
   display: grid; place-items: center;
-  box-shadow: 3px 3px 0 0 var(--ink);
+  box-shadow: 2.5px 2.5px 0 0 var(--ink);
   transform: rotate(-4deg);
   color: var(--dept, var(--ink));
 }
-.dept5-icon-box svg { width: 24px; height: 24px; stroke-width: 2.4; }
+.dept5-icon-box svg { width: 21px; height: 21px; stroke-width: 2.3; }
 
 /* ---- Body ---- */
 .dept5-body {
-  padding: 1.1rem 1.25rem 1.2rem;
-  display: flex; flex-direction: column; gap: .7rem; flex: 1;
+  padding: 1rem 1.1rem 1.15rem;
+  display: flex; flex-direction: column; gap: .65rem; flex: 1;
 }
 .dept5-body h3 {
-  margin: 0; font-size: 26px; line-height: 1.2; font-weight: 900; color: var(--ink);
+  margin: 0; font-size: clamp(20px, 1.35vw, 23px); line-height: 1.25; font-weight: 900; color: var(--ink);
 }
 .dept5-body h3 .w { display: inline-block; }
-.dept5-body h3 .w1 { transform: rotate(-2deg); margin-left: .4rem; }
+.dept5-body h3 .w1 { transform: rotate(-2deg); margin-left: .35rem; }
 .dept5-body h3 .w2 { transform: rotate(1.5deg); color: var(--dept, var(--ink)); }
 .dept5-desc {
-  margin: 0; font-size: 13px; line-height: 1.65; font-weight: 500; color: var(--ink-subtle);
+  margin: 0; font-size: 12.5px; line-height: 1.6; font-weight: 500; color: var(--ink-subtle);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   /* رزرو ارتفاع دقیقاً ۲ خط تا شروع چیپ‌ها در همهٔ کارت‌ها هم‌ردیف بماند */
-  min-height: calc(1.65em * 2);
+  min-height: calc(1.6em * 2);
 }
 
 /* ---- Course chips (تینت پرسونا) ---- */
 .dept5-chips {
-  display: flex; flex-wrap: wrap; gap: .45rem;
-  padding-top: .7rem;
+  display: flex; flex-wrap: wrap; gap: .35rem;
+  padding-top: .65rem;
   border-top: 1.5px dashed var(--ink-light);
+  min-height: 58px;
+  align-content: flex-start;
 }
 .dept5-chip {
   background: var(--dept-light, var(--bg-neutral));
   color: var(--dept-dark, var(--ink));
   border: 1.5px solid var(--dept, var(--ink));
-  padding: .32rem .75rem;
-  border-radius: 0 .55rem 0 .55rem;
+  padding: .25rem .55rem;
+  border-radius: 0 .5rem 0 .5rem;
   corner-shape: squircle; -webkit-corner-shape: squircle;
-  font-weight: 800; font-size: 11.5px;
+  font-weight: 800; font-size: 11px;
 }
 
 /* ---- Foot: stat + CTA ---- */
 .dept5-foot {
-  display: flex; justify-content: space-between; align-items: center; gap: 1rem;
-  margin-top: auto; padding-top: .4rem;
+  display: flex; justify-content: space-between; align-items: center; gap: .5rem;
+  margin-top: auto; padding-top: .5rem;
 }
 .dept5-stat {
-  display: inline-flex; align-items: baseline; gap: .4rem;
-  font-weight: 700; font-size: 12px; color: var(--ink-subtle);
+  display: inline-flex; align-items: baseline; gap: .35rem;
+  font-weight: 700; font-size: 11.5px; color: var(--ink-subtle);
+  white-space: nowrap;
 }
 .dept5-stat strong {
   font-family: var(--font-iransans), "IRANSansX", system-ui, -apple-system, sans-serif !important;
-  font-weight: 900; font-size: 18px; color: var(--dept, var(--ink));
+  font-weight: 900; font-size: 17px; color: var(--dept, var(--ink));
 }
 .dept5-cta {
-  display: inline-flex; align-items: center; gap: .4rem;
+  display: inline-flex; align-items: center; gap: .35rem;
   background: var(--dept, var(--ink));
   color: var(--white);
   border: 2px solid var(--ink);
-  border-radius: 11px;
+  border-radius: 10px;
   corner-shape: squircle; -webkit-corner-shape: squircle;
   box-shadow: 2px 2px 0 0 var(--ink);
-  padding: .55rem 1rem;
-  font-weight: 900; font-size: 13px;
+  padding: .45rem .75rem;
+  font-weight: 900; font-size: 12px;
+  white-space: nowrap;
   transform: rotate(-2deg);
   transition: transform .2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow .2s ease;
   will-change: transform;
 }
 .dept5-stack.business .dept5-cta { color: var(--ink); }
 .dept5-cta:hover { transform: rotate(-2deg) scale(1.05) translateY(-2px); box-shadow: 3px 3px 0 0 var(--ink); }
-.dept5-cta svg { width: 13px; height: 13px; }
+.dept5-cta svg { width: 12px; height: 12px; }
 
 /* =============================================
    کارت عریض پایین (MBA): layout دو ستونه
