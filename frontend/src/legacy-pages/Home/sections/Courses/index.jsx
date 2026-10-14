@@ -92,9 +92,6 @@ export default function Courses() {
               { t: "کن", rot: "-0.5deg" },
             ]}
           />
-          <p className="lead" style={{ color: "var(--ink-subtle)", margin: "0.5rem auto 0", fontWeight: 500 }}>
-            دوره‌های پروژه‌محور با جدیدترین متدهای آموزشی؛ از پایه تا ورود به بازار کار.
-          </p>
         </div>
 
         <div className="v2-controls">
