@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import UserProfileSettings from "../panel/components/UserProfileSettings";
+import UserProfileSettings from "./components/UserProfileSettings";
 import { isUserLoggedIn } from "@/data/panelStore";
 import "./profile.css";
 

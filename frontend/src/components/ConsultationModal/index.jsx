@@ -168,21 +168,10 @@ export default function ConsultationModal({ isOpen, onClose }) {
             </p>
             <div className="cmod-success-info">
               <span>دپارتمان انتخابی: <b>{DEPARTMENTS.find((d) => d.id === dept)?.title}</b></span>
-              <span>همچنین وضعیت مشاوره در بخش تیکت‌های پنل کاربری شما ثبت گردید.</span>
             </div>
             <div className="cmod-success-actions">
               <button type="button" className="cmod-submit" onClick={onClose}>
-                بستن و ادامه مرور سایت
-              </button>
-              <button
-                type="button"
-                className="cmod-btn-ghost"
-                onClick={() => {
-                  onClose();
-                  window.location.hash = "panel/support";
-                }}
-              >
-                مشاهده در پنل کاربری
+                بستن
               </button>
             </div>
           </div>

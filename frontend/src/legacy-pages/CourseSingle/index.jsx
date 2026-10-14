@@ -143,7 +143,6 @@ export default function CourseSingle({ slug, initialCourse }) {
         sessions: course.facts?.find((f) => f.k === "مدت زمان")?.v ? `۱۲ فصل · ${course.facts.find((f) => f.k === "مدت زمان").v}` : "۱۲ فصل · ۳۲ ساعت",
       });
       setEnrollToast(true);
-      setTimeout(() => { window.location.hash = "panel/courses"; }, 1200);
       return;
     }
     setCheckoutOpen(true);
