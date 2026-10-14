@@ -231,6 +231,23 @@
   box-shadow: 1px 1px 0 var(--ink, #1F1E1D);
 }
 
+/* باکس کد پیگیری در حالت پرداخت ناموفق */
+.pc-error-auth-box {
+  justify-content: center;
+  padding: 9px 14px;
+}
+
+.pc-error-auth-box .mc-spotplayer-box-info {
+  justify-content: center;
+  flex: none;
+  max-width: 100%;
+}
+
+.pc-error-auth-box .mc-spotplayer-box-info span {
+  flex: none;
+  text-align: center;
+}
+
 /* دانلود اپ‌ها */
 .pc-apps-section {
   padding-top: 0.85rem;

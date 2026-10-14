@@ -109,22 +109,13 @@ export default function PaymentCallbackClient() {
             </div>
             {authority && (
               <div className="w-full max-w-full">
-                <div className="mc-spotplayer-box">
+                <div className="mc-spotplayer-box pc-error-auth-box">
                   <div className="mc-spotplayer-box-info">
                     <Key size={14} className="text-amber-600 flex-shrink-0" />
                     <span className="font-mono text-[11px] sm:text-[12px] truncate select-all">
                       {authority}
                     </span>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => copyLicenseKey(authority)}
-                    className="mc-copy-key-btn"
-                    title="کپی کد پیگیری"
-                  >
-                    {copied ? <Check size={12} /> : <Copy size={12} />}
-                    <span>{copied ? "کپی شد" : "کپی"}</span>
-                  </button>
                 </div>
               </div>
             )}
