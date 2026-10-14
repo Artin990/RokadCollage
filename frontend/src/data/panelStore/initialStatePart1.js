@@ -29,87 +29,8 @@ export const initialStreak = {
   ],
 };
 
-export const initialMyCourses = [
-  {
-    id: 1,
-    slug: "data-structures",
-    title: "ساختمان داده و الگوریتم",
-    teacher: "دکتر رستمی",
-    sessions: "۱۲ جلسه · ۲۴ ساعت",
-    progress: 62,
-    chapter: "فصل ۴ از ۷",
-    next: "جلسهٔ بعد: الگوریتم‌های گراف (پنج‌شنبه ۱۰:۳۰)",
-    status: "active",
-    pattern: "/assets/StatCard/blue.png",
-    lessons: [
-      { id: 101, n: 1, title: "مقدمه‌ای بر ساختمان داده و حافظه", time: "۲۴ دقیقه", done: true },
-      { id: 102, n: 2, title: "آرایه، لیست پیوندی و اشاره‌گرها", time: "۳۱ دقیقه", done: true },
-      { id: 103, n: 3, title: "پشته (Stack) و صف (Queue)", time: "۲۸ دقیقه", done: true },
-      { id: 104, n: 4, title: "درخت باینری، BST و پیمایش‌ها", time: "۴۲ دقیقه", done: false, now: true },
-      { id: 105, n: 5, title: "گراف وزن‌دار و الگوریتم Dijkstra", time: "۳۸ دقیقه", done: false, locked: false },
-      { id: 106, n: 6, title: "جدول درهم‌سازی (Hash Table) و حل تصادم", time: "۳۵ دقیقه", done: false, locked: false },
-    ],
-  },
-  {
-    id: 2,
-    slug: "ai-fundamentals",
-    title: "مبانی هوش مصنوعی و یادگیری ماشین",
-    teacher: "دکتر عزیزی",
-    sessions: "۱۶ جلسه · ۳۲ ساعت",
-    progress: 28,
-    chapter: "فصل ۲ از ۸",
-    next: "تکلیف باز: تمرین ۲ (مهلت ۱۸ شهریور)",
-    status: "active",
-    pattern: "/assets/StatCard/green.png",
-    lessons: [
-      { id: 201, n: 1, title: "مفاهیم پایه AI و عامل‌های هوشمند", time: "۳۰ دقیقه", done: true },
-      { id: 202, n: 2, title: "الگوریتم‌های جستجو (A* و Heuristics)", time: "۴۵ دقیقه", done: true },
-      { id: 203, n: 3, title: "رگرسیون خطی و گرادیان نزولی", time: "۵۰ دقیقه", done: false, now: true },
-      { id: 204, n: 4, title: "طبقه‌بندی و ماشین بردار پشتیبان (SVM)", time: "۴۰ دقیقه", done: false, locked: false },
-      { id: 205, n: 5, title: "شبکه‌های عصبی مصنوعی پرسپترون", time: "۵۵ دقیقه", done: false, locked: false },
-      { id: 206, n: 6, title: "پروژه طبقه‌بندی تصاویر رقمی", time: "۶۰ دقیقه", done: false, locked: false },
-    ],
-  },
-  {
-    id: 3,
-    slug: "computer-architecture",
-    title: "معماری کامپیوتر و سیستم‌های دیجیتال",
-    teacher: "استاد احمدی",
-    sessions: "۱۲ جلسه · ۲۰ ساعت",
-    progress: 100,
-    chapter: "فصل ۶ از ۶",
-    next: "همهٔ درس‌ها کامل شد؛ گواهی صادر شد",
-    status: "done",
-    pattern: "/assets/StatCard/pink.png",
-    lessons: [
-      { id: 301, n: 1, title: "نمایش داده‌ها و مدارهای منطقی", time: "۳۵ دقیقه", done: true },
-      { id: 302, n: 2, title: "طراحی واحد محاسبه و منطق (ALU)", time: "۴۰ دقیقه", done: true },
-      { id: 303, n: 3, title: "مجموعه دستورالعمل‌های RISC و CISC", time: "۴۵ دقیقه", done: true },
-      { id: 304, n: 4, title: "معماری پایپ‌لاین (Pipelining)", time: "۵۰ دقیقه", done: true },
-      { id: 305, n: 5, title: "سلسله‌مراتب حافظه و بهینه‌سازی کش", time: "۴۰ دقیقه", done: true },
-      { id: 306, n: 6, title: "مدیریت حافظه مجازی و سیستم ورودی/خروجی", time: "۴۵ دقیقه", done: true },
-    ],
-  },
-  {
-    id: 4,
-    slug: "applied-statistics",
-    title: "آمار و احتمال کاربردی در دیتا ساینس",
-    teacher: "دکتر رضایی",
-    sessions: "۱۰ جلسه · ۱۸ ساعت",
-    progress: 12,
-    chapter: "فصل ۱ از ۵",
-    next: "جلسهٔ بعد: توزیع‌های گسسته (شنبه ۱۴:۰۰)",
-    status: "new",
-    pattern: "/assets/StatCard/yellow.png",
-    lessons: [
-      { id: 401, n: 1, title: "مفاهیم اساسی احتمال و متغیرهای تصادفی", time: "۲۵ دقیقه", done: true },
-      { id: 402, n: 2, title: "توزیع برنولی، دو جمله‌ای و پواسون", time: "۳۵ دقیقه", done: false, now: true },
-      { id: 403, n: 3, title: "توزیع‌های پیوسته و نرمال گاوسی", time: "۴۰ دقیقه", done: false, locked: false },
-      { id: 404, n: 4, title: "قضیه حد مرکزی و نمونه‌گیری آماری", time: "۳۵ دقیقه", done: false, locked: false },
-      { id: 405, n: 5, title: "آزمون فرض و بازه اطمینان", time: "۴۵ دقیقه", done: false, locked: false },
-    ],
-  },
-];
+export const initialMyCourses = [];
+
 
 export const initialWishlist = ["wordpress", "frontend-react"];
 

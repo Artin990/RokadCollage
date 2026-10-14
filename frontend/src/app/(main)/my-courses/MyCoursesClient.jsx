@@ -4,7 +4,6 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import { RotateCw, BookOpen } from "lucide-react";
 import { getMyEnrollments } from "@/services/enrollmentService";
-import { getPanelStore } from "@/data/panelStore";
 import MyCourseCard from "./components/MyCourseCard";
 import SpotPlayerLicenseModal from "@/legacy-pages/CourseSingle/components/SpotPlayerLicenseModal";
 import "@/legacy-pages/DepartmentPage/department.css";
@@ -76,54 +75,33 @@ export default function MyCoursesClient() {
       try {
         setLoading(true);
         const data = await getMyEnrollments();
-        const list = Array.isArray(data) ? data : data?.data || [];
+        const rawList = Array.isArray(data) ? data : data?.data || [];
 
-        // Fallback to local panel store if backend has no active enrollments
-        if (list.length === 0) {
-          const store = getPanelStore();
-          if (store?.myCourses?.length > 0) {
-            const fallbackList = store.myCourses.map((mc, idx) => ({
-              _id: mc.id || mc._id || `mc_${idx}`,
-              createdAt: mc.enrolledAt || new Date().toISOString(),
-              course: {
-                _id: mc.id || mc._id || `course_${idx}`,
-                title: mc.title,
-                slug: mc.slug,
-                type: mc.type || "غیر حضوری",
-                duration: mc.sessions || "۴۰ ساعت",
-                category: mc.category || (idx % 2 === 0 ? "فناوری اطلاعات" : "کسب‌وکار"),
-                instructor: mc.inst || "اساتید کالج رکاد",
-              },
-              spotplayer: {
-                key: "0001testps7e9xn2s88okxumc4qgiROKAD",
-                downloadUrl: "https://dl.spotplayer.ir/player_access/",
-                status: "issued",
-              },
-            }));
-            setEnrollments(fallbackList);
-            return;
+        // Exclude failed/cancelled enrollments, failed payments, and virtual courses with failed or inactive licenses
+        const validList = rawList.filter((item) => {
+          if (!item || !item.course) return false;
+          if (item.status === "failed" || item.status === "cancelled") return false;
+          if (item.transactionId && item.transactionId.status === "failed") return false;
+
+          const isVirtual =
+            item.courseModel === "VirtualCourse" ||
+            item.course?.type === "مجازی" ||
+            item.course?.type === "غیر حضوری" ||
+            Boolean(item.spotplayer);
+
+          if (isVirtual) {
+            // Must have an active license, not failed or unissued
+            if (item.spotplayer?.status === "failed") return false;
+            if (!item.spotplayer?.key && item.spotplayer?.status !== "issued") return false;
           }
-        }
-        setEnrollments(list);
+
+          return true;
+        });
+
+        setEnrollments(validList);
       } catch (err) {
         console.error("Failed to load enrollments:", err);
-        const store = getPanelStore();
-        if (store?.myCourses?.length > 0) {
-          const fallbackList = store.myCourses.map((mc, idx) => ({
-            _id: mc.id || mc._id || `mc_${idx}`,
-            createdAt: mc.enrolledAt || new Date().toISOString(),
-            course: {
-              _id: mc.id || mc._id || `course_${idx}`,
-              title: mc.title,
-              slug: mc.slug,
-              type: mc.type || "غیر حضوری",
-              duration: mc.sessions || "۴۰ ساعت",
-              category: mc.category || "فناوری اطلاعات",
-              instructor: mc.inst || "اساتید کالج رکاد",
-            },
-          }));
-          setEnrollments(fallbackList);
-        }
+        setEnrollments([]);
       } finally {
         setLoading(false);
       }

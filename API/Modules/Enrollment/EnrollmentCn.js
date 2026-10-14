@@ -214,14 +214,33 @@ export const getOneEnrollment = catchAsync(async (req, res, next) => {
  * Includes spotplayer.key and buildDownloadUrl for the user's own courses.
  */
 export const getMyEnrollments = catchAsync(async (req, res, next) => {
-  const enrollments = await Enrollment.find({ user: req.userId })
+  const enrollments = await Enrollment.find({
+    user: req.userId,
+    $nor: [
+      { courseModel: "VirtualCourse", "spotplayer.status": "failed" },
+    ],
+  })
     .select("+spotplayer.key")
     .sort({ createdAt: -1 })
     .populate("course", "title type category price duration img sprints location spotplayerCourseId slug")
     .populate("session", "code scheduleDays scheduleHours capacity")
+    .populate("transactionId", "status")
     .lean();
 
-  const enriched = enrollments.map((enr) => {
+  const filtered = enrollments.filter((enr) => {
+    // Exclude if transaction explicitly failed
+    if (enr.transactionId && enr.transactionId.status === "failed") {
+      return false;
+    }
+    // For virtual courses, exclude if license failed or not active
+    if (enr.courseModel === "VirtualCourse") {
+      if (enr.spotplayer?.status === "failed") return false;
+      if (!enr.spotplayer?.key && enr.spotplayer?.status !== "issued") return false;
+    }
+    return true;
+  });
+
+  const enriched = filtered.map((enr) => {
     if (enr.spotplayer?.url) {
       enr.spotplayer.downloadUrl = buildDownloadUrl(enr.spotplayer.url);
     }
