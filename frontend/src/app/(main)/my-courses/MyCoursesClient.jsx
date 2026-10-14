@@ -58,18 +58,26 @@ export default function MyCoursesClient() {
         const data = await getMyEnrollments();
         const rawList = Array.isArray(data) ? data : data?.data || [];
 
-        // Exclude failed/cancelled enrollments, failed payments, and courses without an active license
+        // Exclude failed/cancelled enrollments, failed payments, and virtual courses without an active license
         const validList = rawList.filter((item) => {
           if (!item || !item.course) return false;
           if (item.status === "failed" || item.status === "cancelled") return false;
           if (item.transactionId && item.transactionId.status === "failed") return false;
 
-          // Only courses with an active license should appear
-          const hasActiveLicense = Boolean(
-            item.spotplayer?.key || (item.spotplayer?.licenseId && item.spotplayer?.status === "issued")
-          );
-          if (!hasActiveLicense || item.spotplayer?.status === "failed") {
-            return false;
+          const isVirtual =
+            item.courseModel === "VirtualCourse" ||
+            item.course?.type === "مجازی" ||
+            item.course?.type === "غیر حضوری" ||
+            !item.session;
+
+          // دوره‌های مجازی حتماً باید لایسنس فعال داشته باشند
+          if (isVirtual) {
+            const hasActiveLicense = Boolean(
+              item.spotplayer?.key || (item.spotplayer?.licenseId && item.spotplayer?.status === "issued")
+            );
+            if (!hasActiveLicense || item.spotplayer?.status === "failed") {
+              return false;
+            }
           }
 
           return true;

@@ -205,7 +205,7 @@ export default function MyCourseCard({ item, onOpenLicense }) {
             <ExternalLink size={14} />
           </Link>
 
-          {isVirtual && (
+          {isVirtual && Boolean(item.spotplayer?.key || item.spotplayer?.licenseId) && (
             <button
               type="button"
               className="mc-btn-license"
