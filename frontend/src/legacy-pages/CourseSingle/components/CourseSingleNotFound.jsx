@@ -1,9 +1,10 @@
 import React from "react";
+import Link from "next/link";
 import { Search, ArrowLeft } from "lucide-react";
 
 export default function CourseSingleNotFound() {
   return (
-    <main className="cs-page" id="course" style={{ padding: "80px 20px", textAlign: "center", minHeight: "60vh" }}>
+    <main className="cs-page" id="course" style={{ padding: "80px 20px", textAlign: "center", minHeight: "60vh", background: "#ffffff" }}>
       <div style={{ maxWidth: 480, margin: "0 auto", background: "#fff", border: "3px solid var(--ink)", borderRadius: "16px 0 16px 0", padding: "40px 24px", boxShadow: "6px 6px 0 var(--college)" }}>
         <div style={{ display: "flex", justifyContent: "center", marginBottom: "14px" }}>
           <Search size={44} style={{ color: "var(--navy)" }} />
@@ -12,8 +13,8 @@ export default function CourseSingleNotFound() {
         <p style={{ fontSize: "14px", color: "var(--ink-subtle)", lineHeight: 1.8, margin: "0 0 24px" }}>
           متأسفانه دوره‌ای با این آدرس وجود ندارد یا ممکن است حذف شده باشد.
         </p>
-        <a
-          href="#courses-index"
+        <Link
+          href="/courses"
           style={{
             display: "inline-flex",
             alignItems: "center",
@@ -30,7 +31,7 @@ export default function CourseSingleNotFound() {
         >
           <span>مشاهده لیست دوره‌ها</span>
           <ArrowLeft size={16} />
-        </a>
+        </Link>
       </div>
     </main>
   );
