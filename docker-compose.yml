@@ -42,9 +42,9 @@ services:
       ZARINPAL_MERCHANT_ID: 00000000-0000-0000-0000-000000000000
       ZARINPAL_SANDBOX: "true"
       ZARINPAL_CALLBACK_URL: http://localhost:3000/payment/callback
-      SPOTPLAYER_API_KEY: your_spotplayer_api_key_here
+      SPOTPLAYER_API_KEY: as8c9J2DQXTODxbitLiZFS4z3lOATgvESe1ET1dYAESvqYmE
       SPOTPLAYER_DOWNLOAD_DOMAIN: https://dl.spotplayer.ir
-      SPOTPLAYER_TEST_MODE: "true"
+      SPOTPLAYER_TEST_MODE: "false"
       ALLOWED_ORIGINS: http://localhost:5173,http://localhost:3000
     ports:
       - "5000:5000"
