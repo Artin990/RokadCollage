@@ -16,6 +16,7 @@ export default function RotatedHeading({ words, as: Tag = "h2", tag, className =
           text: w.text ?? w.t ?? "",
           deg: w.deg !== undefined ? w.deg : (w.rot ? parseFloat(w.rot) : 0),
           hl: w.hl,
+          color: w.color,
         }));
 
   return (
@@ -29,7 +30,7 @@ export default function RotatedHeading({ words, as: Tag = "h2", tag, className =
             transition: "transform 0.3s ease",
             display: "inline-block",
             marginInline: "3px",
-            ...(w.hl ? { color: "var(--college)" } : {}),
+            ...(w.color ? { color: w.color } : w.hl ? { color: "var(--ink)" } : {}),
           }}
         >
           {w.text}
