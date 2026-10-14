@@ -57,16 +57,17 @@ export default function Courses() {
   });
 
   useEffect(() => {
-    const mq = window.matchMedia("(max-width: 700px)");
+    const mq = window.matchMedia("(max-width: 768px)");
     const onChange = function (e) { setIsMobile(e.matches); };
     setIsMobile(mq.matches);
     mq.addEventListener("change", onChange);
     return function () { mq.removeEventListener("change", onChange); };
   }, []);
 
-  const perPage = isMobile ? 1 : 4;
+  const perPage = 4;
   const pageCount = Math.max(1, Math.ceil(filtered.length / perPage));
   const safePage = Math.min(page, pageCount - 1);
+  const displayedCourses = isMobile ? filtered : filtered.slice(safePage * perPage, (safePage + 1) * perPage);
 
   useEffect(() => { setPage(0); }, [filter]);
 
@@ -146,8 +147,8 @@ export default function Courses() {
         ) : (
           <div className="v2-carousel">
             <div className="v2-page">
-              {filtered.slice(safePage * perPage, (safePage + 1) * perPage).map((c, i) => (
-                <CourseCard key={c._id || i} course={c} index={safePage * perPage + i} store={store} />
+              {displayedCourses.map((c, i) => (
+                <CourseCard key={c._id || i} course={c} index={(isMobile ? 0 : safePage * perPage) + i} store={store} />
               ))}
             </div>
           </div>
