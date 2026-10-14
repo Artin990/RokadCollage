@@ -369,33 +369,7 @@ export default function MyCoursesClient() {
         {/* نوار فیلتر و تب وضعیت */}
         <div className="dp-toolbar">
           <div className="dp-toolbar-start">
-            {/* تب‌های تغییر سریع وضعیت خرید */}
-            <div className="mc-status-tabs">
-              <button
-                type="button"
-                className={`mc-status-tab ${purchaseFilter === "all" ? "active" : ""}`}
-                onClick={() => setPurchaseFilter("all")}
-              >
-                <span>همه</span>
-                <span className="mc-status-tab-count">{stats.total.toLocaleString("fa-IR")}</span>
-              </button>
-              <button
-                type="button"
-                className={`mc-status-tab ${purchaseFilter === "purchased" ? "active" : ""}`}
-                onClick={() => setPurchaseFilter("purchased")}
-              >
-                <span>خریداری‌شده</span>
-                <span className="mc-status-tab-count">{stats.purchasedCount.toLocaleString("fa-IR")}</span>
-              </button>
-              <button
-                type="button"
-                className={`mc-status-tab ${purchaseFilter === "saved" ? "active" : ""}`}
-                onClick={() => setPurchaseFilter("saved")}
-              >
-                <span>نشان‌شده‌ها</span>
-                <span className="mc-status-tab-count">{stats.savedCount.toLocaleString("fa-IR")}</span>
-              </button>
-            </div>
+
 
             {activeFilterCount > 0 && (
               <div className="dp-active-topic-badge">
@@ -483,13 +457,7 @@ export default function MyCoursesClient() {
                 ======================================================== */}
             {(purchaseFilter === "all" || purchaseFilter === "purchased") && (
               <section className="mc-purchased-sec">
-                {purchaseFilter === "all" && filteredSaved.length > 0 && (
-                  <div className="mb-4">
-                    <h2 className="text-xl font-black text-stone-900">
-                      دوره‌های ثبت‌نام‌شده ({filteredPurchased.length.toLocaleString("fa-IR")})
-                    </h2>
-                  </div>
-                )}
+
 
                 {filteredPurchased.length === 0 ? (
                   purchaseFilter === "purchased" ? (
@@ -534,9 +502,7 @@ export default function MyCoursesClient() {
                       <Bookmark size={14} fill="currentColor" />
                       علاقه‌مندی‌ها
                     </span>
-                    <h2 className="mc-saved-title">
-                      دوره‌های نشان‌شده ({filteredSaved.length.toLocaleString("fa-IR")})
-                    </h2>
+
                   </div>
 
                   {filteredSaved.length > 1 && (
