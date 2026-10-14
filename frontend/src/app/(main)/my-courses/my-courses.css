@@ -639,3 +639,25 @@
     width: 100%;
   }
 }
+
+/* ========================================================
+   MODAL CLOSE BUTTONS HOVER ANIMATION
+   ======================================================== */
+.spm-close-btn,
+.dp-filter-close {
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.spm-close-btn:hover,
+.dp-filter-close:hover {
+  background: var(--female-light, #FCE7F3) !important;
+  color: var(--ink, #1F1E1D) !important;
+  transform: translateY(-1.5px) rotate(90deg) !important;
+  box-shadow: 3px 3px 0 var(--ink, #1F1E1D) !important;
+}
+
+.spm-close-btn:active,
+.dp-filter-close:active {
+  transform: translate(1px, 1px) rotate(90deg) !important;
+  box-shadow: 1px 1px 0 var(--ink, #1F1E1D) !important;
+}

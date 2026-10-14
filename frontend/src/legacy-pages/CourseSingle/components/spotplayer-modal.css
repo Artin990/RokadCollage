@@ -60,13 +60,18 @@
   place-items: center;
   cursor: pointer;
   box-shadow: 2px 2px 0 var(--ink, #1F1E1D);
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   color: var(--ink, #1F1E1D);
 }
 
 .spm-close-btn:hover {
-  background: #f5f5f4;
-  transform: translate(1px, 1px);
+  background: var(--female-light, #FCE7F3);
+  transform: translateY(-1.5px) rotate(90deg);
+  box-shadow: 3px 3px 0 var(--ink, #1F1E1D);
+}
+
+.spm-close-btn:active {
+  transform: translate(1px, 1px) rotate(90deg);
   box-shadow: 1px 1px 0 var(--ink, #1F1E1D);
 }
 

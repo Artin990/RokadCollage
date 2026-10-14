@@ -1540,14 +1540,20 @@
   background: #fff;
   color: var(--ink);
   border: 2px solid var(--ink);
-  border-radius: 8px 0 8px 0;
-  corner-shape: squircle; -webkit-corner-shape: squircle;
+  border-radius: 50%;
   cursor: pointer;
-  transition: all .18s ease;
+  box-shadow: 2px 2px 0 var(--ink);
+  transition: all .22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .dp-filter-close:hover {
-  background: var(--dp);
-  color: var(--dp-text);
+  background: var(--female-light, #FCE7F3);
+  color: var(--ink);
+  transform: translateY(-1.5px) rotate(90deg);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+.dp-filter-close:active {
+  transform: translate(1px, 1px) rotate(90deg);
+  box-shadow: 1px 1px 0 var(--ink);
 }
 .dp-filter-body {
   padding: 18px;
