@@ -18,8 +18,7 @@ export function CourseCard({ course, index, store }) {
   const num = toPersianNum(index + 1);
   const mode = course.mode === "in-person" || course.isInPerson ? "onsite" : "online";
   const slug = course.slug || course.id || course._id;
-  const isLoggedIn = Boolean(store?.auth?.isLoggedIn);
-  const isSaved = isLoggedIn && isWishlisted(slug, store);
+  const isSaved = isWishlisted(slug, store);
 
   const durationText = course.duration || (course.hours ? `${toPersianNum(course.hours)} ساعت` : "۱۲ هفته");
   const priceFormatted = course.price ? `${toPersianNum(Number(course.price).toLocaleString("fa-IR"))} تومان` : "رایگان";
@@ -43,36 +42,10 @@ export function CourseCard({ course, index, store }) {
           onClick={function (e) {
             e.preventDefault();
             e.stopPropagation();
-            if (!isLoggedIn) {
-              try {
-                sessionStorage.setItem("rokad_auth_redirect", `course/${slug}`);
-              } catch (_) {}
-              window.dispatchEvent(
-                new CustomEvent("rokad_auth_required", {
-                  detail: {
-                    message: `برای ذخیره «${course.title}»، لطفاً ابتدا در کالج ثبت‌نام کنید.`,
-                    action: "register",
-                  },
-                })
-              );
-              return;
-            }
             toggleWishlist(slug);
           }}
-          aria-label={
-            isLoggedIn
-              ? isSaved
-                ? "حذف از نشان‌شده‌ها"
-                : "نشان کردن دوره"
-              : "برای ذخیره دوره، ثبت‌نام کنید"
-          }
-          title={
-            isLoggedIn
-              ? isSaved
-                ? "حذف از نشان‌شده‌ها"
-                : "نشان کردن دوره"
-              : "برای ذخیره دوره، ابتدا ثبت‌نام کنید"
-          }
+          aria-label={isSaved ? "حذف از نشان‌شده‌ها" : "نشان کردن دوره"}
+          title={isSaved ? "حذف از نشان‌شده‌ها" : "نشان کردن دوره"}
         >
           <svg
             width="15"

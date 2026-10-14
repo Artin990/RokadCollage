@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./courses-hub.css";
 import { getPanelStore } from "@/data/panelStore.js";
+import { isWishlisted } from "@/data/selectors.js";
 import { getAllCourses } from "@/services/courseService.js";
 import { getTeachers } from "@/services/teacherService.js";
 import { useHorizontalDragScroll } from "./hooks/useHorizontalDragScroll.js";
@@ -8,6 +9,7 @@ import CoursesHubHero from "./components/CoursesHubHero.jsx";
 import FlagshipSection from "./components/FlagshipSection.jsx";
 import SuggestedGroupSection from "./components/SuggestedGroupSection.jsx";
 import InstructorsSection from "./components/InstructorsSection.jsx";
+import SavedCoursesSection from "./components/SavedCoursesSection.jsx";
 import { Code, Briefcase, Globe, Sparkles } from "lucide-react";
 
 const DEPT_CONFIG = {
@@ -144,6 +146,34 @@ export default function CoursesPage() {
 
   const displayedSuggestedGroups = Object.values(groupedCategories);
 
+  const savedCourses = courses
+    .filter((c) => {
+      const slug = c.slug || c.id || c._id;
+      return isWishlisted(slug, store) || isWishlisted(c.id, store) || isWishlisted(c._id, store);
+    })
+    .map((c) => {
+      const cat = c.category || "فناوری اطلاعات";
+      const deptInfo = DEPT_CONFIG[cat] || DEPT_CONFIG["فناوری اطلاعات"];
+      return {
+        id: c.id || c._id,
+        title: c.title,
+        cat: cat,
+        deptId: deptInfo.deptId,
+        badgeColor: deptInfo.badgeColor,
+        badgeBg: deptInfo.badgeBg,
+        pattern: deptInfo.pattern,
+        inst: c.instructor?.fullName || c.instructor?.name || "استاد کالج",
+        hours: c.duration || `${c.hours || 30} ساعت`,
+        students: `${Number(c.studentCount || 85).toLocaleString("fa-IR")} هنرجو`,
+        rating: "۴.۸",
+        price: c.price ? `${Number(c.price).toLocaleString("fa-IR")} تومان` : "رایگان",
+        tag: c.isInPerson || c.mode === "in-person" ? "حضوری" : "آنلاین",
+        tagType: "hot",
+        slug: c.slug || c.id || c._id,
+        mode: c.isInPerson || c.mode === "in-person" ? "in-person" : "online",
+      };
+    });
+
   const displayedInstructors = instructors.map((t) => ({
     name: t.name,
     dept: t.specialization?.includes("فرانت") || t.specialization?.includes("برنامه") || t.specialization?.includes("UI") ? "فناوری اطلاعات" : t.specialization?.includes("کسب") || t.specialization?.includes("مارکتینگ") ? "کسب و کار" : "زبان‌های خارجی",
@@ -166,6 +196,7 @@ export default function CoursesPage() {
           <div className="py-20 text-center text-stone-500 font-bold">در حال بارگذاری دوره‌ها از سرور...</div>
         ) : (
           <>
+            <SavedCoursesSection savedCourses={savedCourses} store={store} />
             {flagshipCourses.length > 0 && (
               <FlagshipSection flagshipCourses={flagshipCourses} store={store} />
             )}

@@ -232,6 +232,68 @@
   max-width: 600px;
 }
 
+/* ============ سکشن دوره‌های ذخیره‌شده ============ */
+.ch-saved-sec {
+  transition: opacity 0.3s ease;
+}
+
+.ch-saved-tag {
+  background: var(--college-light, #fef4e2);
+  color: var(--college-darker, #8c5a08);
+  border-color: var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.ch-saved-count-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.ch-saved-count-pill svg {
+  color: var(--college-darker, #8c5a08);
+}
+
+.ch-saved-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: var(--bg-college-tint, #fff8ea);
+  border: 2px dashed rgba(41, 40, 39, 0.25);
+  border-radius: 14px;
+  padding: 28px 20px;
+}
+
+.ch-saved-empty-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1.5px solid var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--college-dark, #ba7b16);
+  flex-shrink: 0;
+}
+
+.ch-saved-empty-text {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink-subtle, #62605b);
+  margin: 0;
+}
+
 /* ============ سکشن ۱: دوره‌های پیشنهادی ============ */
 .ch-dept-tabs {
   display: flex;

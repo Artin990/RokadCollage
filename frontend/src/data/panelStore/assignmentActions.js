@@ -28,24 +28,19 @@ export function submitAssignment(assignmentId, submissionData) {
 
 /** افزودن / حذف از علاقه‌مندی‌ها (Wishlist) */
 export function toggleWishlist(slug) {
+  if (!slug) return [];
   const state = getPanelStore();
-  if (!state.auth || !state.auth.isLoggedIn) {
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(
-        new CustomEvent("rokad_auth_required", {
-          detail: {
-            message: "برای ذخیره دوره‌ها، لطفاً ابتدا در کالج ثبت‌نام کنید.",
-            action: "register",
-          },
-        })
-      );
-    }
-    return false;
-  }
-  const exists = state.wishlist.includes(slug);
+  const currentWishlist = Array.isArray(state.wishlist) ? state.wishlist : [];
+  const cleanSlug = String(slug).toLowerCase().replace(/^#course\/?/, "").replace(/\//g, "").trim();
+
+  const exists = currentWishlist.some((s) => {
+    return String(s).toLowerCase().replace(/^#course\/?/, "").replace(/\//g, "").trim() === cleanSlug;
+  });
+
   const updatedWishlist = exists
-    ? state.wishlist.filter((s) => s !== slug)
-    : [...state.wishlist, slug];
+    ? currentWishlist.filter((s) => String(s).toLowerCase().replace(/^#course\/?/, "").replace(/\//g, "").trim() !== cleanSlug)
+    : [...currentWishlist, cleanSlug];
+
   const updatedState = { ...state, wishlist: updatedWishlist };
   savePanelStore(updatedState);
   return updatedWishlist;

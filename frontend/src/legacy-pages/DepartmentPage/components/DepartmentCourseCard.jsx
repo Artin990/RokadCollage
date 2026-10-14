@@ -15,8 +15,7 @@ export const getSlugForDeptCourse = (c) => {
 export default function DepartmentCourseCard({ c, rot, persona: cardPersona, store }) {
   const cardTheme = cardPersona || DEPT_PERSONA[c.department] || DEPT_PERSONA.languages;
   const slug = getSlugForDeptCourse(c);
-  const isLoggedIn = Boolean(store?.auth?.isLoggedIn);
-  const isSaved = isLoggedIn && isWishlisted(slug, store);
+  const isSaved = isWishlisted(slug, store);
   const isOnline = c.mode === "online" || c.mode === "غیرحضوری" || c.mode === "غیر حضوری";
 
   return (
@@ -41,24 +40,10 @@ export default function DepartmentCourseCard({ c, rot, persona: cardPersona, sto
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            if (!isLoggedIn) {
-              try {
-                sessionStorage.setItem("rokad_auth_redirect", `course/${slug}`);
-              } catch (_) {}
-              window.dispatchEvent(
-                new CustomEvent("rokad_auth_required", {
-                  detail: {
-                    message: `برای ذخیره «${c.title}»، لطفاً ابتدا در کالج ثبت‌نام کنید.`,
-                    action: "register",
-                  },
-                })
-              );
-              return;
-            }
             toggleWishlist(slug);
           }}
-          aria-label={isLoggedIn ? (isSaved ? "حذف از نشان‌شده‌ها" : "نشان کردن دوره") : "برای ذخیره دوره، ثبت‌نام کنید"}
-          title={isLoggedIn ? (isSaved ? "حذف از نشان‌شده‌ها" : "نشان کردن دوره") : "برای ذخیره دوره، ابتدا ثبت‌نام کنید"}
+          aria-label={isSaved ? "حذف از نشان‌شده‌ها" : "نشان کردن دوره"}
+          title={isSaved ? "حذف از نشان‌شده‌ها" : "نشان کردن دوره"}
         >
           <Bookmark size={15} fill={isSaved ? "currentColor" : "none"} stroke="currentColor" strokeWidth={2.2} />
         </button>
