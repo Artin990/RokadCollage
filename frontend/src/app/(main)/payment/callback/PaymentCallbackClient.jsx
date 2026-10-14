@@ -109,7 +109,8 @@ export default function PaymentCallbackClient() {
             </div>
             {authority && (
               <div className="pc-error-tracking">
-                کد پیگیری درخواست: {authority}
+                <span>کد پیگیری درخواست:</span>
+                <span className="pc-error-code font-mono" dir="ltr">{authority}</span>
               </div>
             )}
             <div className="pc-actions">
