@@ -101,14 +101,22 @@ export default function MyCourseCard({ item, onOpenLicense }) {
   const courseSlug = course.slug || course._id;
   const courseHref = courseSlug ? `/courses/${courseSlug}` : "/courses";
 
+  const instructorName =
+    Array.isArray(course.teachers) && course.teachers.length > 0
+      ? course.teachers
+          .map((t) => (typeof t === "object" ? t.name || t.fullName : t))
+          .filter(Boolean)
+          .join("، ")
+      : course.instructor || "اساتید کالج رکاد";
+
   return (
     <article className="mc-card">
       {/* بخش ویژوال با پترن و آیکون دپارتمان (مشابه ch-flag-visual) */}
       <div className={`mc-card-visual ${dept.themeClass}`}>
-        <img src={dept.pattern} alt="" className="mc-card-pattern" aria-hidden="true" />
+        <img src={course.img || dept.pattern} alt="" className="mc-card-pattern" aria-hidden="true" />
 
-        {/* برچسب دپارتمان در گوشه بالا */}
-        <span className="mc-dept-chip">{(dept.name || "").replace(/^دپارتمان\s+/, "")}</span>
+        {/* برچسب دسته‌بندی پویا از دیتابیس */}
+        <span className="mc-dept-chip">{course.category || dept.name}</span>
 
         {/* باکس آیکون نئوبروتالیست مرکزی */}
         <div className="mc-icon-wrap">
@@ -149,7 +157,7 @@ export default function MyCourseCard({ item, onOpenLicense }) {
         {/* ردیف متادیتا */}
         <div className="mc-card-meta-row">
           <span>
-            مدرس: <strong>{course.instructor || "اساتید کالج رکاد"}</strong>
+            مدرس: <strong>{instructorName}</strong>
           </span>
           {item.createdAt && (
             <span>

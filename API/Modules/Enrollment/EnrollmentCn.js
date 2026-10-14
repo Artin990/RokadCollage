@@ -220,7 +220,14 @@ export const getMyEnrollments = catchAsync(async (req, res, next) => {
   })
     .select("+spotplayer.key")
     .sort({ createdAt: -1 })
-    .populate("course", "title type category price duration img sprints location spotplayerCourseId slug")
+    .populate({
+      path: "course",
+      select: "title type category price duration img sprints location spotplayerCourseId slug teachers",
+      populate: {
+        path: "teachers",
+        select: "name title avatar role",
+      },
+    })
     .populate("session", "code scheduleDays scheduleHours capacity")
     .populate("transactionId", "status")
     .lean();

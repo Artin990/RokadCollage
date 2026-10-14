@@ -22,12 +22,6 @@ const STATUS_OPTIONS = [
   { id: "completed", label: "تکمیل‌شده" },
 ];
 
-const DEPT_OPTIONS = [
-  { id: "all", label: "همه حوزه‌ها" },
-  { id: "it", label: "فناوری اطلاعات" },
-  { id: "business", label: "کسب‌وکار" },
-  { id: "languages", label: "زبان‌ها" },
-];
 
 const SORTS = [
   { id: "default", label: "پیشفرض" },
@@ -135,6 +129,19 @@ export default function MyCoursesClient() {
     };
   }, [enrollments]);
 
+  // دسته‌بندی‌های کاملاً پویا استخراج‌شده از دوره‌های واقعی دیتابیس
+  const deptOptions = useMemo(() => {
+    const categories = new Set();
+    enrollments.forEach((e) => {
+      const c = e.course?.category;
+      if (c && typeof c === "string") categories.add(c.trim());
+    });
+    return [
+      { id: "all", label: "همه حوزه‌ها" },
+      ...Array.from(categories).map((cat) => ({ id: cat, label: cat })),
+    ];
+  }, [enrollments]);
+
   // محاسبه تعداد فیلترهای فعال
   const activeFilterCount = useMemo(() => {
     let count = 0;
@@ -157,7 +164,6 @@ export default function MyCoursesClient() {
     let result = enrollments.filter((item) => {
       const course = item.course || {};
       const title = (course.title || "").toLowerCase();
-      const cat = (course.category || course.dept || "").toLowerCase();
       const isVirtual =
         item.courseModel === "VirtualCourse" ||
         course.type === "مجازی" ||
@@ -180,30 +186,10 @@ export default function MyCoursesClient() {
         if (itemDate < thirtyDaysAgo && enrollments.indexOf(item) > 2) return false;
       }
 
-      // فیلتر دپارتمان
+      // فیلتر دپارتمان و حوزه کاملاً پویا بر اساس فیلد category دوره
       if (deptFilter !== "all") {
-        if (deptFilter === "it") {
-          const isIt =
-            cat.includes("it") ||
-            cat.includes("فناوری") ||
-            cat.includes("وب") ||
-            title.includes("وردپرس") ||
-            title.includes("سئو") ||
-            title.includes("ui/ux") ||
-            title.includes("پایتون");
-          if (!isIt) return false;
-        } else if (deptFilter === "business") {
-          const isBiz =
-            cat.includes("business") ||
-            cat.includes("کسب") ||
-            cat.includes("مارکتینگ") ||
-            cat.includes("مدیریت") ||
-            title.includes("فروش");
-          if (!isBiz) return false;
-        } else if (deptFilter === "languages") {
-          const isLang = cat.includes("lang") || cat.includes("زبان") || title.includes("انگلیسی");
-          if (!isLang) return false;
-        }
+        const itemCat = (course.category || "").trim();
+        if (itemCat !== deptFilter) return false;
       }
 
       return true;
@@ -542,7 +528,7 @@ export default function MyCoursesClient() {
               <div className="dp-fgroup">
                 <div className="dp-fgroup-title">دپارتمان و حوزه</div>
                 <div className="dp-segment">
-                  {DEPT_OPTIONS.map((d) => (
+                  {deptOptions.map((d) => (
                     <button
                       key={d.id}
                       type="button"
