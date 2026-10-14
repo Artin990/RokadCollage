@@ -1024,10 +1024,6 @@
   scroll-behavior: auto;
 }
 
-.mc-saved-track.is-single {
-  justify-content: center;
-}
-
 .mc-saved-track .mc-card {
   flex: 0 0 330px;
   width: 330px;
