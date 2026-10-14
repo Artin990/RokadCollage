@@ -118,11 +118,13 @@ export default function DepartmentPage({ deptId, initialCourses = [] }) {
   }, [liveComments, currentId]);
 
   const dept = useMemo(() => {
+    const popularCourses = formattedDeptCourses.length > 0 ? formattedDeptCourses : (baseDept.popular || []);
+    const newestCourses = formattedDeptCourses.length > 0 ? formattedDeptCourses : (baseDept.newest || []);
     return {
       ...baseDept,
-      popular: formattedDeptCourses,
-      newest: formattedDeptCourses,
-      suggested: formattedDeptCourses.slice(0, 4),
+      popular: popularCourses,
+      newest: newestCourses,
+      suggested: popularCourses.slice(0, 4),
       testimonials: deptTestimonials.length > 0 ? deptTestimonials : (baseDept.testimonials || []),
     };
   }, [baseDept, formattedDeptCourses, deptTestimonials]);
