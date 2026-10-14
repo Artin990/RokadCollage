@@ -15,12 +15,11 @@
 }
 
 /* ========================================================
-   HERO SECTION (مطابق الگوی تک‌صفحه دپارتمان‌ها)
+   HERO SECTION (مطابق الگوی تک‌صفحه دپارتمان‌ها - بدون خط مشکی با فید نرم)
    ======================================================== */
 .mc-hero {
   position: relative;
-  background: linear-gradient(180deg, #FFF4E5 0%, #FFFDF8 100%);
-  border-bottom: 2.5px solid var(--ink, #1F1E1D);
+  background: linear-gradient(to bottom, var(--college-light, #FFF4E5) 0%, var(--bg-cream, #FFFDF8) 100%);
   overflow: hidden;
 }
 
