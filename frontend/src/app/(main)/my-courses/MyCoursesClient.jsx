@@ -2,11 +2,19 @@
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
-import { RotateCw, BookOpen, Search, Bookmark, CheckCircle2 } from "lucide-react";
+import {
+  RotateCw,
+  BookOpen,
+  Search,
+  Bookmark,
+  ChevronRight,
+  ChevronLeft,
+} from "lucide-react";
 import { getMyEnrollments } from "@/services/enrollmentService";
 import { getAllCourses } from "@/services/courseService";
 import { getPanelStore } from "@/data/panelStore";
 import { isWishlisted } from "@/data/selectors";
+import { useHorizontalDragScroll } from "@/legacy-pages/CoursesPage/hooks/useHorizontalDragScroll.js";
 import MyCourseCard from "./components/MyCourseCard";
 import SpotPlayerLicenseModal from "@/legacy-pages/CourseSingle/components/SpotPlayerLicenseModal";
 import "@/legacy-pages/DepartmentPage/department.css";
@@ -58,6 +66,9 @@ export default function MyCoursesClient() {
   const [filterOpen, setFilterOpen] = useState(false);
   const filterRef = useRef(null);
 
+  // اسلایدر افقی برای سکشن علاقه‌مندی‌ها
+  const savedScroll = useHorizontalDragScroll();
+
   // لایسنس مودال اسپات‌پلیر
   const [licenseModal, setLicenseModal] = useState({
     isOpen: false,
@@ -101,10 +112,10 @@ export default function MyCoursesClient() {
     loadData();
   }, []);
 
-  // ترکیب دوره‌های خریداری‌شده و دوره‌های نشان‌شده
-  const combinedItems = useMemo(() => {
+  // تفکیک دوره‌های خریداری‌شده و دوره‌های نشان‌شده
+  const { enrolledItems, savedItems } = useMemo(() => {
     const enrolledMap = new Map();
-    const enrolledItems = enrollments.map((e) => {
+    const enrolled = enrollments.map((e) => {
       const cId = String(e.course?._id || e.course?.id || "").trim();
       const cSlug = String(e.course?.slug || "").trim();
       if (cId) enrolledMap.set(cId, true);
@@ -118,14 +129,14 @@ export default function MyCoursesClient() {
       };
     });
 
-    const savedItems = [];
+    const saved = [];
     allCourses.forEach((c) => {
       const cId = String(c._id || c.id || "").trim();
       const cSlug = String(c.slug || "").trim();
       const isSaved = isWishlisted(cSlug, store) || isWishlisted(cId, store);
 
       if (isSaved && !enrolledMap.has(cId) && !enrolledMap.has(cSlug)) {
-        savedItems.push({
+        saved.push({
           _id: c._id || c.id,
           isPurchased: false,
           purchaseStatus: "saved",
@@ -137,21 +148,18 @@ export default function MyCoursesClient() {
       }
     });
 
-    return [...enrolledItems, ...savedItems];
+    return { enrolledItems: enrolled, savedItems: saved };
   }, [enrollments, allCourses, store]);
 
   // محاسبه آمار هیرو
   const stats = useMemo(() => {
-    const total = combinedItems.length;
-    let purchasedCount = 0;
-    let savedCount = 0;
+    const total = enrolledItems.length + savedItems.length;
+    const purchasedCount = enrolledItems.length;
+    const savedCount = savedItems.length;
     let virtualCount = 0;
     let inPersonCount = 0;
 
-    combinedItems.forEach((e) => {
-      if (e.isPurchased) purchasedCount++;
-      if (e.purchaseStatus === "saved" || isWishlisted(e.course?.slug || e.course?._id, store)) savedCount++;
-
+    [...enrolledItems, ...savedItems].forEach((e) => {
       const isVirtual =
         e.courseModel === "VirtualCourse" ||
         e.course?.type === "مجازی" ||
@@ -169,12 +177,12 @@ export default function MyCoursesClient() {
       virtualCount,
       inPersonCount,
     };
-  }, [combinedItems, store]);
+  }, [enrolledItems, savedItems]);
 
-  // دسته‌بندی‌های کاملاً پویا استخراج‌شده از دوره‌ها
+  // دسته‌بندی‌های کاملاً پویا استخراج‌شده از کل دوره‌ها
   const deptOptions = useMemo(() => {
     const categories = new Set();
-    combinedItems.forEach((e) => {
+    [...enrolledItems, ...savedItems].forEach((e) => {
       const c = e.course?.category || e.course?.department;
       if (c && typeof c === "string") categories.add(c.trim());
     });
@@ -182,33 +190,11 @@ export default function MyCoursesClient() {
       { id: "all", label: "همه دپارتمان‌ها" },
       ...Array.from(categories).map((cat) => ({ id: cat, label: cat })),
     ];
-  }, [combinedItems]);
+  }, [enrolledItems, savedItems]);
 
-  // محاسبه تعداد فیلترهای فعال
-  const activeFilterCount = useMemo(() => {
-    let count = 0;
-    if (purchaseFilter !== "all") count++;
-    if (modeFilter !== "all") count++;
-    if (statusFilter !== "all") count++;
-    if (deptFilter !== "all") count++;
-    if (sort !== "default") count++;
-    if (searchQuery.trim()) count++;
-    return count;
-  }, [purchaseFilter, modeFilter, statusFilter, deptFilter, sort, searchQuery]);
-
-  // پاک کردن همه فیلترها
-  const resetFilters = () => {
-    setPurchaseFilter("all");
-    setModeFilter("all");
-    setStatusFilter("all");
-    setDeptFilter("all");
-    setSort("default");
-    setSearchQuery("");
-  };
-
-  // فیلتر و مرتب‌سازی دوره‌ها
-  const filteredCourses = useMemo(() => {
-    let result = combinedItems.filter((item) => {
+  // فیلتر کردن یک لیست بر اساس فیلترهای فعال
+  const applyFilters = (list, isSavedList = false) => {
+    let result = list.filter((item) => {
       const course = item.course || {};
       const title = (course.title || "").toLowerCase();
       const isVirtual =
@@ -218,7 +204,7 @@ export default function MyCoursesClient() {
         Boolean(item.spotplayer?.key) ||
         !item.session;
 
-      // فیلتر جستجوی زنده بر اساس عنوان دوره یا دسته‌بندی
+      // فیلتر جستجو
       if (searchQuery.trim()) {
         const q = searchQuery.trim().toLowerCase();
         const matchesTitle = title.includes(q);
@@ -226,20 +212,12 @@ export default function MyCoursesClient() {
         if (!matchesTitle && !matchesCategory) return false;
       }
 
-      // فیلتر وضعیت خریداری
-      if (purchaseFilter === "purchased") {
-        if (!item.isPurchased) return false;
-      } else if (purchaseFilter === "saved") {
-        const isSaved = item.purchaseStatus === "saved" || isWishlisted(course.slug || course._id, store);
-        if (!isSaved) return false;
-      }
-
-      // فیلتر نحوه برگزاری (حضوری / غیر حضوری)
+      // فیلتر نحوه برگزاری
       if (modeFilter === "in-person" && isVirtual) return false;
       if (modeFilter === "online" && !isVirtual) return false;
 
-      // فیلتر وضعیت پیشرفت دوره (فقط برای دوره‌های خریداری‌شده)
-      if (item.isPurchased) {
+      // فیلتر وضعیت پیشرفت (فقط برای دوره‌های خریداری‌شده)
+      if (!isSavedList) {
         if (statusFilter === "completed") {
           if (item.status !== "completed" && item.progress !== 100) return false;
         } else if (statusFilter === "active") {
@@ -247,13 +225,11 @@ export default function MyCoursesClient() {
         } else if (statusFilter === "recent") {
           const itemDate = new Date(item.createdAt || 0).getTime();
           const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
-          if (itemDate < thirtyDaysAgo && combinedItems.indexOf(item) > 2) return false;
+          if (itemDate < thirtyDaysAgo && list.indexOf(item) > 2) return false;
         }
-      } else if (statusFilter !== "all") {
-        return false;
       }
 
-      // فیلتر دپارتمان و حوزه
+      // فیلتر دپارتمان
       if (deptFilter !== "all") {
         const itemCat = (course.category || course.department || "").trim();
         if (itemCat !== deptFilter) return false;
@@ -276,7 +252,45 @@ export default function MyCoursesClient() {
     }
 
     return result;
-  }, [combinedItems, purchaseFilter, modeFilter, statusFilter, deptFilter, sort, searchQuery, store]);
+  };
+
+  const filteredPurchased = useMemo(() => applyFilters(enrolledItems, false), [
+    enrolledItems,
+    searchQuery,
+    modeFilter,
+    statusFilter,
+    deptFilter,
+    sort,
+  ]);
+
+  const filteredSaved = useMemo(() => applyFilters(savedItems, true), [
+    savedItems,
+    searchQuery,
+    modeFilter,
+    deptFilter,
+    sort,
+  ]);
+
+  // تعداد فیلترهای فعال
+  const activeFilterCount = useMemo(() => {
+    let count = 0;
+    if (purchaseFilter !== "all") count++;
+    if (modeFilter !== "all") count++;
+    if (statusFilter !== "all") count++;
+    if (deptFilter !== "all") count++;
+    if (sort !== "default") count++;
+    if (searchQuery.trim()) count++;
+    return count;
+  }, [purchaseFilter, modeFilter, statusFilter, deptFilter, sort, searchQuery]);
+
+  const resetFilters = () => {
+    setPurchaseFilter("all");
+    setModeFilter("all");
+    setStatusFilter("all");
+    setDeptFilter("all");
+    setSort("default");
+    setSearchQuery("");
+  };
 
   const handleOpenLicense = (courseId, courseTitle) => {
     setLicenseModal({
@@ -323,7 +337,7 @@ export default function MyCoursesClient() {
 
           {/* عنوان اصلی همراه با هایلایتر نئوبروتالیست */}
           <h1 className="mc-hero-title">
-            دوره‌های من | <span className="mc-hero-accent">مسیر یادگیری و نشان‌شده‌ها</span>
+            دوره‌های من | <span className="mc-hero-accent">مسیر یادگیری و علاقه‌مندی‌ها</span>
           </h1>
 
           {/* نوار آمار (کل، خریداری‌شده، نشان‌شده‌ها، غیر حضوری) */}
@@ -352,7 +366,7 @@ export default function MyCoursesClient() {
           MAIN CONTENT AREA
           ======================================================== */}
       <main className="mc-content-wrap">
-        {/* نوار فیلتر، تب وضعیت و ابزارها */}
+        {/* نوار فیلتر و تب وضعیت */}
         <div className="dp-toolbar">
           <div className="dp-toolbar-start">
             {/* تب‌های تغییر سریع وضعیت خرید */}
@@ -422,7 +436,7 @@ export default function MyCoursesClient() {
               )}
             </div>
 
-            {/* دکمه فیلترها (شامل فیلتر دپارتمان، مرتب‌سازی و نحوه برگزاری) */}
+            {/* دکمه فیلترها (دپارتمان، مرتب‌سازی و نحوه برگزاری) */}
             <button
               type="button"
               className="dp-filter-btn"
@@ -462,48 +476,121 @@ export default function MyCoursesClient() {
           </div>
         )}
 
-        {/* لیست خالی */}
-        {!loading && filteredCourses.length === 0 && (
-          <div className="mc-empty-box">
-            <div className="w-16 h-16 rounded-[14px_0_14px_0] bg-amber-50 text-amber-600 border-2 border-stone-900 shadow-[3px_3px_0_#292827] flex items-center justify-center">
-              <BookOpen className="w-8 h-8" />
-            </div>
-            <h3 className="text-xl font-black text-stone-900">
-              {combinedItems.length === 0
-                ? "هنوز دوره‌ای خریداری یا نشان نکرده‌اید"
-                : "دوره‌ای با این فیلترها یافت نشد"}
-            </h3>
-            {activeFilterCount > 0 ? (
-              <button
-                type="button"
-                onClick={resetFilters}
-                className="mt-2 px-6 py-2.5 bg-white hover:bg-stone-50 text-stone-950 font-black text-xs border-2 border-stone-900 rounded-[10px_0_10px_0] shadow-[2.5px_2.5px_0_#292827]"
-              >
-                پاک کردن فیلترها
-              </button>
-            ) : (
-              <Link
-                href="/courses"
-                className="mt-2 px-6 py-3 bg-[#f8a41d] hover:bg-[#e69415] text-stone-950 font-black text-sm border-2 border-stone-900 rounded-[10px_0_10px_0] shadow-[3.5px_3.5px_0_#292827] transition-transform active:translate-x-0.5 active:translate-y-0.5"
-              >
-                مشاهده دوره‌ها
-              </Link>
-            )}
-          </div>
-        )}
+        {!loading && (
+          <>
+            {/* ========================================================
+                ۱. سکشن دوره‌های خریداری‌شده
+                ======================================================== */}
+            {(purchaseFilter === "all" || purchaseFilter === "purchased") && (
+              <section className="mc-purchased-sec">
+                {purchaseFilter === "all" && filteredSaved.length > 0 && (
+                  <div className="mb-4">
+                    <h2 className="text-xl font-black text-stone-900">
+                      دوره‌های ثبت‌نام‌شده ({filteredPurchased.length.toLocaleString("fa-IR")})
+                    </h2>
+                  </div>
+                )}
 
-        {/* گرید دوره‌ها (۳ کارت در هر ردیف) */}
-        {!loading && filteredCourses.length > 0 && (
-          <div className="mc-grid">
-            {filteredCourses.map((item) => (
-              <MyCourseCard
-                key={item._id || item.course?._id || item.course?.slug}
-                item={item}
-                onOpenLicense={handleOpenLicense}
-                store={store}
-              />
-            ))}
-          </div>
+                {filteredPurchased.length === 0 ? (
+                  purchaseFilter === "purchased" ? (
+                    <div className="mc-empty-box">
+                      <div className="w-16 h-16 rounded-[14px_0_14px_0] bg-amber-50 text-amber-600 border-2 border-stone-900 shadow-[3px_3px_0_#292827] flex items-center justify-center">
+                        <BookOpen className="w-8 h-8" />
+                      </div>
+                      <h3 className="text-xl font-black text-stone-900">
+                        هنوز در دوره‌ای ثبت‌نام نکرده‌اید
+                      </h3>
+                      <Link
+                        href="/courses"
+                        className="mt-2 px-6 py-3 bg-[#f8a41d] hover:bg-[#e69415] text-stone-950 font-black text-sm border-2 border-stone-900 rounded-[10px_0_10px_0] shadow-[3.5px_3.5px_0_#292827]"
+                      >
+                        مشاهده دوره‌ها
+                      </Link>
+                    </div>
+                  ) : null
+                ) : (
+                  <div className="mc-grid">
+                    {filteredPurchased.map((item) => (
+                      <MyCourseCard
+                        key={item._id || item.course?._id || item.course?.slug}
+                        item={item}
+                        onOpenLicense={handleOpenLicense}
+                        store={store}
+                      />
+                    ))}
+                  </div>
+                )}
+              </section>
+            )}
+
+            {/* ========================================================
+                ۲. سکشن جداگانه علاقه‌مندی‌ها (اسلایدر دوره‌های نشان‌شده)
+                ======================================================== */}
+            {(purchaseFilter === "all" || purchaseFilter === "saved") && (
+              <section className="mc-saved-section" id="my-wishlist">
+                <div className="mc-saved-head">
+                  <div className="mc-saved-title-wrap">
+                    <span className="mc-saved-tag">
+                      <Bookmark size={14} fill="currentColor" />
+                      علاقه‌مندی‌ها
+                    </span>
+                    <h2 className="mc-saved-title">
+                      دوره‌های نشان‌شده ({filteredSaved.length.toLocaleString("fa-IR")})
+                    </h2>
+                  </div>
+
+                  {filteredSaved.length > 1 && (
+                    <div className="mc-saved-nav-btns" aria-label="هدایت اسلاید علاقه‌مندی‌ها">
+                      <button
+                        type="button"
+                        className="mc-saved-nav-btn"
+                        disabled={!savedScroll.nav.prev}
+                        onClick={() => savedScroll.scroll(false)}
+                        aria-label="قبلی"
+                        title="قبلی"
+                      >
+                        <ChevronRight size={18} strokeWidth={2.5} />
+                      </button>
+                      <button
+                        type="button"
+                        className="mc-saved-nav-btn"
+                        disabled={!savedScroll.nav.next}
+                        onClick={() => savedScroll.scroll(true)}
+                        aria-label="بعدی"
+                        title="بعدی"
+                      >
+                        <ChevronLeft size={18} strokeWidth={2.5} />
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {filteredSaved.length === 0 ? (
+                  <div className="mc-saved-empty">
+                    <div className="mc-saved-empty-icon">
+                      <Bookmark size={24} />
+                    </div>
+                    <p className="mc-saved-empty-text">
+                      دوره‌ای در لیست علاقه‌مندی‌های شما قرار ندارد
+                    </p>
+                  </div>
+                ) : (
+                  <div className="mc-saved-track-wrap">
+                    <div className="mc-saved-track" ref={savedScroll.rowRef}>
+                      {filteredSaved.map((item) => (
+                        <MyCourseCard
+                          key={item._id || item.course?._id || item.course?.slug}
+                          item={item}
+                          onOpenLicense={handleOpenLicense}
+                          store={store}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </section>
+            )}
+          </>
         )}
       </main>
 

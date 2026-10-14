@@ -896,3 +896,155 @@
 .mc-btn-enroll:hover {
   background: #e69415;
 }
+
+/* ========================================================
+   سکشن جداگانه علاقه‌مندی‌ها (اسلایدر دوره‌های نشان‌شده)
+   ======================================================== */
+.mc-saved-section {
+  margin-top: 52px;
+  padding-top: 36px;
+  border-top: 2.5px dashed rgba(31, 30, 29, 0.2);
+}
+
+.mc-saved-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+
+.mc-saved-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mc-saved-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--college-light, #FFF4E5);
+  color: var(--college-darker, #B45309);
+  border: 1.5px solid var(--ink, #1F1E1D);
+  border-radius: 999px;
+  padding: 4px 14px;
+  font-size: 13px;
+  font-weight: 850;
+  box-shadow: 2px 2px 0 var(--ink, #1F1E1D);
+  width: fit-content;
+}
+
+.mc-saved-title {
+  font-size: clamp(20px, 2.5vw, 26px);
+  font-weight: 950;
+  color: var(--ink, #1F1E1D);
+  margin: 0;
+}
+
+.mc-saved-nav-btns {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mc-saved-nav-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px 0 12px 0;
+  background: #ffffff;
+  border: 2px solid var(--ink, #1F1E1D);
+  box-shadow: 2.5px 2.5px 0 var(--ink, #1F1E1D);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--ink, #1F1E1D);
+  transition: all 0.15s ease;
+}
+
+.mc-saved-nav-btn:hover:not(:disabled) {
+  background: var(--college, #F8A41D);
+  transform: translate(-1.5px, -1.5px);
+  box-shadow: 4px 4px 0 var(--ink, #1F1E1D);
+}
+
+.mc-saved-nav-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.mc-saved-track-wrap {
+  position: relative;
+  overflow: hidden;
+  margin: 0 -4px;
+  padding: 4px 4px 18px;
+}
+
+.mc-saved-track {
+  display: flex;
+  align-items: stretch;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mc-saved-track::-webkit-scrollbar {
+  display: none;
+}
+
+.mc-saved-track.is-dragging {
+  cursor: grabbing;
+  scroll-behavior: auto;
+}
+
+.mc-saved-track .mc-card {
+  flex: 0 0 340px;
+  width: 340px;
+  max-width: 85vw;
+}
+
+@media (max-width: 640px) {
+  .mc-saved-track .mc-card {
+    flex: 0 0 285px;
+    width: 285px;
+  }
+}
+
+.mc-saved-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: #FFFDF0;
+  border: 2px dashed rgba(31, 30, 29, 0.25);
+  border-radius: 14px;
+  padding: 28px 20px;
+}
+
+.mc-saved-empty-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px 0 12px 0;
+  background: #ffffff;
+  border: 1.5px solid var(--ink, #1F1E1D);
+  box-shadow: 2px 2px 0 var(--ink, #1F1E1D);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--college-darker, #B45309);
+  flex-shrink: 0;
+}
+
+.mc-saved-empty-text {
+  font-size: 14px;
+  font-weight: 750;
+  color: var(--ink-subtle, #62605B);
+  margin: 0;
+}
