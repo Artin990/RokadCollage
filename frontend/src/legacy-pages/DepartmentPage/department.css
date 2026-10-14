@@ -1695,11 +1695,36 @@
     width: 100%;
     gap: 8px;
   }
-  .dp-filter-btn, .dp-sort-btn {
-    flex: 1;
+  .dp-filter-btn {
+    flex: 0 0 38px;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
+    position: relative;
+  }
+  .dp-filter-btn > span:not(.dp-filter-count) {
+    display: none;
+  }
+  .dp-filter-btn .dp-filter-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    min-width: 17px;
+    height: 17px;
+    font-size: 10px;
+  }
+  .dp-sort {
+    flex: 1;
+  }
+  .dp-sort-btn {
+    width: 100%;
+    justify-content: space-between;
     padding: 8px 12px;
     font-size: 12px;
+    height: 38px;
   }
 
   .dp-fab-wrap { left: 14px; bottom: 14px; }

@@ -595,14 +595,48 @@
   }
 
   .mc-card-actions {
+    display: flex;
     flex-direction: row;
+    flex-wrap: nowrap;
     gap: 8px;
+    width: 100%;
   }
 
   .mc-btn-primary,
   .mc-btn-license {
     padding: 9px 12px;
     font-size: 12.5px;
+  }
+
+  /* دکمه فیلتر در سایز موبایل: فقط آیکون */
+  .dp-filter-btn {
+    flex: 0 0 38px !important;
+    width: 38px !important;
+    height: 38px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+  }
+  .dp-filter-btn > span:not(.dp-filter-count) {
+    display: none !important;
+  }
+  .dp-filter-btn .dp-filter-count {
+    position: absolute !important;
+    top: -5px !important;
+    right: -5px !important;
+    min-width: 17px !important;
+    height: 17px !important;
+    font-size: 10px !important;
+  }
+  .dp-sort {
+    flex: 1 !important;
+  }
+  .dp-sort-btn {
+    width: 100% !important;
+    height: 38px !important;
+    justify-content: space-between !important;
   }
 }
 
@@ -627,16 +661,31 @@
     font-size: 11px;
   }
 
+  /* دو دکمه ورود به دوره و لایسنس در کنار هم */
   .mc-card-actions {
-    flex-wrap: wrap;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 8px !important;
+    width: 100% !important;
   }
 
   .mc-btn-primary {
-    width: 100%;
+    flex: 1 1 auto !important;
+    width: auto !important;
+    padding: 8px 10px !important;
+    font-size: 12px !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
   }
 
   .mc-btn-license {
-    width: 100%;
+    flex: 0 0 auto !important;
+    width: auto !important;
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
   }
 }
 
