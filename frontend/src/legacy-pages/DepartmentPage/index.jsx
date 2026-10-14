@@ -23,6 +23,7 @@ const DEPT_CATEGORY_MAP = {
   it: "فناوری اطلاعات",
   business: "کسب و کار",
   languages: "زبان‌های خارجی",
+  counseling: "مشاوره",
 };
 
 export default function DepartmentPage({ deptId, initialCourses = [] }) {
@@ -65,7 +66,10 @@ export default function DepartmentPage({ deptId, initialCourses = [] }) {
   // Filter live courses that match this department's category
   const targetCategory = DEPT_CATEGORY_MAP[currentId] || baseDept.name;
   const deptLiveCourses = liveCourses.filter(
-    (c) => c.category === targetCategory || (currentId === "it" && (c.category?.includes("اطلاعات") || c.category?.includes("فرانتاند") || c.category?.includes("بکاند")))
+    (c) =>
+      c.category === targetCategory ||
+      (currentId === "it" && (c.category?.includes("اطلاعات") || c.category?.includes("فرانتاند") || c.category?.includes("بکاند"))) ||
+      (currentId === "counseling" && (c.category?.includes("مشاوره") || c.category?.includes("هدایت")))
   );
 
   const formattedDeptCourses = deptLiveCourses.map((c, i) => {
@@ -102,6 +106,7 @@ export default function DepartmentPage({ deptId, initialCourses = [] }) {
       if (currentId === "it") return cat.includes("اطلاعات") || cat.includes("فرانتاند") || cat.includes("بکاند");
       if (currentId === "business") return cat.includes("کسب");
       if (currentId === "languages") return cat.includes("زبان");
+      if (currentId === "counseling") return cat.includes("مشاوره") || cat.includes("هدایت");
       return true;
     });
     const source = matching.length > 0 ? matching : liveComments;
@@ -202,11 +207,11 @@ export default function DepartmentPage({ deptId, initialCourses = [] }) {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const collegePersona = DEPT_PERSONA.business;
+  const activePersona = currentId === "counseling" ? DEPT_PERSONA.counseling : DEPT_PERSONA.business;
   const styleVars = {
-    "--dp": collegePersona.colorVar,
-    "--dp-light": collegePersona.lightVar,
-    "--dp-dark": collegePersona.darkVar,
+    "--dp": activePersona.colorVar,
+    "--dp-light": activePersona.lightVar,
+    "--dp-dark": activePersona.darkVar,
     "--dp-text": "var(--ink)",
   };
 
@@ -235,7 +240,7 @@ export default function DepartmentPage({ deptId, initialCourses = [] }) {
 
   return (
     <div className="dp-page" style={styleVars} data-dept={currentId} key={currentId}>
-      <DepartmentHero dept={dept} persona={collegePersona} onScrollTo={scrollToSection} />
+      <DepartmentHero dept={dept} persona={activePersona} onScrollTo={scrollToSection} />
 
       <main className="dp-main container">
         <DepartmentSuggestedRow
@@ -274,7 +279,7 @@ export default function DepartmentPage({ deptId, initialCourses = [] }) {
         <DepartmentCtaSection
           dept={dept}
           currentId={currentId}
-          persona={collegePersona}
+          persona={activePersona}
           onScrollTo={scrollToSection}
         />
       </main>

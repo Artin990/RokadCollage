@@ -7,6 +7,7 @@ const departments = [
   { label: "فناوری اطلاعات", href: "/dept/it" },
   { label: "کسب و کار", href: "/dept/business" },
   { label: "زبان‌های خارجی", href: "/dept/languages" },
+  { label: "مشاوره", href: "/dept/counseling" },
 ];
 
 const quickLinks = [

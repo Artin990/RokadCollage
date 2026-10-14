@@ -35,16 +35,27 @@ const departments = [
   },
   {
     id: "languages",
-    wide: true,
     title: ["زبان‌های", "خارجی"],
-    desc: "انگلیسی، آیلتس و زبان‌های بین‌المللی برای تحصیل، کار و ارتباطات جهانی؛ از مکالمه روزمره تا Business English و آمادگی آزمون‌های معتبر.",
-    chips: ["IELTS", "Business English", "مکالمه", "تافل", "زبان دوم", "ترجمه"],
+    desc: "انگلیسی، آیلتس و زبان‌های بین‌المللی برای تحصیل، کار و ارتباطات جهانی؛ از مکالمه روزمره تا Business English و آزمون‌ها.",
+    chips: ["IELTS", "Business English", "مکالمه", "تافل", "زبان دوم"],
     stat: "+۶۰۰",
     statLabel: "هنرجو",
     pattern: "/assets/StatCard/green.png",
     dept: "var(--teal-alt)",
     deptLight: "var(--teal-light)",
     deptDark: "var(--teal-dark)",
+  },
+  {
+    id: "counseling",
+    title: ["مشاوره", "و هدایت"],
+    desc: "مشاوره تحصیلی، شغلی و توسعه فردی؛ برای کشف استعدادها، برنامه‌ریزی هدفمند و ساختن آینده‌ای مطمئن.",
+    chips: ["هدایت شغلی", "مشاوره تحصیلی", "استعدادیابی", "توسعه فردی", "کوچینگ"],
+    stat: "+۳۰۰",
+    statLabel: "مراجع",
+    pattern: "/assets/StatCard/pink.png",
+    dept: "var(--female)",
+    deptLight: "var(--female-light)",
+    deptDark: "var(--female-dark)",
   },
 ];
 
@@ -71,6 +82,12 @@ const deptIcons = {
       <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
     </svg>
   ),
+  counseling: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+    </svg>
+  ),
 };
 
 const ArrowIcon = () => (
@@ -90,9 +107,9 @@ export default function Departments({ layout = "stack" }) {
         {/* Head */}
         <div className="dept5-head">
           <h2>
-            <span className="w w1">سه</span>
+            <span className="w w1">چهار</span>
             <span className="w w2">دپارتمان،</span>
-            <span className="w w3">سه جهان</span>
+            <span className="w w3">چهار جهان</span>
           </h2>
         </div>
 

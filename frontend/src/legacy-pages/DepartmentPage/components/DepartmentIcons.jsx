@@ -84,12 +84,14 @@ export const DEPT_ICONS = {
   languages: { hero: "globe", cta: "translate" },
   business: { hero: "rocket", cta: "briefcase" },
   it: { hero: "code", cta: "server" },
+  counseling: { hero: "spark", cta: "users" },
 };
 
 export const ALL_DEPTS = [
   { id: "it", name: "فناوری اطلاعات", color: "var(--navy-alt)" },
   { id: "business", name: "کسب و کار", color: "var(--college)" },
   { id: "languages", name: "زبان‌های خارجی", color: "var(--teal-alt)" },
+  { id: "counseling", name: "مشاوره", color: "var(--female)" },
 ];
 
 export const SectionHead = ({ pre, accent }) => (

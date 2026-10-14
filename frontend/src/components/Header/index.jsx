@@ -56,6 +56,7 @@ export default function Header() {
           { section: "دپارتمان‌ها", title: "دپارتمان فناوری اطلاعات (IT)", text: "مسیرهای تخصصی وب، برنامه‌نویسی و سئو", link: "/dept/it", tags: "دپارتمان it وب برنامه‌نویسی", image: "/assets/StatCard/blue.png" },
           { section: "دپارتمان‌ها", title: "دپارتمان کسب و کار", text: "مهارت‌های نوین کسب‌وکار و مدیریت", link: "/dept/business", tags: "دپارتمان کسب و کار مارکتینگ مدیریت", image: "/assets/StatCard/yellow.png" },
           { section: "دپارتمان‌ها", title: "دپارتمان زبان‌های خارجی", text: "انگلیسی، آیلتس و مکالمه", link: "/dept/languages", tags: "دپارتمان زبان خارجی آیلتس انگلیسی", image: "/assets/StatCard/green.png" },
+          { section: "دپارتمان‌ها", title: "دپارتمان مشاوره", text: "هدایت تحصیلی، شغلی و توسعه فردی", link: "/dept/counseling", tags: "دپارتمان مشاوره هدایت شغلی تحصیلی استعدادیابی", image: "/assets/StatCard/pink.png" },
         ];
         setLiveItems([...courseHits, ...blogHits, ...depts]);
       } catch (err) {

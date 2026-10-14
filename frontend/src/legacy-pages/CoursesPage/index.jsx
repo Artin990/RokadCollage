@@ -8,7 +8,7 @@ import CoursesHubHero from "./components/CoursesHubHero.jsx";
 import FlagshipSection from "./components/FlagshipSection.jsx";
 import SuggestedGroupSection from "./components/SuggestedGroupSection.jsx";
 import InstructorsSection from "./components/InstructorsSection.jsx";
-import { Code, Briefcase, Globe } from "lucide-react";
+import { Code, Briefcase, Globe, Sparkles } from "lucide-react";
 
 const DEPT_CONFIG = {
   "فناوری اطلاعات": {
@@ -40,6 +40,16 @@ const DEPT_CONFIG = {
     icon: Globe,
     themeClass: "flag-languages",
     badge: "دپارتمان زبان‌های خارجی",
+  },
+  "مشاوره": {
+    deptId: "counseling",
+    deptName: "مشاوره",
+    badgeColor: "var(--female-dark)",
+    badgeBg: "var(--female-light)",
+    pattern: "/assets/StatCard/pink.png",
+    icon: Sparkles,
+    themeClass: "flag-female",
+    badge: "دپارتمان مشاوره",
   },
 };
 
