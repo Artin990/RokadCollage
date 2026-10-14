@@ -205,7 +205,7 @@ export default function CourseSingleInPerson({ course, slug }) {
               <button
                 type="button"
                 onClick={() => setInfoModalOpen(false)}
-                className="w-8 h-8 rounded-full border-2 border-stone-900 shadow-[2px_2px_0_#1F1E1D] flex items-center justify-center transition-all duration-200 hover:-translate-y-0.5 hover:rotate-90 hover:shadow-[3px_3px_0_#1F1E1D] hover:bg-[#FCE7F3] cursor-pointer"
+                className="w-8 h-8 rounded-full border-2 border-stone-900 shadow-[2px_2px_0_#1F1E1D] flex items-center justify-center transition-all duration-150 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0_#1F1E1D] hover:bg-stone-100 cursor-pointer"
                 aria-label="بستن"
               >
                 <X size={16} />

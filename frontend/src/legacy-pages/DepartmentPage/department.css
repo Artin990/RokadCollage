@@ -1543,17 +1543,17 @@
   border-radius: 50%;
   cursor: pointer;
   box-shadow: 2px 2px 0 var(--ink);
-  transition: all .22s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all .18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .dp-filter-close:hover {
-  background: var(--female-light, #FCE7F3);
+  background: #f5f5f4;
   color: var(--ink);
-  transform: translateY(-1.5px) rotate(90deg);
-  box-shadow: 3px 3px 0 var(--ink);
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--ink);
 }
 .dp-filter-close:active {
-  transform: translate(1px, 1px) rotate(90deg);
-  box-shadow: 1px 1px 0 var(--ink);
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 var(--ink);
 }
 .dp-filter-body {
   padding: 18px;

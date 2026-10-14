@@ -641,23 +641,23 @@
 }
 
 /* ========================================================
-   MODAL CLOSE BUTTONS HOVER ANIMATION
+   MODAL CLOSE BUTTONS HOVER ANIMATION (بدون روتیت، افکت فشردن کلید)
    ======================================================== */
 .spm-close-btn,
 .dp-filter-close {
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .spm-close-btn:hover,
 .dp-filter-close:hover {
-  background: var(--female-light, #FCE7F3) !important;
+  background: #f5f5f4 !important;
   color: var(--ink, #1F1E1D) !important;
-  transform: translateY(-1.5px) rotate(90deg) !important;
-  box-shadow: 3px 3px 0 var(--ink, #1F1E1D) !important;
+  transform: translate(1px, 1px) !important;
+  box-shadow: 1px 1px 0 var(--ink, #1F1E1D) !important;
 }
 
 .spm-close-btn:active,
 .dp-filter-close:active {
-  transform: translate(1px, 1px) rotate(90deg) !important;
-  box-shadow: 1px 1px 0 var(--ink, #1F1E1D) !important;
+  transform: translate(2px, 2px) !important;
+  box-shadow: 0 0 0 var(--ink, #1F1E1D) !important;
 }
