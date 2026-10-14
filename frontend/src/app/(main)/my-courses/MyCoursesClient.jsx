@@ -2,12 +2,21 @@
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
-import { RotateCw, BookOpen, Search } from "lucide-react";
+import { RotateCw, BookOpen, Search, Bookmark, CheckCircle2 } from "lucide-react";
 import { getMyEnrollments } from "@/services/enrollmentService";
+import { getAllCourses } from "@/services/courseService";
+import { getPanelStore } from "@/data/panelStore";
+import { isWishlisted } from "@/data/selectors";
 import MyCourseCard from "./components/MyCourseCard";
 import SpotPlayerLicenseModal from "@/legacy-pages/CourseSingle/components/SpotPlayerLicenseModal";
 import "@/legacy-pages/DepartmentPage/department.css";
 import "./my-courses.css";
+
+const PURCHASE_OPTIONS = [
+  { id: "all", label: "همه دوره‌ها" },
+  { id: "purchased", label: "خریداری‌شده" },
+  { id: "saved", label: "نشان‌شده‌ها" },
+];
 
 const MODE_OPTIONS = [
   { id: "all", label: "همه" },
@@ -27,14 +36,19 @@ const SORTS = [
   { id: "newest", label: "جدیدترین" },
   { id: "oldest", label: "قدیمی‌ترین" },
   { id: "title", label: "عنوان دوره" },
+  { id: "price-low", label: "ارزان‌ترین" },
+  { id: "price-high", label: "گران‌ترین" },
 ];
 
 export default function MyCoursesClient() {
   const [enrollments, setEnrollments] = useState([]);
+  const [allCourses, setAllCourses] = useState([]);
+  const [store, setStore] = useState(getPanelStore);
   const [loading, setLoading] = useState(true);
 
   // جستجو، فیلترها و مرتب‌سازی
   const [searchQuery, setSearchQuery] = useState("");
+  const [purchaseFilter, setPurchaseFilter] = useState("all");
   const [modeFilter, setModeFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [deptFilter, setDeptFilter] = useState("all");
@@ -52,41 +66,34 @@ export default function MyCoursesClient() {
   });
 
   useEffect(() => {
+    const handleStoreChange = (e) => {
+      setStore(e.detail || getPanelStore());
+    };
+    window.addEventListener("rokad_panel_store_changed", handleStoreChange);
+    return () => window.removeEventListener("rokad_panel_store_changed", handleStoreChange);
+  }, []);
+
+  useEffect(() => {
     async function loadData() {
       try {
         setLoading(true);
-        const data = await getMyEnrollments();
-        const rawList = Array.isArray(data) ? data : data?.data || [];
+        const [enrollmentData, coursesData] = await Promise.all([
+          getMyEnrollments().catch(() => []),
+          getAllCourses().catch(() => []),
+        ]);
 
-        // Exclude failed/cancelled enrollments, failed payments, and virtual courses without an active license
-        const validList = rawList.filter((item) => {
+        const rawList = Array.isArray(enrollmentData) ? enrollmentData : enrollmentData?.data || [];
+        const validEnrollments = rawList.filter((item) => {
           if (!item || !item.course) return false;
           if (item.status === "failed" || item.status === "cancelled") return false;
           if (item.transactionId && item.transactionId.status === "failed") return false;
-
-          const isVirtual =
-            item.courseModel === "VirtualCourse" ||
-            item.course?.type === "مجازی" ||
-            item.course?.type === "غیر حضوری" ||
-            !item.session;
-
-          // دوره‌های مجازی حتماً باید لایسنس فعال داشته باشند
-          if (isVirtual) {
-            const hasActiveLicense = Boolean(
-              item.spotplayer?.key || (item.spotplayer?.licenseId && item.spotplayer?.status === "issued")
-            );
-            if (!hasActiveLicense || item.spotplayer?.status === "failed") {
-              return false;
-            }
-          }
-
           return true;
         });
 
-        setEnrollments(validList);
+        setEnrollments(validEnrollments);
+        setAllCourses(Array.isArray(coursesData) ? coursesData : []);
       } catch (err) {
-        console.error("Failed to load enrollments:", err);
-        setEnrollments([]);
+        console.error("Failed to load my-courses data:", err);
       } finally {
         setLoading(false);
       }
@@ -94,14 +101,57 @@ export default function MyCoursesClient() {
     loadData();
   }, []);
 
+  // ترکیب دوره‌های خریداری‌شده و دوره‌های نشان‌شده
+  const combinedItems = useMemo(() => {
+    const enrolledMap = new Map();
+    const enrolledItems = enrollments.map((e) => {
+      const cId = String(e.course?._id || e.course?.id || "").trim();
+      const cSlug = String(e.course?.slug || "").trim();
+      if (cId) enrolledMap.set(cId, true);
+      if (cSlug) enrolledMap.set(cSlug, true);
+
+      return {
+        ...e,
+        isPurchased: true,
+        purchaseStatus: "purchased",
+        price: e.course?.price || 0,
+      };
+    });
+
+    const savedItems = [];
+    allCourses.forEach((c) => {
+      const cId = String(c._id || c.id || "").trim();
+      const cSlug = String(c.slug || "").trim();
+      const isSaved = isWishlisted(cSlug, store) || isWishlisted(cId, store);
+
+      if (isSaved && !enrolledMap.has(cId) && !enrolledMap.has(cSlug)) {
+        savedItems.push({
+          _id: c._id || c.id,
+          isPurchased: false,
+          purchaseStatus: "saved",
+          course: c,
+          createdAt: c.createdAt || new Date().toISOString(),
+          status: "saved",
+          price: c.price || 0,
+        });
+      }
+    });
+
+    return [...enrolledItems, ...savedItems];
+  }, [enrollments, allCourses, store]);
+
   // محاسبه آمار هیرو
   const stats = useMemo(() => {
-    const total = enrollments.length;
+    const total = combinedItems.length;
+    let purchasedCount = 0;
+    let savedCount = 0;
     let virtualCount = 0;
     let inPersonCount = 0;
-    let completedCount = 0;
 
-    enrollments.forEach((e) => {
+    combinedItems.forEach((e) => {
+      if (e.isPurchased) purchasedCount++;
+      if (e.purchaseStatus === "saved" || isWishlisted(e.course?.slug || e.course?._id, store)) savedCount++;
+
       const isVirtual =
         e.courseModel === "VirtualCourse" ||
         e.course?.type === "مجازی" ||
@@ -110,46 +160,45 @@ export default function MyCoursesClient() {
         !e.session;
       if (isVirtual) virtualCount++;
       else inPersonCount++;
-
-      if (e.status === "completed" || e.progress === 100) {
-        completedCount++;
-      }
     });
 
     return {
       total,
+      purchasedCount,
+      savedCount,
       virtualCount,
       inPersonCount,
-      completedCount,
     };
-  }, [enrollments]);
+  }, [combinedItems, store]);
 
-  // دسته‌بندی‌های کاملاً پویا استخراج‌شده از دوره‌های واقعی دیتابیس
+  // دسته‌بندی‌های کاملاً پویا استخراج‌شده از دوره‌ها
   const deptOptions = useMemo(() => {
     const categories = new Set();
-    enrollments.forEach((e) => {
-      const c = e.course?.category;
+    combinedItems.forEach((e) => {
+      const c = e.course?.category || e.course?.department;
       if (c && typeof c === "string") categories.add(c.trim());
     });
     return [
-      { id: "all", label: "همه حوزه‌ها" },
+      { id: "all", label: "همه دپارتمان‌ها" },
       ...Array.from(categories).map((cat) => ({ id: cat, label: cat })),
     ];
-  }, [enrollments]);
+  }, [combinedItems]);
 
   // محاسبه تعداد فیلترهای فعال
   const activeFilterCount = useMemo(() => {
     let count = 0;
+    if (purchaseFilter !== "all") count++;
     if (modeFilter !== "all") count++;
     if (statusFilter !== "all") count++;
     if (deptFilter !== "all") count++;
     if (sort !== "default") count++;
     if (searchQuery.trim()) count++;
     return count;
-  }, [modeFilter, statusFilter, deptFilter, sort, searchQuery]);
+  }, [purchaseFilter, modeFilter, statusFilter, deptFilter, sort, searchQuery]);
 
   // پاک کردن همه فیلترها
   const resetFilters = () => {
+    setPurchaseFilter("all");
     setModeFilter("all");
     setStatusFilter("all");
     setDeptFilter("all");
@@ -159,7 +208,7 @@ export default function MyCoursesClient() {
 
   // فیلتر و مرتب‌سازی دوره‌ها
   const filteredCourses = useMemo(() => {
-    let result = enrollments.filter((item) => {
+    let result = combinedItems.filter((item) => {
       const course = item.course || {};
       const title = (course.title || "").toLowerCase();
       const isVirtual =
@@ -173,28 +222,40 @@ export default function MyCoursesClient() {
       if (searchQuery.trim()) {
         const q = searchQuery.trim().toLowerCase();
         const matchesTitle = title.includes(q);
-        const matchesCategory = (course.category || "").toLowerCase().includes(q);
+        const matchesCategory = (course.category || course.department || "").toLowerCase().includes(q);
         if (!matchesTitle && !matchesCategory) return false;
+      }
+
+      // فیلتر وضعیت خریداری
+      if (purchaseFilter === "purchased") {
+        if (!item.isPurchased) return false;
+      } else if (purchaseFilter === "saved") {
+        const isSaved = item.purchaseStatus === "saved" || isWishlisted(course.slug || course._id, store);
+        if (!isSaved) return false;
       }
 
       // فیلتر نحوه برگزاری (حضوری / غیر حضوری)
       if (modeFilter === "in-person" && isVirtual) return false;
       if (modeFilter === "online" && !isVirtual) return false;
 
-      // فیلتر وضعیت
-      if (statusFilter === "completed") {
-        if (item.status !== "completed" && item.progress !== 100) return false;
-      } else if (statusFilter === "active") {
-        if (item.status === "completed" || item.progress === 100) return false;
-      } else if (statusFilter === "recent") {
-        const itemDate = new Date(item.createdAt || 0).getTime();
-        const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
-        if (itemDate < thirtyDaysAgo && enrollments.indexOf(item) > 2) return false;
+      // فیلتر وضعیت پیشرفت دوره (فقط برای دوره‌های خریداری‌شده)
+      if (item.isPurchased) {
+        if (statusFilter === "completed") {
+          if (item.status !== "completed" && item.progress !== 100) return false;
+        } else if (statusFilter === "active") {
+          if (item.status === "completed" || item.progress === 100) return false;
+        } else if (statusFilter === "recent") {
+          const itemDate = new Date(item.createdAt || 0).getTime();
+          const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
+          if (itemDate < thirtyDaysAgo && combinedItems.indexOf(item) > 2) return false;
+        }
+      } else if (statusFilter !== "all") {
+        return false;
       }
 
-      // فیلتر دپارتمان و حوزه کاملاً پویا بر اساس فیلد category دوره
+      // فیلتر دپارتمان و حوزه
       if (deptFilter !== "all") {
-        const itemCat = (course.category || "").trim();
+        const itemCat = (course.category || course.department || "").trim();
         if (itemCat !== deptFilter) return false;
       }
 
@@ -208,10 +269,14 @@ export default function MyCoursesClient() {
       result.sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
     } else if (sort === "title") {
       result.sort((a, b) => (a.course?.title || "").localeCompare(b.course?.title || "", "fa"));
+    } else if (sort === "price-low") {
+      result.sort((a, b) => (Number(a.course?.price) || 0) - (Number(b.course?.price) || 0));
+    } else if (sort === "price-high") {
+      result.sort((a, b) => (Number(b.course?.price) || 0) - (Number(a.course?.price) || 0));
     }
 
     return result;
-  }, [enrollments, modeFilter, statusFilter, deptFilter, sort, searchQuery]);
+  }, [combinedItems, purchaseFilter, modeFilter, statusFilter, deptFilter, sort, searchQuery, store]);
 
   const handleOpenLicense = (courseId, courseTitle) => {
     setLicenseModal({
@@ -232,7 +297,7 @@ export default function MyCoursesClient() {
   return (
     <div className="mc-page">
       {/* ========================================================
-          HERO SECTION (دقیقاً مشابه تک‌صفحه دپارتمان‌ها)
+          HERO SECTION
           ======================================================== */}
       <header className="mc-hero">
         <img
@@ -253,31 +318,31 @@ export default function MyCoursesClient() {
           {/* بج نشان وضعیت */}
           <div className="mc-badge">
             <span className="dot" />
-            <span>دوره‌های فعال</span>
+            <span>مدیریت دوره‌ها</span>
           </div>
 
           {/* عنوان اصلی همراه با هایلایتر نئوبروتالیست */}
           <h1 className="mc-hero-title">
-            دوره‌های من | <span className="mc-hero-accent">مسیر رشد تخصصی شما</span>
+            دوره‌های من | <span className="mc-hero-accent">مسیر یادگیری و نشان‌شده‌ها</span>
           </h1>
 
-          {/* نوار آمار (دوره‌های من، غیر حضوری، کارگاه حضوری، تکمیل شده) */}
+          {/* نوار آمار (کل، خریداری‌شده، نشان‌شده‌ها، غیر حضوری) */}
           <div className="dp-hero-stats">
             <div className="dp-hstat">
               <b>{stats.total.toLocaleString("fa-IR")}</b>
-              <span>دوره‌های ثبت‌نام‌شده</span>
+              <span>مجموع دوره‌ها</span>
+            </div>
+            <div className="dp-hstat">
+              <b>{stats.purchasedCount.toLocaleString("fa-IR")}</b>
+              <span>خریداری‌شده</span>
+            </div>
+            <div className="dp-hstat">
+              <b>{stats.savedCount.toLocaleString("fa-IR")}</b>
+              <span>نشان‌شده‌ها</span>
             </div>
             <div className="dp-hstat">
               <b>{stats.virtualCount.toLocaleString("fa-IR")}</b>
               <span>غیر حضوری</span>
-            </div>
-            <div className="dp-hstat">
-              <b>{stats.inPersonCount.toLocaleString("fa-IR")}</b>
-              <span>کارگاه حضوری</span>
-            </div>
-            <div className="dp-hstat">
-              <b>{stats.completedCount.toLocaleString("fa-IR")}</b>
-              <span>تکمیل‌شده</span>
             </div>
           </div>
         </div>
@@ -287,12 +352,37 @@ export default function MyCoursesClient() {
           MAIN CONTENT AREA
           ======================================================== */}
       <main className="mc-content-wrap">
-        {/* نوار فیلتر و مرتب‌سازی دقیقاً منطبق با استایل دپارتمان (dp-toolbar) */}
+        {/* نوار فیلتر، تب وضعیت و ابزارها */}
         <div className="dp-toolbar">
           <div className="dp-toolbar-start">
-            <div className="dp-count">
-              <b>{filteredCourses.length.toLocaleString("fa-IR")}</b> دوره
+            {/* تب‌های تغییر سریع وضعیت خرید */}
+            <div className="mc-status-tabs">
+              <button
+                type="button"
+                className={`mc-status-tab ${purchaseFilter === "all" ? "active" : ""}`}
+                onClick={() => setPurchaseFilter("all")}
+              >
+                <span>همه</span>
+                <span className="mc-status-tab-count">{stats.total.toLocaleString("fa-IR")}</span>
+              </button>
+              <button
+                type="button"
+                className={`mc-status-tab ${purchaseFilter === "purchased" ? "active" : ""}`}
+                onClick={() => setPurchaseFilter("purchased")}
+              >
+                <span>خریداری‌شده</span>
+                <span className="mc-status-tab-count">{stats.purchasedCount.toLocaleString("fa-IR")}</span>
+              </button>
+              <button
+                type="button"
+                className={`mc-status-tab ${purchaseFilter === "saved" ? "active" : ""}`}
+                onClick={() => setPurchaseFilter("saved")}
+              >
+                <span>نشان‌شده‌ها</span>
+                <span className="mc-status-tab-count">{stats.savedCount.toLocaleString("fa-IR")}</span>
+              </button>
             </div>
+
             {activeFilterCount > 0 && (
               <div className="dp-active-topic-badge">
                 <span>{activeFilterCount.toLocaleString("fa-IR")} فیلتر فعال</span>
@@ -332,7 +422,7 @@ export default function MyCoursesClient() {
               )}
             </div>
 
-            {/* دکمه فیلترها (شامل فیلترها و ترتیب نمایش) */}
+            {/* دکمه فیلترها (شامل فیلتر دپارتمان، مرتب‌سازی و نحوه برگزاری) */}
             <button
               type="button"
               className="dp-filter-btn"
@@ -379,8 +469,8 @@ export default function MyCoursesClient() {
               <BookOpen className="w-8 h-8" />
             </div>
             <h3 className="text-xl font-black text-stone-900">
-              {enrollments.length === 0
-                ? "هنوز در دوره‌ای ثبت‌نام نکرده‌اید"
+              {combinedItems.length === 0
+                ? "هنوز دوره‌ای خریداری یا نشان نکرده‌اید"
                 : "دوره‌ای با این فیلترها یافت نشد"}
             </h3>
             {activeFilterCount > 0 ? (
@@ -407,9 +497,10 @@ export default function MyCoursesClient() {
           <div className="mc-grid">
             {filteredCourses.map((item) => (
               <MyCourseCard
-                key={item._id || item.course?._id}
+                key={item._id || item.course?._id || item.course?.slug}
                 item={item}
                 onOpenLicense={handleOpenLicense}
+                store={store}
               />
             ))}
           </div>
@@ -417,7 +508,7 @@ export default function MyCoursesClient() {
       </main>
 
       {/* ========================================================
-          مدال فیلترهای دوره‌ها (مشابه DepartmentFilterModal)
+          مدال فیلترهای دوره‌ها
           ======================================================== */}
       {filterOpen && (
         <div
@@ -486,35 +577,18 @@ export default function MyCoursesClient() {
             </div>
 
             <div className="dp-filter-body">
-              {/* گروه نحوه برگزاری */}
+              {/* گروه وضعیت خریداری */}
               <div className="dp-fgroup">
-                <div className="dp-fgroup-title">نحوه برگزاری</div>
+                <div className="dp-fgroup-title">وضعیت خریداری</div>
                 <div className="dp-segment">
-                  {MODE_OPTIONS.map((m) => (
+                  {PURCHASE_OPTIONS.map((p) => (
                     <button
-                      key={m.id}
+                      key={p.id}
                       type="button"
-                      className={modeFilter === m.id ? "on" : ""}
-                      onClick={() => setModeFilter(m.id)}
+                      className={purchaseFilter === p.id ? "on" : ""}
+                      onClick={() => setPurchaseFilter(p.id)}
                     >
-                      {m.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* گروه وضعیت دوره */}
-              <div className="dp-fgroup">
-                <div className="dp-fgroup-title">وضعیت دوره</div>
-                <div className="dp-segment">
-                  {STATUS_OPTIONS.map((s) => (
-                    <button
-                      key={s.id}
-                      type="button"
-                      className={statusFilter === s.id ? "on" : ""}
-                      onClick={() => setStatusFilter(s.id)}
-                    >
-                      {s.label}
+                      {p.label}
                     </button>
                   ))}
                 </div>
@@ -547,6 +621,40 @@ export default function MyCoursesClient() {
                       type="button"
                       className={sort === s.id ? "on" : ""}
                       onClick={() => setSort(s.id)}
+                    >
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* گروه نحوه برگزاری */}
+              <div className="dp-fgroup">
+                <div className="dp-fgroup-title">نحوه برگزاری</div>
+                <div className="dp-segment">
+                  {MODE_OPTIONS.map((m) => (
+                    <button
+                      key={m.id}
+                      type="button"
+                      className={modeFilter === m.id ? "on" : ""}
+                      onClick={() => setModeFilter(m.id)}
+                    >
+                      {m.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* گروه وضعیت پیشرفت دوره */}
+              <div className="dp-fgroup">
+                <div className="dp-fgroup-title">وضعیت یادگیری</div>
+                <div className="dp-segment">
+                  {STATUS_OPTIONS.map((s) => (
+                    <button
+                      key={s.id}
+                      type="button"
+                      className={statusFilter === s.id ? "on" : ""}
+                      onClick={() => setStatusFilter(s.id)}
                     >
                       {s.label}
                     </button>

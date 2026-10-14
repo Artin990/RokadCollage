@@ -14,7 +14,10 @@ import {
   Calendar,
   CheckCircle2,
   ExternalLink,
+  Bookmark,
 } from "lucide-react";
+import { toggleWishlist } from "@/data/panelStore.js";
+import { isWishlisted } from "@/data/selectors.js";
 
 /**
  * دپارتمان‌ها و کانفیگ آیکون و تم
@@ -85,8 +88,9 @@ function resolveDept(course = {}) {
   return DEPT_CONFIG.default;
 }
 
-export default function MyCourseCard({ item, onOpenLicense }) {
+export default function MyCourseCard({ item, onOpenLicense, store }) {
   const course = item.course || {};
+  const isPurchased = item.isPurchased !== false;
   const isVirtual =
     item.courseModel === "VirtualCourse" ||
     course.type === "مجازی" ||
@@ -94,12 +98,13 @@ export default function MyCourseCard({ item, onOpenLicense }) {
     Boolean(item.spotplayer?.key) ||
     !item.session;
 
-  const isCompleted = item.status === "completed" || item.progress === 100;
+  const isCompleted = isPurchased && (item.status === "completed" || item.progress === 100);
   const dept = resolveDept(course);
   const DeptIcon = dept.icon;
 
-  const courseSlug = course.slug || course._id;
+  const courseSlug = course.slug || course._id || course.id;
   const courseHref = courseSlug ? `/courses/${courseSlug}` : "/courses";
+  const isSaved = isWishlisted(courseSlug, store) || item.purchaseStatus === "saved";
 
   const instructorName =
     Array.isArray(course.teachers) && course.teachers.length > 0
@@ -111,11 +116,26 @@ export default function MyCourseCard({ item, onOpenLicense }) {
 
   return (
     <article className="mc-card">
-      {/* بخش ویژوال با پترن و آیکون دپارتمان (مشابه ch-flag-visual) */}
+      {/* بخش ویژوال با پترن و آیکون دپارتمان */}
       <div className={`mc-card-visual ${dept.themeClass}`}>
         <img src={course.img || dept.pattern} alt="" className="mc-card-pattern" aria-hidden="true" />
 
-        {/* برچسب دسته‌بندی پویا از دیتابیس */}
+        {/* دکمه نشان کردن در گوشه بالا */}
+        <button
+          type="button"
+          className={`mc-card-save-btn ${isSaved ? "is-saved" : ""}`}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleWishlist(courseSlug);
+          }}
+          aria-label={isSaved ? "حذف از نشان‌شده‌ها" : "نشان کردن دوره"}
+          title={isSaved ? "حذف از نشان‌شده‌ها" : "نشان کردن دوره"}
+        >
+          <Bookmark size={14} fill={isSaved ? "currentColor" : "none"} strokeWidth={2.4} />
+        </button>
+
+        {/* برچسب دسته‌بندی پویا */}
         <span className="mc-dept-chip">{course.category || dept.name}</span>
 
         {/* باکس آیکون نئوبروتالیست مرکزی */}
@@ -126,14 +146,21 @@ export default function MyCourseCard({ item, onOpenLicense }) {
         {/* بج نوع برگزاری / وضعیت */}
         <span
           className={`mc-badge-pill ${
-            isCompleted
+            !isPurchased
+              ? "mc-badge-saved"
+              : isCompleted
               ? "mc-badge-completed"
               : isVirtual
               ? "mc-badge-virtual"
               : "mc-badge-inperson"
           }`}
         >
-          {isCompleted ? (
+          {!isPurchased ? (
+            <>
+              <Bookmark size={12} strokeWidth={2.5} fill="currentColor" />
+              <span>نشان‌شده</span>
+            </>
+          ) : isCompleted ? (
             <>
               <CheckCircle2 size={12} strokeWidth={2.5} />
               <span>تکمیل‌شده</span>
@@ -174,6 +201,16 @@ export default function MyCourseCard({ item, onOpenLicense }) {
           <Link href={courseHref}>{course.title || "عنوان دوره تخصصی"}</Link>
         </h3>
 
+        {/* اگر دوره هنوز خریداری نشده است، نمایش ردیف قیمت */}
+        {!isPurchased && (
+          <div className="mc-card-price-row">
+            <span className="mc-price-label">شهریه دوره:</span>
+            <b className="mc-price-val">
+              {course.price ? `${Number(course.price).toLocaleString("fa-IR")} تومان` : "رایگان"}
+            </b>
+          </div>
+        )}
+
         {/* پیل‌های مشخصات */}
         <div className="mc-pills-row">
           {course.duration && (
@@ -200,20 +237,29 @@ export default function MyCourseCard({ item, onOpenLicense }) {
 
         {/* اکشن‌های فوتر کارت (حداکثر ۱ تا ۲ کلمه، فعل اول) */}
         <div className="mc-card-actions">
-          <Link href={courseHref} className="mc-btn-primary">
-            <span>ورود به دوره</span>
-            <ExternalLink size={14} />
-          </Link>
+          {isPurchased ? (
+            <>
+              <Link href={courseHref} className="mc-btn-primary">
+                <span>ورود به دوره</span>
+                <ExternalLink size={14} />
+              </Link>
 
-          {isVirtual && Boolean(item.spotplayer?.key || item.spotplayer?.licenseId) && (
-            <button
-              type="button"
-              className="mc-btn-license"
-              onClick={() => onOpenLicense(course._id || course.slug, course.title)}
-            >
-              <Key size={14} />
-              <span>لایسنس</span>
-            </button>
+              {isVirtual && Boolean(item.spotplayer?.key || item.spotplayer?.licenseId) && (
+                <button
+                  type="button"
+                  className="mc-btn-license"
+                  onClick={() => onOpenLicense(course._id || course.slug, course.title)}
+                >
+                  <Key size={14} />
+                  <span>لایسنس</span>
+                </button>
+              )}
+            </>
+          ) : (
+            <Link href={courseHref} className="mc-btn-primary mc-btn-enroll">
+              <span>مشاهده و ثبت‌نام</span>
+              <ExternalLink size={14} />
+            </Link>
           )}
         </div>
       </div>

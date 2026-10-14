@@ -775,3 +775,124 @@
   transform: translate(2px, 2px) !important;
   box-shadow: 0 0 0 var(--ink, #1F1E1D) !important;
 }
+
+/* ========================================================
+   STATUS TABS & SAVED COURSES SUPPORT
+   ======================================================== */
+.mc-status-tabs {
+  display: inline-flex;
+  align-items: center;
+  background: #ffffff;
+  border: 2px solid var(--ink, #1F1E1D);
+  border-radius: 12px 0 12px 0;
+  box-shadow: 2.5px 2.5px 0 var(--ink, #1F1E1D);
+  padding: 3px;
+  gap: 3px;
+}
+
+.mc-status-tab {
+  padding: 6px 14px;
+  border-radius: 8px 0 8px 0;
+  border: 1.5px solid transparent;
+  background: transparent;
+  color: var(--ink-subtle, #62605B);
+  font-size: 13px;
+  font-weight: 850;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.mc-status-tab:hover {
+  color: var(--ink, #1F1E1D);
+}
+
+.mc-status-tab.active {
+  background: var(--college, #F8A41D);
+  color: var(--ink, #1F1E1D);
+  border-color: var(--ink, #1F1E1D);
+  box-shadow: 1.5px 1.5px 0 var(--ink, #1F1E1D);
+}
+
+.mc-status-tab-count {
+  font-size: 11px;
+  background: rgba(41, 40, 39, 0.1);
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-weight: 800;
+}
+
+.mc-status-tab.active .mc-status-tab-count {
+  background: #ffffff;
+  color: var(--ink, #1F1E1D);
+}
+
+.mc-badge-saved {
+  background: var(--college-light, #FFF4E5);
+  color: var(--college-darker, #B45309);
+  border-color: var(--ink, #1F1E1D);
+}
+
+.mc-card-save-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px 0 8px 0;
+  background: #ffffff;
+  border: 1.5px solid var(--ink, #1F1E1D);
+  box-shadow: 2px 2px 0 var(--ink, #1F1E1D);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 4;
+  color: var(--ink, #1F1E1D);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.mc-card-save-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink, #1F1E1D);
+}
+
+.mc-card-save-btn.is-saved {
+  background: var(--college, #F8A41D);
+  color: var(--ink, #1F1E1D);
+}
+
+.mc-card-price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #FAFAF9;
+  border: 1.5px dashed var(--ink, #1F1E1D);
+  border-radius: 8px 0 8px 0;
+  padding: 8px 12px;
+  font-size: 12.5px;
+}
+
+.mc-price-label {
+  color: var(--ink-subtle, #62605B);
+  font-weight: 700;
+}
+
+.mc-price-val {
+  color: var(--ink, #1F1E1D);
+  font-weight: 900;
+  font-size: 13.5px;
+}
+
+.mc-btn-enroll {
+  background: var(--college, #F8A41D);
+  color: var(--ink, #1F1E1D);
+  box-shadow: 2.5px 2.5px 0 var(--ink, #1F1E1D);
+}
+
+.mc-btn-enroll:hover {
+  background: #e69415;
+}
