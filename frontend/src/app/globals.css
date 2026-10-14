@@ -3287,24 +3287,28 @@ a:focus-visible, button:focus-visible {
   }
   .v2-carousel::-webkit-scrollbar { display: none; }
 
-  .v2-page {
+  .v2-track {
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
+    align-items: stretch !important;
     gap: 1.1rem !important;
     width: max-content !important;
     min-width: 100% !important;
-    padding-inline: 4px;
-    scroll-snap-align: none !important;
   }
-  .v2-page .v2-stack {
-    flex: 0 0 82vw !important;
-    width: 82vw !important;
-    max-width: 330px !important;
+
+  .v2-page {
+    flex: 0 0 78vw !important;
+    width: 78vw !important;
+    max-width: 320px !important;
+    display: block !important;
     scroll-snap-align: start !important;
     margin: 0 !important;
   }
-  .v2-track { gap: 1.1rem; }
+  .v2-page .v2-stack {
+    width: 100% !important;
+    height: 100% !important;
+  }
   .v2-controls .v2-nav-arrows { display: none; }
   .v2-controls { justify-content: center; }
   .v2-item { grid-template-columns: 1fr; grid-template-rows: 140px auto; }

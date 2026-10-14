@@ -64,10 +64,9 @@ export default function Courses() {
     return function () { mq.removeEventListener("change", onChange); };
   }, []);
 
-  const perPage = 4;
+  const perPage = isMobile ? 1 : 4;
   const pageCount = Math.max(1, Math.ceil(filtered.length / perPage));
   const safePage = Math.min(page, pageCount - 1);
-  const displayedCourses = isMobile ? filtered : filtered.slice(safePage * perPage, (safePage + 1) * perPage);
 
   useEffect(() => { setPage(0); }, [filter]);
 
@@ -146,10 +145,21 @@ export default function Courses() {
           <div className="text-center py-12 text-stone-500 font-bold">هیچ دوره‌ای در این بخش یافت نشد.</div>
         ) : (
           <div className="v2-carousel">
-            <div className="v2-page">
-              {displayedCourses.map((c, i) => (
-                <CourseCard key={c._id || i} course={c} index={(isMobile ? 0 : safePage * perPage) + i} store={store} />
-              ))}
+            <div
+              className="v2-track"
+              style={isMobile ? {} : { transform: `translateX(calc(${safePage} * (100% + 2.5rem)))` }}
+            >
+              {Array.from({ length: pageCount }, (_, p) => {
+                const pageCourses = filtered.slice(p * perPage, p * perPage + perPage);
+                return (
+                  <div className="v2-page" key={`${filter}-${p}`} aria-hidden={!isMobile && p !== safePage}>
+                    {pageCourses.map((c, idx) => {
+                      const realIndex = p * perPage + idx;
+                      return <CourseCard key={c._id || c.slug || realIndex} course={c} index={realIndex} store={store} />;
+                    })}
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
