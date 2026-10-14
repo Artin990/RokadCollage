@@ -3278,9 +3278,12 @@ a:focus-visible, button:focus-visible {
   .v2-carousel {
     overflow-x: auto !important;
     overflow-y: hidden !important;
-    padding: 10px 1rem 18px !important;
-    margin: -10px -1rem -18px !important;
+    padding-top: 10px !important;
+    padding-bottom: 20px !important;
+    padding-inline: 0 !important;
+    margin-inline: -1rem !important;
     scroll-snap-type: x mandatory !important;
+    scroll-padding-inline: calc((100vw - min(84vw, 340px)) / 2) !important;
     -webkit-overflow-scrolling: touch !important;
     scrollbar-width: none;
     display: block !important;
@@ -3292,17 +3295,19 @@ a:focus-visible, button:focus-visible {
     flex-direction: row !important;
     flex-wrap: nowrap !important;
     align-items: stretch !important;
-    gap: 1.1rem !important;
+    gap: 1.25rem !important;
     width: max-content !important;
-    min-width: 100% !important;
+    padding-inline: calc((100vw - min(84vw, 340px)) / 2) !important;
   }
 
   .v2-page {
-    flex: 0 0 78vw !important;
-    width: 78vw !important;
-    max-width: 320px !important;
-    display: block !important;
-    scroll-snap-align: start !important;
+    flex: 0 0 min(84vw, 340px) !important;
+    width: min(84vw, 340px) !important;
+    max-width: 340px !important;
+    display: flex !important;
+    justify-content: center !important;
+    scroll-snap-align: center !important;
+    scroll-snap-stop: always !important;
     margin: 0 !important;
   }
   .v2-page .v2-stack {
