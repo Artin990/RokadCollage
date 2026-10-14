@@ -538,7 +538,10 @@ export default function MyCoursesClient() {
                   </div>
                 ) : (
                   <div className="mc-saved-track-wrap">
-                    <div className="mc-saved-track" ref={savedScroll.rowRef}>
+                    <div
+                      className={`mc-saved-track ${filteredSaved.length <= 1 ? "is-single" : ""}`}
+                      ref={savedScroll.rowRef}
+                    >
                       {filteredSaved.map((item) => (
                         <MyCourseCard
                           key={item._id || item.course?._id || item.course?.slug}

@@ -140,27 +140,20 @@ export default function MyCourseCard({ item, onOpenLicense, store }) {
 
         {/* باکس آیکون نئوبروتالیست مرکزی */}
         <div className="mc-icon-wrap">
-          <DeptIcon size={42} style={{ color: "var(--ink, #1F1E1D)" }} strokeWidth={2.2} />
+          <DeptIcon size={32} style={{ color: "var(--ink, #1F1E1D)" }} strokeWidth={2.2} />
         </div>
 
         {/* بج نوع برگزاری / وضعیت */}
         <span
           className={`mc-badge-pill ${
-            !isPurchased
-              ? "mc-badge-saved"
-              : isCompleted
+            isCompleted
               ? "mc-badge-completed"
               : isVirtual
               ? "mc-badge-virtual"
               : "mc-badge-inperson"
           }`}
         >
-          {!isPurchased ? (
-            <>
-              <Bookmark size={12} strokeWidth={2.5} fill="currentColor" />
-              <span>نشان‌شده</span>
-            </>
-          ) : isCompleted ? (
+          {isCompleted ? (
             <>
               <CheckCircle2 size={12} strokeWidth={2.5} />
               <span>تکمیل‌شده</span>
