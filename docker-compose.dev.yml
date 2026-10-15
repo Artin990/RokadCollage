@@ -1,0 +1,49 @@
+# ============================================================
+# Development Override for Local Development with Hot Reload
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+# ============================================================
+
+services:
+  backend:
+    build:
+      context: ./API
+      dockerfile: Dockerfile
+      target: development
+    environment:
+      NODE_ENV: development
+    volumes:
+      # Bind mount API source code for hot reload
+      - ./API:/app
+      # Anonymous volume to preserve Linux node_modules inside container
+      - /app/node_modules
+
+  admin:
+    build:
+      context: ./Admin
+      dockerfile: Dockerfile
+      target: development
+    ports:
+      - "5173:5173"
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://localhost:5000/api/
+      - VITE_FILE_URL=http://localhost:5000/
+    volumes:
+      # Bind mount Admin source code for hot reload
+      - ./Admin:/app
+      - /app/node_modules
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: development
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost:5000/api
+    volumes:
+      # Bind mount frontend source code for Next.js hot reload
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
