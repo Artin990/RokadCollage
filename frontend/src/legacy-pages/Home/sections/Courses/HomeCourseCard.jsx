@@ -23,6 +23,7 @@ export function CourseCard({ course, index, store }) {
   const durationText = course.duration || (course.hours ? `${toPersianNum(course.hours)} ساعت` : "۱۲ هفته");
   const priceFormatted = course.price ? `${toPersianNum(Number(course.price).toLocaleString("fa-IR"))} تومان` : "رایگان";
   const tags = Array.isArray(course.tags) && course.tags.length > 0 ? course.tags : [course.category || "مهارت"];
+  const hoverColorClass = cat.btnHoverFg === "var(--ink)" ? "btn-hover-dark" : "btn-hover-white";
 
   return (
     <div
@@ -96,7 +97,7 @@ export function CourseCard({ course, index, store }) {
                 {priceFormatted !== "رایگان" ? priceFormatted : durationText}
               </div>
             </div>
-            <Link href={`/courses/${slug}`} className="v2-btn">
+            <Link href={`/courses/${slug}`} className={`v2-btn ${hoverColorClass}`}>
               {"مشاهده "} <ArrowIcon width={14} height={14} />
             </Link>
           </div>
