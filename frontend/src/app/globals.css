@@ -4849,10 +4849,10 @@ a:focus-visible, button:focus-visible {
   .bi-blog-grid { grid-template-columns: repeat(3, 1fr); }
   .bi-card-lg {
     grid-column: span 2;
-    grid-row: span 2;
+    grid-row: auto;
   }
   .bi-card-lg .bi-card-media {
-    height: 280px;
+    height: 200px;
   }
 }
 @media (max-width: 640px) {
