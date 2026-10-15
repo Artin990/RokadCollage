@@ -31,20 +31,24 @@ export default function DepartmentHero({ dept, persona, onScrollTo }) {
             مشاهدهٔ دوره‌ها
             <ArrowIcon />
           </a>
-          <a className="dp-btn dp-btn-ghost" href="#dp-paths" onClick={(e) => onScrollTo(e, "dp-paths")}>
-            مسیر یادگیری
-          </a>
+          {dept.paths && dept.paths.length > 0 && (
+            <a className="dp-btn dp-btn-ghost" href="#dp-paths" onClick={(e) => onScrollTo(e, "dp-paths")}>
+              مسیر یادگیری
+            </a>
+          )}
         </div>
 
         {/* نوار آمار */}
-        <div className="dp-hero-stats">
-          {dept.stats.map((s) => (
-            <div className="dp-hstat" key={s.lab}>
-              <b>{s.num}</b>
-              <span>{s.lab}</span>
-            </div>
-          ))}
-        </div>
+        {dept.stats && dept.stats.length > 0 && (
+          <div className="dp-hero-stats">
+            {dept.stats.map((s) => (
+              <div className="dp-hstat" key={s.lab}>
+                <b>{s.num}</b>
+                <span>{s.lab}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </header>
   );

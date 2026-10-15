@@ -3,6 +3,8 @@ import Link from "next/link";
 import { SectionHead, CourseIcon, ArrowIcon } from "./DepartmentIcons.jsx";
 
 export default function DepartmentPathsSection({ dept, currentId }) {
+  if (!dept?.paths || dept.paths.length === 0) return null;
+
   return (
     <section className="dp-block dp-card-block" id="dp-paths">
       <SectionHead pre="مسیرهای" accent="یادگیری" />

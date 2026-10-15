@@ -133,15 +133,34 @@ export default function DepartmentPage({ deptId, initialCourses = [] }) {
     }));
   }, [liveComments, currentId]);
 
+  const dynamicStats = useMemo(() => {
+    if (!formattedDeptCourses || formattedDeptCourses.length === 0) return [];
+    const inPersonCount = formattedDeptCourses.filter((c) => c.mode === "حضوری").length;
+    const onlineCount = formattedDeptCourses.filter((c) => c.mode !== "حضوری").length;
+
+    const stats = [
+      { num: `${Number(formattedDeptCourses.length).toLocaleString("fa-IR")}`, lab: "دوره تخصصی" },
+    ];
+    if (inPersonCount > 0) {
+      stats.push({ num: `${Number(inPersonCount).toLocaleString("fa-IR")}`, lab: "کارگاه حضوری" });
+    }
+    if (onlineCount > 0) {
+      stats.push({ num: `${Number(onlineCount).toLocaleString("fa-IR")}`, lab: "دوره آنلاین" });
+    }
+    return stats;
+  }, [formattedDeptCourses]);
+
   const dept = useMemo(() => {
     return {
       ...baseDept,
+      stats: dynamicStats,
+      paths: [],
       popular: formattedDeptCourses,
       newest: formattedDeptCourses,
       suggested: formattedDeptCourses.slice(0, 4),
       testimonials: deptTestimonials,
     };
-  }, [baseDept, formattedDeptCourses, deptTestimonials]);
+  }, [baseDept, dynamicStats, formattedDeptCourses, deptTestimonials]);
 
   const [tab, setTab] = useState("popular");
   const [selectedTopic, setSelectedTopic] = useState(null);
@@ -290,7 +309,9 @@ export default function DepartmentPage({ deptId, initialCourses = [] }) {
           store={store}
         />
 
-        <DepartmentPathsSection dept={dept} currentId={currentId} />
+        {dept.paths && dept.paths.length > 0 && (
+          <DepartmentPathsSection dept={dept} currentId={currentId} />
+        )}
 
         {dept.testimonials && dept.testimonials.length > 0 && (
           <DepartmentTestimonialsSection dept={dept} />
