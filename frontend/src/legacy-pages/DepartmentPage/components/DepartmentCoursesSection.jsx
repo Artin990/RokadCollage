@@ -83,10 +83,12 @@ export default function DepartmentCoursesSection({
 
       {allCourses.length === 0 ? (
         <div className="dp-empty">
-          <p>دوره‌ای با این فیلترها پیدا نشد.</p>
-          <button type="button" className="dp-btn dp-btn-ghost" onClick={resetFilters} style={{ marginTop: 12 }}>
-            پاک کردن همهٔ فیلترها
-          </button>
+          <p>{activeFilterCount > 0 ? "دوره‌ای با این فیلترها پیدا نشد." : "هنوز دوره‌ای در این دپارتمان ثبت نشده است."}</p>
+          {activeFilterCount > 0 && (
+            <button type="button" className="dp-btn dp-btn-ghost" onClick={resetFilters} style={{ marginTop: 12 }}>
+              پاک کردن فیلترها
+            </button>
+          )}
         </div>
       ) : (
         <>

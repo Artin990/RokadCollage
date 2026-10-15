@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import "./department.css";
 import { DEPT_PERSONA, departments } from "@/data/departments.js";
 import { getPanelStore } from "@/data/panelStore.js";
+import { isCourseInPerson } from "@/data/selectors.js";
 import { faToNum } from "./components/DepartmentIcons.jsx";
 import { useRtlRowNav } from "./hooks/useRtlRowNav.js";
 import { matchesTopic, filterCourses } from "./utils/departmentFilters.js";
@@ -65,52 +66,67 @@ export default function DepartmentPage({ deptId, initialCourses = [] }) {
 
   // Filter live courses that match this department's category
   const targetCategory = DEPT_CATEGORY_MAP[currentId] || baseDept.name;
-  const deptLiveCourses = liveCourses.filter(
-    (c) =>
-      c.category === targetCategory ||
-      (currentId === "it" && (c.category?.includes("اطلاعات") || c.category?.includes("فرانتاند") || c.category?.includes("بکاند"))) ||
-      (currentId === "counseling" && (c.category?.includes("مشاوره") || c.category?.includes("هدایت")))
-  );
+  const deptLiveCourses = useMemo(() => {
+    return liveCourses.filter((c) => {
+      if (c.department === currentId) return true;
+      const cat = String(c.category || "");
+      if (cat === targetCategory) return true;
+      if (currentId === "it") {
+        return cat.includes("اطلاعات") || cat.includes("فرانتاند") || cat.includes("فرانت‌اند") || cat.includes("بکاند") || cat.includes("بک‌اند") || cat.includes("نرم‌افزار") || cat.includes("برنامه‌نویسی");
+      }
+      if (currentId === "business") {
+        return cat.includes("کسب") || cat.includes("مدیریت") || cat.includes("مارکتینگ") || cat.includes("فروش");
+      }
+      if (currentId === "languages") {
+        return cat.includes("زبان") || cat.toLowerCase().includes("english") || cat.toLowerCase().includes("ielts");
+      }
+      if (currentId === "counseling") {
+        return cat.includes("مشاوره") || cat.includes("هدایت");
+      }
+      return false;
+    });
+  }, [liveCourses, currentId, targetCategory]);
 
-  const formattedDeptCourses = deptLiveCourses.map((c, i) => {
-    const isHp = c.isInPerson || c.mode === "in-person" || c.type === "حضوری";
-    const teacherName = c.instructor?.fullName || c.instructor?.name || (c.teachers && c.teachers[0]?.name) || "مدرس کالج";
-    const priceNum = c.finalPrice !== undefined ? c.finalPrice : c.price;
-    const hasDiscount = Boolean(c.isDiscountActive && c.price && c.finalPrice && c.finalPrice < c.price);
+  const formattedDeptCourses = useMemo(() => {
+    return deptLiveCourses.map((c, i) => {
+      const isHp = isCourseInPerson(c);
+      const teacherName = c.instructor?.fullName || c.instructor?.name || (c.teachers && c.teachers[0]?.name) || "مدرس کالج";
+      const priceNum = c.finalPrice !== undefined ? c.finalPrice : c.price;
+      const hasDiscount = Boolean(c.isDiscountActive && c.price && c.finalPrice && c.finalPrice < c.price);
 
-    return {
-      id: c.id || c._id || `dept-c-${i}`,
-      _id: c._id || c.id,
-      title: c.title,
-      cat: c.category || targetCategory,
-      department: currentId,
-      mode: isHp ? "حضوری" : "غیر حضوری",
-      hours: c.duration || `${c.hours || 35} ساعت`,
-      rating: "۴.۹",
-      students: `${Number(c.studentCount || 95).toLocaleString("fa-IR")}`,
-      price: priceNum ? `${Number(priceNum).toLocaleString("fa-IR")} تومان` : "رایگان",
-      old: hasDiscount ? `${Number(c.price).toLocaleString("fa-IR")} تومان` : null,
-      free: !priceNum || priceNum === 0,
-      slug: c.slug || c.id || c._id,
-      inst: teacherName,
-      ic: currentId,
-      tag: isHp ? "کارگاه حضوری" : "آنلاین",
-    };
-  });
+      return {
+        id: c.id || c._id || `dept-c-${i}`,
+        _id: c._id || c.id,
+        title: c.title,
+        cat: c.category || targetCategory,
+        department: currentId,
+        mode: isHp ? "حضوری" : "غیر حضوری",
+        hours: c.duration || `${c.hours || 35} ساعت`,
+        rating: "۴.۹",
+        students: `${Number(c.studentCount || 95).toLocaleString("fa-IR")}`,
+        price: priceNum ? `${Number(priceNum).toLocaleString("fa-IR")} تومان` : "رایگان",
+        old: hasDiscount ? `${Number(c.price).toLocaleString("fa-IR")} تومان` : null,
+        free: !priceNum || priceNum === 0,
+        slug: c.slug || c.id || c._id,
+        inst: teacherName,
+        ic: currentId,
+        tag: isHp ? "کارگاه حضوری" : "آنلاین",
+      };
+    });
+  }, [deptLiveCourses, currentId, targetCategory]);
 
   const deptTestimonials = useMemo(() => {
     if (!liveComments || liveComments.length === 0) return [];
     const matching = liveComments.filter((c) => {
-      const cat = c.course?.category;
-      if (!cat) return true;
+      const cat = String(c.course?.category || "");
+      if (!cat) return false;
       if (currentId === "it") return cat.includes("اطلاعات") || cat.includes("فرانتاند") || cat.includes("بکاند");
-      if (currentId === "business") return cat.includes("کسب");
+      if (currentId === "business") return cat.includes("کسب") || cat.includes("مدیریت") || cat.includes("مارکتینگ");
       if (currentId === "languages") return cat.includes("زبان");
       if (currentId === "counseling") return cat.includes("مشاوره") || cat.includes("هدایت");
-      return true;
+      return false;
     });
-    const source = matching.length > 0 ? matching : liveComments;
-    return source.map((c) => ({
+    return matching.map((c) => ({
       name: c.name,
       role: c.role || c.job || "هنرجوی دوره",
       text: c.comment,
@@ -118,14 +134,12 @@ export default function DepartmentPage({ deptId, initialCourses = [] }) {
   }, [liveComments, currentId]);
 
   const dept = useMemo(() => {
-    const popularCourses = formattedDeptCourses.length > 0 ? formattedDeptCourses : (baseDept.popular || []);
-    const newestCourses = formattedDeptCourses.length > 0 ? formattedDeptCourses : (baseDept.newest || []);
     return {
       ...baseDept,
-      popular: popularCourses,
-      newest: newestCourses,
-      suggested: popularCourses.slice(0, 4),
-      testimonials: deptTestimonials.length > 0 ? deptTestimonials : (baseDept.testimonials || []),
+      popular: formattedDeptCourses,
+      newest: formattedDeptCourses,
+      suggested: formattedDeptCourses.slice(0, 4),
+      testimonials: deptTestimonials,
     };
   }, [baseDept, formattedDeptCourses, deptTestimonials]);
 
@@ -245,14 +259,16 @@ export default function DepartmentPage({ deptId, initialCourses = [] }) {
       <DepartmentHero dept={dept} persona={collegePersona} onScrollTo={scrollToSection} />
 
       <main className="dp-main container">
-        <DepartmentSuggestedRow
-          dept={dept}
-          tab={tab}
-          setTab={setTab}
-          suggestNav={suggestNav}
-          persona={persona}
-          store={store}
-        />
+        {dept.popular && dept.popular.length > 0 && (
+          <DepartmentSuggestedRow
+            dept={dept}
+            tab={tab}
+            setTab={setTab}
+            suggestNav={suggestNav}
+            persona={persona}
+            store={store}
+          />
+        )}
 
         <DepartmentCoursesSection
           allCourses={allCourses}
@@ -276,7 +292,9 @@ export default function DepartmentPage({ deptId, initialCourses = [] }) {
 
         <DepartmentPathsSection dept={dept} currentId={currentId} />
 
-        <DepartmentTestimonialsSection dept={dept} />
+        {dept.testimonials && dept.testimonials.length > 0 && (
+          <DepartmentTestimonialsSection dept={dept} />
+        )}
 
         <DepartmentCtaSection
           dept={dept}
