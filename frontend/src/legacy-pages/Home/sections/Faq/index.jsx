@@ -82,6 +82,70 @@ const faqChat = [
   },
 ];
 
+/* ---------- FAQ Schema for Google Rich Snippets ---------- */
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "آیا برای شرکت در دوره‌های رکاد به پیش‌نیاز نیاز دارم؟",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "خیر، دوره‌های کالج رکاد از سطح صفر تا حرفه‌ای طراحی شده‌اند. سرفصل‌ها مرحله‌به‌مرحله چیده شده‌اند؛ حتی اگر هیچ آشنایی قبلی نداری، به‌راحتی می‌تونی جلو بری.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "آیا دوره‌ها برای نوجوانان و دانش‌آموزان هم مناسب هستند؟",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "بله! رکاد اولین هنرستان استارتاپی ایرانه و دوره‌های اختصاصی برای نوجوانان و دانش‌آموزان داره. زبان و سبک تدریس متناسب با گروه سنی انتخاب می‌شه.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "آیا بعد از پایان دوره مدرک دریافت می‌کنم؟",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "بله. پس از اتمام موفق دوره و ارائه‌ی پروژه‌ی پایانی، مدرک معتبر رکاد‌کالج با کد QR قابل استعلام دریافت می‌کنی که کاملاً مناسب برای رزومه و لینکدین است.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "آیا آموزش‌ها پروژه‌محور هستند؟",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "کاملاً. هنرجو در طول دوره چند پروژه‌ی واقعی انجام می‌ده و در پایان یک پروژه‌ی جامع تحویل می‌ده که به‌عنوان نمونه‌کار قابل ارائه‌ست.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "آیا در طول دوره پشتیبانی آموزشی دارم؟",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "بله، ۱۰۰٪. منتور اختصاصی و پشتیبانی با پاسخ‌گویی در کمتر از ۲۴ ساعت.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "آیا رکاد برای ورود به بازار کار هم کمک می‌کند؟",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "بله. تیم کاریابی رکاد از رزومه‌سازی تا آماده‌سازی مصاحبه و معرفی به شرکت‌های همکار کنارت هست. هنرجویان برتر مستقیم به کارفرمایان معرفی می‌شن.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "اگر ندانم کدام دوره برای من مناسب است، چه کار کنم؟",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "کافیه مشاوره‌ی رایگان درخواست بدی. کارشناس ما با توجه به علاقه، شرایط و هدف شغلی‌ات، بهترین مسیر یادگیری رو بهت پیشنهاد می‌ده.",
+      },
+    },
+  ],
+};
+
 /* ---------- Component ---------- */
 export default function Faq() {
   // تمام بخش‌ها در ابتدا بسته باشند؛ با باز شدن هر مورد، بقیه بسته می‌شوند (Accordion).
@@ -93,6 +157,11 @@ export default function Faq() {
 
   return (
     <section className="section" id="faq" style={{ background: "var(--white)" }}>
+      {/* FAQ Schema for SEO Rich Results */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       {/* Background pattern (mask fade) */}
       <PatternLayer rotate={180} />
       <div className="container section-inner">

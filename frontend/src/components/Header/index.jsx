@@ -67,7 +67,7 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    const t = setTimeout(() => setDebouncedQuery(query), 160);
+    const t = setTimeout(() => setDebouncedQuery(query), 250);
     return () => clearTimeout(t);
   }, [query]);
 

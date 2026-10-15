@@ -104,6 +104,8 @@ export default function AuthForgotFlow({
                 type="text"
                 maxLength={1}
                 inputMode="numeric"
+                pattern="[0-9]*"
+                autoComplete={i === 0 ? "one-time-code" : "off"}
                 value={forgotOtp[i] !== "" ? toFa(forgotOtp[i]) : ""}
                 onChange={(e) => handleOtpChange(i, e.target.value, true)}
                 onKeyDown={(e) => handleOtpKeyDown(i, e, true)}

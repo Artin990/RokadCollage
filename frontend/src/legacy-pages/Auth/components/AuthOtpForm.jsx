@@ -32,6 +32,8 @@ export default function AuthOtpForm({
             type="text"
             maxLength={1}
             inputMode="numeric"
+            pattern="[0-9]*"
+            autoComplete={i === 0 ? "one-time-code" : "off"}
             value={loginOtp[i] !== "" ? toFa(loginOtp[i]) : ""}
             onChange={(e) => handleOtpChange(i, e.target.value, false)}
             onKeyDown={(e) => handleOtpKeyDown(i, e, false)}

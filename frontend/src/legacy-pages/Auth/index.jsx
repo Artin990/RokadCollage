@@ -81,6 +81,32 @@ export default function AuthPage({ initialMode, onLoginSuccess }) {
   const [forgotOtp, setForgotOtp] = useState(["", "", "", "", ""]);
   const forgotOtpRefs = useRef([]);
 
+  // WebOTP API: دریافت خودکار کد تایید از پیامک در موبایل
+  useEffect(() => {
+    if (step !== "otp" || typeof window === "undefined" || !("OTPCredential" in window)) return;
+    const ac = new AbortController();
+
+    navigator.credentials
+      .get({
+        otp: { transport: ["sms"] },
+        signal: ac.signal,
+      })
+      .then((otp) => {
+        if (otp && otp.code) {
+          const digits = toEnDigits(otp.code).replace(/\D/g, "").slice(0, 5).split("");
+          if (digits.length === 5) {
+            setLoginOtp(digits);
+            if (loginOtpRefs.current[4]) loginOtpRefs.current[4].focus();
+          }
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      ac.abort();
+    };
+  }, [step]);
+
   // Reset password state
   const [newPass, setNewPass] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
