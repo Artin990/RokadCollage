@@ -61,17 +61,7 @@ export default function CoursesPage() {
   const [courses, setCourses] = useState([]);
   const [instructors, setInstructors] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showSavedOnly, setShowSavedOnly] = useState(false);
   const instScroll = useHorizontalDragScroll();
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get("saved") === "true") {
-        setShowSavedOnly(true);
-      }
-    }
-  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -181,146 +171,8 @@ export default function CoursesPage() {
       <CoursesHubHero />
 
       <div className="ch-container">
-        {/* نوار تغییر سریع بین همه دوره‌ها و نشان‌شده‌ها */}
-        <div className="ch-hub-toolbar">
-          <div className="ch-hub-filter-tabs">
-            <button
-              type="button"
-              className={`ch-hub-filter-btn ${!showSavedOnly ? "active" : ""}`}
-              onClick={() => setShowSavedOnly(false)}
-            >
-              <span>همه دوره‌ها</span>
-              <span className="ch-hub-filter-count">{courses.length.toLocaleString("fa-IR")}</span>
-            </button>
-            <button
-              type="button"
-              className={`ch-hub-filter-btn ${showSavedOnly ? "active" : ""}`}
-              onClick={() => setShowSavedOnly(true)}
-            >
-              <Bookmark size={15} fill={showSavedOnly ? "currentColor" : "none"} />
-              <span>نشان‌شده‌ها</span>
-              {savedCourses.length > 0 && (
-                <span className="ch-hub-filter-count ch-hub-filter-count-saved">
-                  {savedCourses.length.toLocaleString("fa-IR")}
-                </span>
-              )}
-            </button>
-          </div>
-        </div>
-
         {loading ? (
           <div className="py-20 text-center text-stone-500 font-bold">در حال بارگذاری دوره‌ها از سرور...</div>
-        ) : showSavedOnly ? (
-          /* ========================================================
-             نمای دوره‌های نشان‌شده (Wishlist View)
-             ======================================================== */
-          <div className="ch-saved-view">
-            <div className="ch-saved-view-head">
-              <div className="ch-saved-view-title-wrap">
-                <span className="ch-saved-badge">
-                  <Bookmark size={14} fill="currentColor" />
-                  علاقه‌مندی‌ها
-                </span>
-                <h2 className="ch-saved-title">
-                  دوره‌های نشان‌شده ({savedCourses.length.toLocaleString("fa-IR")})
-                </h2>
-              </div>
-            </div>
-
-            {savedCourses.length === 0 ? (
-              <div className="ch-saved-empty">
-                <div className="ch-saved-empty-icon">
-                  <Bookmark size={32} />
-                </div>
-                <h3 className="ch-saved-empty-title">هنوز دوره‌ای را نشان نکرده‌اید</h3>
-                <p className="ch-saved-empty-desc">
-                  با کلیک روی نشان، دوره به این بخش اضافه می‌شود.
-                </p>
-                <button
-                  type="button"
-                  className="ch-saved-empty-btn"
-                  onClick={() => setShowSavedOnly(false)}
-                >
-                  مشاهده همه دوره‌ها
-                </button>
-              </div>
-            ) : (
-              <div className="ch-saved-grid">
-                {savedCourses.map((c) => {
-                  const deptInfo = DEPT_CONFIG[c.category] || DEPT_CONFIG["فناوری اطلاعات"];
-                  const DeptIcon = deptInfo.icon || Code;
-                  const isHp = isCourseInPerson(c);
-                  const instructorName = c.instructor?.fullName || c.instructor?.name || (c.teachers && c.teachers[0]?.name) || "استاد کالج";
-                  const priceNum = c.price;
-                  const isPurchased = isEnrolledIn(c.slug || c._id || c.id, store);
-
-                  return (
-                    <Link
-                      key={c._id || c.id || c.slug}
-                      href={`/courses/${c.slug || c._id || c.id}`}
-                      className="ch-card"
-                      data-dept={deptInfo.deptId}
-                    >
-                      <div className="ch-card-cover" style={{ background: deptInfo.badgeBg }}>
-                        <img src={deptInfo.pattern} alt="" className="ch-cover-pat" aria-hidden="true" />
-                        <span className="ch-card-tag hot">{isHp ? "حضوری" : "آنلاین"}</span>
-                        <CourseSaveButton slug={c.slug || c._id || c.id} store={store} />
-                        <DeptIcon size={34} style={{ color: deptInfo.badgeColor, position: "relative", zIndex: 1 }} />
-                      </div>
-
-                      <div className="ch-card-body">
-                        <div className="ch-card-badges-row">
-                          <span
-                            className="ch-card-dept-badge"
-                            style={{ background: deptInfo.badgeBg, color: deptInfo.badgeColor }}
-                          >
-                            {c.category || deptInfo.deptName}
-                          </span>
-                          <CourseModeBadge mode={isHp ? "in-person" : "online"} />
-                        </div>
-
-                        <h3 className="ch-card-title">{c.title}</h3>
-
-                        <div className="ch-card-inst">
-                          <span className="ch-card-av">{instructorName.charAt(0)}</span>
-                          <span>مدرس: {instructorName}</span>
-                        </div>
-
-                        <div className="ch-card-meta">
-                          <span className="ch-card-meta-item ch-rate">
-                            <Star size={13} fill="#f5a623" color="#f5a623" />
-                            ۴.۹
-                          </span>
-                          <span className="ch-card-meta-item">
-                            <Clock size={13} />
-                            {c.duration || "۳۰ ساعت"}
-                          </span>
-                          <span className="ch-card-meta-item">
-                            <Users size={13} />
-                            {Number(c.studentCount || 85).toLocaleString("fa-IR")} هنرجو
-                          </span>
-                        </div>
-
-                        <div className="ch-card-foot">
-                          <div className="ch-card-price">
-                            {isPurchased ? (
-                              <b style={{ color: "#047857" }}>خریداری‌شده</b>
-                            ) : (
-                              <b>{priceNum ? `${Number(priceNum).toLocaleString("fa-IR")} تومان` : "رایگان"}</b>
-                            )}
-                          </div>
-                          <span className="ch-card-btn">
-                            <span>{isPurchased ? "ورود" : "مشاهده"}</span>
-                            <ArrowLeft size={13} />
-                          </span>
-                        </div>
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-            )}
-          </div>
         ) : (
           /* ========================================================
              نمای کامل کاتالوگ دوره‌ها
