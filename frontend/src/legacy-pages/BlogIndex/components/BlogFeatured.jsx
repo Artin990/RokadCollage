@@ -55,12 +55,6 @@ export default function BlogFeatured({ featured }) {
 
                 <h3 className="bi-feat-title">{featured.title}</h3>
                 <p className="bi-feat-desc">{featured.excerpt}</p>
-
-                <div className="bi-progress">
-                  <span> {featured.readTime}</span>
-                  <div className="track"><div className="fill" style={{ width: "35%" }} /></div>
-                  <span>۳۵٪</span>
-                </div>
               </div>
 
               <div className="bi-feat-foot">
