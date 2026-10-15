@@ -3215,7 +3215,7 @@ a:focus-visible, button:focus-visible {
   transition: transform .22s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow .22s ease, background-color .2s ease;
   will-change: transform;
 }
-.v2-action .v2-btn:hover { background: var(--cat); color: var(--ink); transform: rotate(-1.5deg) scale(1.05) translateY(-2px); box-shadow: 4px 4px 0 0 var(--ink); }
+.v2-action .v2-btn:hover { background: var(--cat); color: var(--catBtnHoverFg, #fff); transform: rotate(-1.5deg) scale(1.05) translateY(-2px); box-shadow: 4px 4px 0 0 var(--ink); }
 .v2-action .v2-btn svg { width: 14px; height: 14px; }
 
 /* ---- CTA Row (دسکتاپ : زیر کاروسل، full width، خارج از اسلایدها) ---- */

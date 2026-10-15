@@ -33,6 +33,7 @@ export function CourseCard({ course, index, store }) {
         "--catBg": cat.bg,
         "--catFg": cat.fg,
         "--catBorder": cat.border,
+        "--catBtnHoverFg": cat.btnHoverFg || (cat.accent === "var(--college)" ? "var(--ink)" : "#fff"),
       }}
     >
       <article className="v2-item" style={{ position: "relative" }}>
