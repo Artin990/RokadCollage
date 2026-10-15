@@ -166,7 +166,7 @@ export default function BlogGrid({ activeCategory, searchQuery }) {
           </div>
         )}
 
-        {sorted.length > 0 && (
+        {(hasMore || visible > PAGE_SIZE) && (
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14, marginTop: "3.5rem" }}>
             <div className="bi-loadmore">
               <div className="bi-loadmore-sh" />
