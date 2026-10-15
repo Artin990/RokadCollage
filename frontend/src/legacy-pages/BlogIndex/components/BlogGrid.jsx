@@ -65,7 +65,12 @@ export default function BlogGrid({ activeCategory, searchQuery }) {
   ];
   const sortLabel = SORTS.find((s) => s.id === sortBy)?.label;
 
-  const formattedPosts = blogsList.map((b, i) => ({
+  const sortedRaw = [...blogsList].sort((a, b) => {
+    if (sortBy === "oldest") return (a.id || a._id) > (b.id || b._id) ? 1 : -1;
+    return 0;
+  });
+
+  const formattedPosts = sortedRaw.map((b, i) => ({
     id: b.id || b._id,
     title: b.title,
     excerpt: b.excerpt || b.headline || (b.content ? b.content.replace(/<[^>]+>/g, "").slice(0, 100) + "..." : ""),
@@ -75,15 +80,11 @@ export default function BlogGrid({ activeCategory, searchQuery }) {
     readTime: b.readTime ? `${toFa(b.readTime)} دقیقه` : "۵ دقیقه",
     reads: `${toFa(b.views || 320)}`,
     date: b.createdAt ? new Date(b.createdAt).toLocaleDateString("fa-IR") : "به‌تازگی",
-    size: i % 3 === 0 ? "lg" : "sm",
+    size: i === 0 ? "lg" : "sm",
     slug: b.slug || b.id || b._id,
   }));
 
-  const sorted = [...formattedPosts].sort((a, b) => {
-    if (sortBy === "oldest") return a.id > b.id ? 1 : -1;
-    return 0;
-  });
-
+  const sorted = formattedPosts;
   const posts = sorted.slice(0, visible);
   const hasMore = visible < sorted.length;
 

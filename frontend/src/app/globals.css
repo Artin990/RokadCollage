@@ -4550,6 +4550,7 @@ a:focus-visible, button:focus-visible {
   position: relative; transform-origin: center;
   transform: rotate(var(--rot, 0deg));
   transition: transform .4s ease-out;
+  height: 100%;
 }
 .bi-card:hover { transform: rotate(0deg) translateY(-4px); }
 
@@ -4815,6 +4816,13 @@ a:focus-visible, button:focus-visible {
 }
 @media (min-width: 1024px) {
   .bi-blog-grid { grid-template-columns: repeat(3, 1fr); }
+  .bi-card-lg {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+  .bi-card-lg .bi-card-media {
+    height: 280px;
+  }
 }
 @media (max-width: 640px) {
   .bi-hide-mobile, .bi-hide-mob-inline { display: none !important; }
