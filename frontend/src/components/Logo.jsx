@@ -1,8 +1,24 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
 // Rokad wordmark: white "Sign W" logo on college background + "COLLEGE" accent.
 export default function Logo({ withWord = true, size = 40, compact = false }) {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+
+  const handleClick = (e) => {
+    if (isHome) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   return (
-    <a
-      href="#top"
+    <Link
+      href={isHome ? "#top" : "/"}
+      onClick={handleClick}
       className="logo"
       aria-label="کالج رکاد"
       style={{ display: "inline-flex", alignItems: "center", gap: 10 }}
@@ -63,6 +79,6 @@ export default function Logo({ withWord = true, size = 40, compact = false }) {
           </span>
         </span>
       )}
-    </a>
+    </Link>
   );
 }
