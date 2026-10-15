@@ -87,7 +87,6 @@ export default function BlogTrending() {
                       </span>
                     </div>
                     <div className="bi-trend-body">
-                      <span className="bi-trend-rank" style={{ color: c.solid }}>#{toFa(it.rank)}</span>
                       <div className="bi-trend-top">
                         <span className="bi-trend-badge" style={{ background: c.solid }}>رتبه {toFa(it.rank)}</span>
                       </div>
