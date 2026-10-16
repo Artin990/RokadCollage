@@ -10,6 +10,7 @@ const VideoPlayerModal = dynamic(() => import("../../components/VideoPlayerModal
 const SpotPlayerLicenseModal = dynamic(() => import("./components/SpotPlayerLicenseModal.jsx"), { ssr: false });
 import CourseSingleInPerson from "./CourseSingleInPerson.jsx";
 import CourseSingleNotFound from "./components/CourseSingleNotFound.jsx";
+import SkeletonCourseSingle from "./components/SkeletonCourseSingle.jsx";
 import { CourseTopbar, CourseSidebar } from "./components/CourseSidebar.jsx";
 import CourseMobilePlayer from "./components/CourseMobilePlayer.jsx";
 import ResourcesPanel from "./components/ResourcesPanel.jsx";
@@ -68,7 +69,7 @@ export default function CourseSingle({ slug, initialCourse }) {
   }, []);
 
   if (!course && loading) {
-    return <div className="min-h-screen flex items-center justify-center font-sans text-stone-500">در حال بارگذاری دوره...</div>;
+    return <SkeletonCourseSingle />;
   }
 
   if (!course) {

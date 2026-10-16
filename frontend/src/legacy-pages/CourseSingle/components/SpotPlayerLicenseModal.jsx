@@ -115,9 +115,12 @@ export default function SpotPlayerLicenseModal({ isOpen, onClose, courseId, cour
         </div>
 
         {loading ? (
-          <div className="py-14 flex flex-col items-center justify-center gap-3">
-            <RotateCw className="w-8 h-8 text-[#f8a41d] animate-spin" />
-            <span className="text-xs sm:text-sm font-bold text-stone-600">در حال دریافت کلید لایسنس...</span>
+          <div className="spm-box" style={{ padding: "20px 16px" }} aria-busy="true">
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+              <div className="rk-skeleton-line" style={{ width: 140, height: 16 }} />
+              <div className="rk-skeleton-line" style={{ width: 80, height: 20, borderRadius: 999 }} />
+            </div>
+            <div className="mc-spotplayer-box rk-skeleton-shimmer" style={{ background: "rgba(0,0,0,0.04)", height: 44 }} />
           </div>
         ) : licenseKey ? (
           <div>

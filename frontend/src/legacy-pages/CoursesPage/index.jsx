@@ -10,6 +10,7 @@ import CoursesHubHero from "./components/CoursesHubHero.jsx";
 import FlagshipSection from "./components/FlagshipSection.jsx";
 import SuggestedGroupSection from "./components/SuggestedGroupSection.jsx";
 import InstructorsSection from "./components/InstructorsSection.jsx";
+import SkeletonCoursesHub from "./components/SkeletonCoursesHub.jsx";
 import { CourseModeBadge, CourseSaveButton } from "./components/CourseCardComponents.jsx";
 import { Code, Briefcase, Globe, Sparkles, Bookmark, Star, Clock, Users, ArrowLeft } from "lucide-react";
 
@@ -172,7 +173,7 @@ export default function CoursesPage() {
 
       <div className="ch-container">
         {loading ? (
-          <div className="py-20 text-center text-stone-500 font-bold">در حال بارگذاری دوره‌ها از سرور...</div>
+          <SkeletonCoursesHub />
         ) : (
           /* ========================================================
              نمای کامل کاتالوگ دوره‌ها

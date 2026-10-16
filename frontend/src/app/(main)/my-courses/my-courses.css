@@ -772,6 +772,19 @@
   }
 }
 
+@media (max-width: 360px) {
+  .mc-card-actions {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  .mc-btn-primary,
+  .mc-btn-license {
+    width: 100% !important;
+    padding: 10px !important;
+  }
+}
+
+
 /* ========================================================
    MODAL CLOSE BUTTONS HOVER ANIMATION (بدون روتیت، افکت فشردن کلید)
    ======================================================== */

@@ -346,3 +346,70 @@
   font-size: 0.75rem;
   color: var(--ink-subtle);
 }
+
+/* ============================================================
+   واکنش‌گرایی (Responsive Checkout)
+   ============================================================ */
+@media (max-width: 640px) {
+  .chk-backdrop {
+    padding: 12px;
+  }
+  .chk-card {
+    padding: 1.5rem 1.25rem;
+    border-radius: 16px 0 16px 0;
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .chk-head {
+    margin-bottom: 1.1rem;
+    padding-left: 2rem;
+  }
+  .chk-title {
+    font-size: 1.15rem;
+  }
+  .chk-close {
+    top: 1rem;
+    left: 1rem;
+    width: 32px;
+    height: 32px;
+  }
+  .chk-course-summary {
+    padding: 12px;
+    gap: 10px;
+  }
+  .chk-course-info h4 {
+    font-size: 13.5px;
+  }
+  .chk-receipt {
+    padding: 12px;
+    gap: 8px;
+  }
+  .chk-pay-btn {
+    padding: 0.8rem 1.1rem;
+    font-size: 0.92rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .chk-backdrop {
+    padding: 8px;
+  }
+  .chk-card {
+    padding: 1.25rem 1rem;
+    border-radius: 14px 0 14px 0;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .chk-title {
+    font-size: 1.05rem;
+  }
+  .chk-course-summary {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .chk-receipt-row {
+    font-size: 12px;
+  }
+  .chk-receipt-row.total {
+    font-size: 13.5px;
+  }
+}
+

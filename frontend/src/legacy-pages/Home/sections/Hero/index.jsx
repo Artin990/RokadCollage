@@ -20,6 +20,7 @@ const iconColors = ["", "", "var(--navy)", "var(--female)", "var(--ecosystem)"];
 
 export default function Hero() {
   const [coursesList, setCoursesList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
@@ -29,7 +30,10 @@ export default function Hero() {
           setCoursesList(data.slice(0, 5));
         }
       })
-      .catch((err) => console.error("Hero courses fetch error:", err));
+      .catch((err) => console.error("Hero courses fetch error:", err))
+      .finally(() => {
+        if (mounted) setLoading(false);
+      });
     return () => {
       mounted = false;
     };
@@ -80,32 +84,61 @@ export default function Hero() {
           <div className="hero-v5-panel">
             <div className="hero-v5-panel-head">
               <h4>دوره‌های پیشنهادی</h4>
-              <span className="hero-v5-cnt">
-                {coursesList.length > 0 ? `${coursesList.length} دوره فعال` : "دوره‌های فعال"}
-              </span>
+              {loading ? (
+                <span className="hero-v5-cnt rk-skeleton-shimmer" style={{ width: 64, height: 20, borderRadius: 999 }} />
+              ) : (
+                <span className="hero-v5-cnt">
+                  {coursesList.length > 0 ? `${coursesList.length} دوره فعال` : "دوره‌های فعال"}
+                </span>
+              )}
             </div>
 
-            {coursesList.map((c, i) => {
-              const href = `/courses/${c.slug || c._id}`;
-              const subText = `${c.duration ? `${c.duration} • ` : ""}${c.category || c.department || (c.isVirtual ? "مجازی" : "حضوری")}`;
-              return (
-                <Link key={c._id || c.slug || i} href={href} className="hero-v5-course">
+            {loading ? (
+              Array.from({ length: 5 }, (_, i) => (
+                <div key={i} className="hero-v5-course" style={{ pointerEvents: "none", opacity: 0.9 }}>
                   <div
-                    className="hero-v5-course-ic"
-                    style={iconColors[i % iconColors.length] ? { background: iconColors[i % iconColors.length] } : {}}
-                  >
-                    {courseIcons[i % courseIcons.length]}
+                    className="hero-v5-course-ic rk-skeleton-shimmer"
+                    style={{ background: "#EAE5DC", border: "1.5px solid var(--ink)" }}
+                  />
+                  <div className="hero-v5-course-info" style={{ flex: 1, minWidth: 0 }}>
+                    <div
+                      className="rk-skeleton-shimmer rk-skeleton-line"
+                      style={{ height: 13, width: `${78 - (i % 3) * 12}%`, marginBottom: 6 }}
+                    />
+                    <div
+                      className="rk-skeleton-shimmer rk-skeleton-line"
+                      style={{ height: 10, width: "42%" }}
+                    />
                   </div>
-                  <div className="hero-v5-course-info">
-                    <div className="hero-v5-course-t">{c.title}</div>
-                    <div className="hero-v5-course-s">{subText}</div>
-                  </div>
-                  <div className="hero-v5-course-arr">
-                    <ChevronLeftIcon width={12} height={12} />
-                  </div>
-                </Link>
-              );
-            })}
+                  <div
+                    className="hero-v5-course-arr rk-skeleton-shimmer"
+                    style={{ width: 26, height: 26, borderRadius: "50%", border: "1.5px solid var(--ink)" }}
+                  />
+                </div>
+              ))
+            ) : (
+              coursesList.map((c, i) => {
+                const href = `/courses/${c.slug || c._id}`;
+                const subText = `${c.duration ? `${c.duration} • ` : ""}${c.category || c.department || (c.isVirtual ? "مجازی" : "حضوری")}`;
+                return (
+                  <Link key={c._id || c.slug || i} href={href} className="hero-v5-course">
+                    <div
+                      className="hero-v5-course-ic"
+                      style={iconColors[i % iconColors.length] ? { background: iconColors[i % iconColors.length] } : {}}
+                    >
+                      {courseIcons[i % courseIcons.length]}
+                    </div>
+                    <div className="hero-v5-course-info">
+                      <div className="hero-v5-course-t">{c.title}</div>
+                      <div className="hero-v5-course-s">{subText}</div>
+                    </div>
+                    <div className="hero-v5-course-arr">
+                      <ChevronLeftIcon width={12} height={12} />
+                    </div>
+                  </Link>
+                );
+              })
+            )}
 
             <Link href="/courses" className="hero-v5-all">
               مشاهدهٔ همه دوره‌ها

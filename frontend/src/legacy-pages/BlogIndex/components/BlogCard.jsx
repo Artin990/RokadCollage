@@ -65,3 +65,48 @@ export default function BlogCard({ post, index, entering, exiting, animDelay = 0
     </div>
   );
 }
+
+export function SkeletonBlogIndexCard({ size = "sm", index = 0 }) {
+  const rot = CARD_ROTS[index % CARD_ROTS.length];
+  return (
+    <div
+      className={`bi-card bi-card-${size}`}
+      aria-hidden="true"
+      style={{ "--rot": rot, pointerEvents: "none" }}
+    >
+      <div className="bi-card-sh" />
+      <div className="bi-card-body">
+        <div className="bi-card-media rk-skeleton-shimmer" style={{ background: "rgba(0,0,0,0.06)" }}>
+          <div className="rk-skeleton-line" style={{ position: "absolute", top: 12, right: 12, width: 60, height: 22, borderRadius: 999 }} />
+        </div>
+
+        <div className="bi-card-info">
+          <div className="bi-card-meta" style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <div className="rk-skeleton-line" style={{ width: 45, height: 12 }} />
+            <span className="dot" />
+            <div className="rk-skeleton-line" style={{ width: 45, height: 12 }} />
+            <span className="dot" />
+            <div className="rk-skeleton-line" style={{ width: 35, height: 12 }} />
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBlock: 8 }}>
+            <div className="rk-skeleton-line" style={{ width: "90%", height: size === "lg" ? 24 : 18 }} />
+            <div className="rk-skeleton-line" style={{ width: "65%", height: size === "lg" ? 24 : 18 }} />
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 4, marginBlock: 6 }}>
+            <div className="rk-skeleton-line" style={{ width: "95%", height: 13 }} />
+            <div className="rk-skeleton-line" style={{ width: "80%", height: 13 }} />
+          </div>
+
+          <div className="bi-card-foot" style={{ marginTop: "auto" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <div className="avatar rk-skeleton-shimmer" style={{ width: 24, height: 24, borderRadius: "50%" }} />
+              <div className="rk-skeleton-line" style={{ width: 70, height: 12 }} />
+            </div>
+            <div className="bi-card-arr rk-skeleton-shimmer" style={{ width: 28, height: 28, borderRadius: "50%" }} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+

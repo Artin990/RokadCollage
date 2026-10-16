@@ -126,3 +126,91 @@ export function CtaRow() {
     </Link>
   );
 }
+
+export function SkeletonCourseCard({ index = 0 }) {
+  const cat = COLOR_PALETTE[index % COLOR_PALETTE.length];
+  const icon = courseIcons[index % courseIcons.length];
+  const num = toPersianNum(index + 1);
+  const mode = index % 2 === 0 ? "onsite" : "online";
+  const hoverColorClass = cat.btnHoverFg === "var(--ink)" ? "btn-hover-dark" : "btn-hover-white";
+
+  return (
+    <div
+      className={"v2-stack mode-" + mode}
+      data-mode={mode}
+      style={{
+        "--cat": cat.accent,
+        "--catBg": cat.bg,
+        "--catFg": cat.fg,
+        "--catBorder": cat.border,
+        "--catBtnHoverFg": cat.btnHoverFg || (cat.accent === "var(--college)" ? "var(--ink)" : "#fff"),
+        pointerEvents: "none",
+      }}
+    >
+      <article className="v2-item" style={{ position: "relative" }}>
+        <button
+          type="button"
+          className="course-card-save-btn"
+          aria-hidden="true"
+          style={{ pointerEvents: "none" }}
+        >
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+          </svg>
+        </button>
+        <div className="v2-cover">
+          <span className="v2-num">
+            {num.slice(0, 1)}
+            <span>{num.slice(1)}</span>
+          </span>
+          <div className="v2-icon">{icon}</div>
+        </div>
+        <div className="v2-content">
+          <div className="v2-body">
+            <div className="v2-meta">
+              <span className="v2-cat-pill rk-skeleton-shimmer" style={{ width: 80, height: 22, display: "inline-block" }} />
+              <span
+                className={
+                  "course-mode-badge " +
+                  (mode === "onsite" ? "in-person" : "online")
+                }
+              >
+                {MODE_ICON[mode]}
+                <span>{MODE_LABEL[mode]}</span>
+              </span>
+            </div>
+            <h3 className="t-card" style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 4 }}>
+              <span className="rk-skeleton-line" style={{ width: `${85 - (index % 3) * 10}%`, height: 18 }} />
+              <span className="rk-skeleton-line" style={{ width: "55%", height: 18 }} />
+            </h3>
+            <div className="v2-tags">
+              <span className="rk-skeleton-line" style={{ width: 45, height: 16 }} />
+              <span className="rk-skeleton-line" style={{ width: 55, height: 16 }} />
+              <span className="rk-skeleton-line" style={{ width: 50, height: 16 }} />
+            </div>
+          </div>
+          <div className="v2-action">
+            <div className="v2-price">
+              <div className="v2-price-lbl">شهریه</div>
+              <div className="v2-price-val">
+                <span className="rk-skeleton-line" style={{ width: 85, height: 18 }} />
+              </div>
+            </div>
+            <div className={`v2-btn ${hoverColorClass}`} style={{ pointerEvents: "none" }}>
+              {"مشاهده "} <ArrowIcon width={14} height={14} />
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  );
+}

@@ -197,7 +197,6 @@
 
 /* Mobile: swipe + dots & compact controls */
 @media (max-width: 720px) {
-  .cmt3-title { font-size: 24px; line-height: 1.35; }
   .cmt3-card { flex: 0 0 100%; }
   .cmt3-card .body { grid-template-columns: 1fr; min-height: auto; }
   .cmt3-card .avatar-side { border-left: none; border-bottom: 2px solid var(--ink); padding: 22px 16px; }
@@ -207,3 +206,12 @@
   .cmt3-icon-btn { width: 42px; height: 42px; }
   .cmt3-carousel { touch-action: pan-y; cursor: grab; padding: 12px 4px 20px; }
 }
+
+@media (max-width: 480px) {
+  .cmt3-card .avatar-side { padding: 18px 12px; }
+  .cmt3-card .avatar-big { width: 64px; height: 64px; font-size: 24px; }
+  .cmt3-card .content-side { padding: 16px 14px; gap: 10px; }
+  .cmt3-card .quote-text { font-size: 13.5px; line-height: 1.8; }
+  .cmt3-card .shadow { top: 3px; left: 3px; right: -3px; bottom: -3px; }
+}
+

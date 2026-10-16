@@ -15,7 +15,7 @@ import { getAllCourses } from "@/services/courseService";
 import { getPanelStore } from "@/data/panelStore";
 import { isWishlisted, isEnrolledIn, isCourseInPerson } from "@/data/selectors";
 import { useHorizontalDragScroll } from "@/legacy-pages/CoursesPage/hooks/useHorizontalDragScroll.js";
-import MyCourseCard from "./components/MyCourseCard";
+import MyCourseCard, { SkeletonMyCourseCard } from "./components/MyCourseCard";
 import SpotPlayerLicenseModal from "@/legacy-pages/CourseSingle/components/SpotPlayerLicenseModal";
 import "@/legacy-pages/DepartmentPage/department.css";
 import "./my-courses.css";
@@ -443,9 +443,10 @@ export default function MyCoursesClient() {
 
         {/* وضعیت لودینگ */}
         {loading && (
-          <div className="flex flex-col items-center justify-center py-20 gap-3 text-stone-500 font-bold">
-            <RotateCw className="w-8 h-8 animate-spin text-[#f8a41d]" />
-            <span>در حال بارگذاری دوره‌های شما...</span>
+          <div className="mc-grid py-6" aria-busy="true">
+            <SkeletonMyCourseCard />
+            <SkeletonMyCourseCard />
+            <SkeletonMyCourseCard />
           </div>
         )}
 

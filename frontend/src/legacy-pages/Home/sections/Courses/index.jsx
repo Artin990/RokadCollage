@@ -5,7 +5,7 @@ import RotatedHeading from "@/components/RotatedHeading.jsx";
 import PatternLayer from "@/components/PatternLayer";
 import { getPanelStore } from "@/data/panelStore.js";
 import { getAllCourses } from "@/services/courseService.js";
-import { CourseCard, CtaRow } from "./HomeCourseCard.jsx";
+import { CourseCard, CtaRow, SkeletonCourseCard } from "./HomeCourseCard.jsx";
 
 function Chevron({ right = false }) {
   const d = right ? "M9 6l6 6-6 6" : "M15 6l-6 6 6 6";
@@ -136,11 +136,29 @@ export default function Courses() {
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-8">
-            {[1, 2, 3, 4].map((n) => (
-              <div key={n} className="h-64 bg-white border-2 border-[#292827] rounded-2xl animate-pulse p-4" />
-            ))}
-          </div>
+          <>
+            {/* Desktop Skeleton: 4 cards in 2x2 grid */}
+            <div className="v2-skeleton-desktop v2-carousel" aria-busy="true">
+              <div className="v2-track">
+                <div className="v2-page">
+                  {[0, 1, 2, 3].map((i) => (
+                    <SkeletonCourseCard key={i} index={i} />
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile Skeleton: 1 card per slide with 78vw peek carousel */}
+            <div className="v2-skeleton-mobile v2-carousel" aria-busy="true">
+              <div className="v2-track">
+                {[0, 1, 2].map((i) => (
+                  <div className="v2-page" key={`mob-sk-${i}`}>
+                    <SkeletonCourseCard index={i} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
         ) : filtered.length === 0 ? (
           <div className="text-center py-12 text-stone-500 font-bold">هیچ دوره‌ای در این بخش یافت نشد.</div>
         ) : (

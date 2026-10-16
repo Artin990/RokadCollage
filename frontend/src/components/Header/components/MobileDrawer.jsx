@@ -112,7 +112,7 @@ export default function MobileDrawer({
                 onClick={() => setMobileOpen(false)}
               >
                 <UserCog size={15} style={{ flexShrink: 0 }} />
-                <span style={{ whiteSpace: "nowrap" }}>تنظیمات پروفایل</span>
+                <span style={{ whiteSpace: "nowrap" }}>پروفایل</span>
               </Link>
             </div>
             <button

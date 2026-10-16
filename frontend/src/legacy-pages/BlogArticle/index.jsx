@@ -6,6 +6,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Check } from "lucide-react";
+import SkeletonBlogArticle from "./components/SkeletonBlogArticle.jsx";
 import { getBlogBySlugOrId, getBlogs } from "@/services/blogService.js";
 
 /* رنگ‌های پالت کالج */
@@ -80,11 +81,7 @@ export default function BlogArticle({ slug }) {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center font-['IRANSansX'] text-stone-500 font-medium">
-        در حال بارگذاری مقاله...
-      </div>
-    );
+    return <SkeletonBlogArticle />;
   }
 
   if (!article) {

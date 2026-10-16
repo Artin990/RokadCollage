@@ -429,3 +429,19 @@
     width: 100%;
   }
 }
+
+@media (max-width: 400px) {
+  .prof-hero-inner {
+    padding: 20px 12px 28px;
+  }
+  .prof-card {
+    padding: 1.25rem 1rem;
+    border-radius: 14px 0 14px 0;
+    box-shadow: 3px 3px 0 var(--ink, #1F1E1D);
+  }
+  .prof-field input {
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+}
+

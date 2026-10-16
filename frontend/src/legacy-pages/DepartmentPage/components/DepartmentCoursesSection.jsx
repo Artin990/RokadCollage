@@ -1,10 +1,11 @@
 import React from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { SectionHead, FilterIcon, faNum } from "./DepartmentIcons.jsx";
-import DepartmentCourseCard from "./DepartmentCourseCard.jsx";
+import DepartmentCourseCard, { SkeletonDepartmentCourseCard } from "./DepartmentCourseCard.jsx";
 import { SORTS } from "./DepartmentFilterModal.jsx";
 
 export default function DepartmentCoursesSection({
+  loading,
   allCourses,
   displayedCourses,
   showAll,
@@ -81,7 +82,13 @@ export default function DepartmentCoursesSection({
         </div>
       </div>
 
-      {allCourses.length === 0 ? (
+      {loading ? (
+        <div className="dp-grid" aria-busy="true">
+          {[0, 1, 2, 3, 4, 5].map((i) => (
+            <SkeletonDepartmentCourseCard key={i} rot={[-0.5, 0.5, -0.25, 0.25][i % 4]} />
+          ))}
+        </div>
+      ) : allCourses.length === 0 ? (
         <div className="dp-empty">
           <p>{activeFilterCount > 0 ? "دوره‌ای با این فیلترها پیدا نشد." : "هنوز دوره‌ای در این دپارتمان ثبت نشده است."}</p>
           {activeFilterCount > 0 && (

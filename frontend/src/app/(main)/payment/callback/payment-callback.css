@@ -405,3 +405,28 @@
     white-space: nowrap;
   }
 }
+
+@media (max-width: 420px) {
+  .pc-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .pc-btn-primary,
+  .pc-btn-secondary {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 13.5px;
+  }
+
+  .pc-apps-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .pc-license-key {
+    font-size: 12.5px;
+    word-break: break-all;
+  }
+}
+

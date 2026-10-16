@@ -290,6 +290,7 @@ export default function DepartmentPage({ deptId, initialCourses = [] }) {
         )}
 
         <DepartmentCoursesSection
+          loading={loading}
           allCourses={allCourses}
           displayedCourses={displayedCourses}
           showAll={showAll}

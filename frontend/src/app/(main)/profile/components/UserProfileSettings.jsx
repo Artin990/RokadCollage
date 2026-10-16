@@ -119,9 +119,40 @@ export default function UserProfileSettings() {
 
   if (loading) {
     return (
-      <div className="prof-loading">
-        <RotateCw className="w-8 h-8 animate-spin text-[#f8a41d]" />
-        <span>در حال دریافت اطلاعات حساب...</span>
+      <div className="prof-card" aria-busy="true" style={{ pointerEvents: "none" }}>
+        <div className="prof-user-banner" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div className="prof-user-meta" style={{ display: "flex", gap: 14, alignItems: "center" }}>
+            <div className="prof-avatar rk-skeleton-shimmer" style={{ background: "rgba(0,0,0,0.08)" }} />
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <div className="rk-skeleton-line" style={{ width: 140, height: 20 }} />
+              <div className="rk-skeleton-line" style={{ width: 100, height: 14 }} />
+            </div>
+          </div>
+          <div className="prof-status-chip rk-skeleton-shimmer" style={{ width: 100, height: 28, borderRadius: 999 }} />
+        </div>
+
+        <div className="prof-form" style={{ padding: "24px 28px", display: "flex", flexDirection: "column", gap: 20 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 18 }}>
+            {[1, 2, 3].map((i) => (
+              <div key={i} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                <div className="rk-skeleton-line" style={{ width: 90, height: 14 }} />
+                <div className="rk-skeleton-line" style={{ width: "100%", height: 46, borderRadius: 10 }} />
+              </div>
+            ))}
+          </div>
+
+          <div style={{ marginBlock: 12, borderTop: "1.5px dashed var(--ink-light, #e2e8f0)", paddingTop: 16 }}>
+            <div className="rk-skeleton-line" style={{ width: 120, height: 16, marginBottom: 14 }} />
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 18 }}>
+              <div className="rk-skeleton-line" style={{ width: "100%", height: 46, borderRadius: 10 }} />
+              <div className="rk-skeleton-line" style={{ width: "100%", height: 46, borderRadius: 10 }} />
+            </div>
+          </div>
+
+          <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 10 }}>
+            <div className="rk-skeleton-line" style={{ width: 130, height: 44, borderRadius: 10 }} />
+          </div>
+        </div>
       </div>
     );
   }

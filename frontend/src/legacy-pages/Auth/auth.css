@@ -792,8 +792,26 @@
 
 /* ---------- Responsive ---------- */
 @media (max-width: 480px) {
-  .auth-card { padding: 26px 20px 22px; border-radius: 16px 0 16px 0; }
-  .otp-boxes input { width: 40px; height: 46px; font-size: 17px; }
-  .auth-reg-success-card { padding: 26px 18px 20px; }
+  .auth-page,
+  .auth-root { padding: 24px 12px; }
+  .auth-card { padding: 24px 18px 20px; border-radius: 16px 0 16px 0; box-shadow: 4px 4px 0 var(--college); }
+  .auth-brand { gap: 10px; margin-bottom: 20px; }
+  .auth-brand .mark { width: 40px; height: 40px; }
+  .auth-brand .wordmark strong { font-size: 19px; }
+  .auth-heading { font-size: 19px; }
+  .otp-boxes { gap: 6px; }
+  .otp-boxes input { width: 38px; height: 46px; font-size: 17px; }
+  .auth-reg-success-card { padding: 24px 16px 18px; }
 }
+
+@media (max-width: 360px) {
+  .auth-page,
+  .auth-root { padding: 16px 8px; }
+  .auth-card { padding: 20px 14px 16px; border-radius: 14px 0 14px 0; box-shadow: 3px 3px 0 var(--college); }
+  .auth-heading { font-size: 17px; }
+  .otp-boxes { gap: 4px; }
+  .otp-boxes input { width: 34px; height: 42px; font-size: 15px; border-radius: 6px 0 6px 0; }
+  .auth-btn-primary { padding: 11px 16px; font-size: 14px; }
+}
+
 

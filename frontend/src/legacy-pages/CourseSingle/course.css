@@ -361,12 +361,12 @@
   margin-top: 16px;
   background: var(--college);
   color: #fff;
-  padding: 16px;
+  padding: 11px 18px;
   font-family: inherit;
-  font-size: 16px;
-  font-weight: 800;
-  border: 1.5px solid var(--ink);
-  border-radius: var(--r-md, 12px);
+  font-size: 14px;
+  font-weight: 850;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
   cursor: pointer;
   box-shadow: 2.75px 2.75px 0 var(--ink);
   transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease, background 0.2s ease;
@@ -858,3 +858,38 @@
 @media (min-width: 721px) {
   .cs-mini { display: none; }
 }
+
+@media (max-width: 480px) {
+  .cs-player-col {
+    padding: 8px 12px 0;
+  }
+  .cs-tabs button {
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+  .cs-card {
+    padding: 16px 12px;
+    border-radius: var(--r-md);
+  }
+  .cs-card .cs-btn-primary {
+    padding: 12px;
+    font-size: 14px;
+    width: 100%;
+  }
+  .cs-mini {
+    padding: 4px 8px;
+    gap: 6px;
+  }
+  .cs-mini-thumb {
+    width: 52px;
+    height: 32px;
+  }
+  .cs-mini-pp {
+    width: 28px;
+    height: 28px;
+  }
+  .cs-mini-info b {
+    font-size: 11px;
+  }
+}
+

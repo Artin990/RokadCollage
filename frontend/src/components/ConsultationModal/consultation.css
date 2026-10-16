@@ -317,3 +317,62 @@
   transform: translateY(-1.5px);
   box-shadow: 3.5px 3.5px 0 var(--ink);
 }
+
+/* ============================================================
+   واکنش‌گرایی (Responsive Consultation Modal)
+   ============================================================ */
+@media (max-width: 640px) {
+  .cmod-backdrop {
+    padding: 12px;
+  }
+  .cmod-card {
+    padding: 1.5rem 1.25rem;
+    border-radius: 16px 0 16px 0;
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .cmod-head {
+    margin-bottom: 1.15rem;
+    padding-left: 2rem;
+  }
+  .cmod-title {
+    font-size: 1.18rem;
+  }
+  .cmod-close {
+    top: 1rem;
+    left: 1rem;
+    width: 32px;
+    height: 32px;
+  }
+  .cmod-form-row {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+  .cmod-field input,
+  .cmod-field select,
+  .cmod-field textarea {
+    padding: 0.75rem 0.9rem;
+    font-size: 14px;
+  }
+  .cmod-btn-submit {
+    padding: 0.8rem 1.2rem;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .cmod-backdrop {
+    padding: 8px;
+  }
+  .cmod-card {
+    padding: 1.25rem 1rem;
+    border-radius: 14px 0 14px 0;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .cmod-title {
+    font-size: 1.05rem;
+  }
+  .cmod-desc {
+    font-size: 0.82rem;
+  }
+}
+

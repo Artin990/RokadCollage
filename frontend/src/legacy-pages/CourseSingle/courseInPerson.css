@@ -1190,3 +1190,18 @@
   }
 }
 
+@media (max-width: 380px) {
+  .cs-ip-hero-content {
+    padding: 12px 10px;
+  }
+  .cs-ip-hero-title {
+    font-size: 16px;
+  }
+  .cs-ip-btn-main,
+  .cs-ip-btn-sub {
+    font-size: 13px;
+    padding: 11px 12px;
+  }
+}
+
+

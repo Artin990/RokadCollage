@@ -81,9 +81,9 @@
 }
 
 .ch-hero-title {
-  font-size: clamp(28px, 4.4vw, 44px);
-  font-weight: 800;
-  line-height: 1.35;
+  font-size: clamp(32px, 4.4vw, 48px);
+  font-weight: 950;
+  line-height: 1.25;
   margin: 0 0 16px;
   letter-spacing: -0.015em;
   max-width: 840px;
@@ -113,8 +113,8 @@
 }
 
 .ch-hero-desc {
-  font-size: 16px;
-  line-height: 1.9;
+  font-size: 15px;
+  line-height: 1.85;
   color: var(--ink-subtle, #5c5a55);
   max-width: 720px;
   margin: 0 0 28px;
@@ -862,10 +862,10 @@
   background: var(--college, #F8A41D);
   color: var(--ink);
   border: 2px solid var(--ink);
-  padding: 10px 18px;
-  border-radius: 12px;
-  font-size: 13.5px;
-  font-weight: 800;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 850;
   text-decoration: none;
   box-shadow: 3px 3px 0 var(--ink);
   transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
@@ -881,13 +881,13 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 22px;
+  padding: 8px 18px;
   border: 2px solid var(--ink);
-  border-radius: 12px;
-  font-size: 13.5px;
-  font-weight: 800;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 850;
   text-decoration: none;
-  box-shadow: 4px 4px 0 var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
   transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
@@ -1591,4 +1591,51 @@
     margin: 0 auto;
   }
 }
+
+@media (max-width: 480px) {
+  .ch-hero {
+    padding: 24px 0 32px;
+  }
+  .ch-hero-inner {
+    padding: 0 14px;
+  }
+  .ch-hero-title {
+    font-size: 24px;
+    line-height: 1.35;
+  }
+  .ch-hero-desc {
+    font-size: 13.5px;
+    line-height: 1.75;
+    margin-bottom: 20px;
+  }
+  .ch-flag-card {
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+}
+
+@media (max-width: 400px) {
+  .ch-flag-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .ch-flag-price-block {
+    text-align: center;
+  }
+  .ch-flag-btn-group {
+    width: 100%;
+  }
+  .ch-flag-btn-group a {
+    width: 100%;
+    justify-content: center;
+    padding: 10px 14px;
+  }
+  .ch-card-body {
+    padding: 14px 12px;
+  }
+  .ch-card-title {
+    font-size: 15px;
+  }
+}
+
 

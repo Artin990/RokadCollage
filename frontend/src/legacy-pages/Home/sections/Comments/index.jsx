@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "./comments.css";
 import PatternLayer from "@/components/PatternLayer";
 import { pad2Fa } from "./testimonialsData.jsx";
-import CommentCard from "./CommentCard.jsx";
+import CommentCard, { SkeletonCommentCard } from "./CommentCard.jsx";
 import { getComments } from "@/services/commentService.js";
 
 function Chevron({ right = false }) {
@@ -216,8 +216,12 @@ export default function Comments() {
         </div>
 
         {loading ? (
-          <div style={{ textAlign: "center", padding: "50px 0", color: "var(--muted)" }}>
-            در حال بارگذاری دیدگاه‌ها...
+          <div className="cmt3-carousel" aria-busy="true">
+            <div className="cmt3-track">
+              {Array.from({ length: perView }, (_, i) => (
+                <SkeletonCommentCard key={i} index={i} />
+              ))}
+            </div>
           </div>
         ) : items.length === 0 ? (
           <div style={{ textAlign: "center", padding: "50px 0", color: "var(--muted)" }}>

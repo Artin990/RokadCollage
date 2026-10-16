@@ -6,6 +6,53 @@ import PatternLayer from "@/components/PatternLayer";
 import { getBlogs } from "@/services/blogService.js";
 import Link from "next/link";
 
+function SkeletonBlogCard({ index = 0 }) {
+  return (
+    <article className="mag-card" aria-hidden="true">
+      <div className="shadow" />
+      <div className="body">
+        <div
+          className="cover rk-skeleton-shimmer"
+          style={{
+            background:
+              index % 2 === 0
+                ? "linear-gradient(135deg, rgba(230,126,34,0.35), rgba(211,84,0,0.45))"
+                : "linear-gradient(135deg, rgba(41,128,185,0.35), rgba(26,74,107,0.45))",
+          }}
+        >
+          <div className="num" style={{ opacity: 0.7 }}>
+            ۰{index + 1}
+          </div>
+          <div className="glyph-lg" style={{ opacity: 0.2 }}>
+            ✦
+          </div>
+        </div>
+        <div className="info" style={{ display: "flex", flexDirection: "column", gap: "12px", padding: "20px 24px" }}>
+          <div className="cat-row">
+            <div className="rk-skeleton-line" style={{ width: "65px", height: "24px", borderRadius: "8px 0 8px 0" }} />
+            <div className="rk-skeleton-line" style={{ width: "50px", height: "14px" }} />
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBlock: "4px" }}>
+            <div className="rk-skeleton-line" style={{ width: "95%", height: "20px" }} />
+            <div className="rk-skeleton-line" style={{ width: "70%", height: "20px" }} />
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+            <div className="rk-skeleton-line" style={{ width: "90%", height: "14px" }} />
+            <div className="rk-skeleton-line" style={{ width: "60%", height: "14px" }} />
+          </div>
+          <div className="foot" style={{ marginTop: "auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div className="author-mini" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <div className="dot rk-skeleton-shimmer" style={{ width: "24px", height: "24px", borderRadius: "50%" }} />
+              <div className="rk-skeleton-line" style={{ width: "80px", height: "12px" }} />
+            </div>
+            <div className="rk-skeleton-line" style={{ width: "60px", height: "24px", borderRadius: "6px" }} />
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
 export default function Blogs() {
   const [blogsList, setBlogsList] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -134,14 +181,14 @@ export default function Blogs() {
               <span className="w w2">بینش‌ها</span>
               <span className="w w3">و تجربه‌ها</span>
             </h2>
-            <p style={{ color: "var(--ink-subtle)", margin: "8px 0 0", fontSize: "14.5px", fontWeight: 500 }}>
+            <p className="mag-desc" style={{ color: "var(--ink-subtle)", fontWeight: 500 }}>
               مقاله‌های دست‌اول از مدیران و مدرسین کالج برای تسلط بر مهارت‌های روز
             </p>
           </div>
 
           <div className="right">
             <Link href="/blog" className="mag-btn">
-              <span className="mag-btn-text">مشاهده همه مقالات</span>
+              <span className="mag-btn-text">مشاهده مقالات</span>
               <svg className="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16">
                 <path d="M15 6l-6 6 6 6" />
               </svg>
@@ -150,10 +197,11 @@ export default function Blogs() {
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-8">
-            {[1, 2].map((n) => (
-              <div key={n} className="h-64 bg-white border-2 border-[#292827] rounded-2xl animate-pulse" />
-            ))}
+          <div className="mag-carousel-wrap" aria-busy="true">
+            <div className="mag-grid">
+              <SkeletonBlogCard index={0} />
+              <SkeletonBlogCard index={1} />
+            </div>
           </div>
         ) : blogsList.length === 0 ? (
           <div className="text-center py-12 text-stone-500 font-bold">هنوز مقاله‌ای منتشر نشده است.</div>

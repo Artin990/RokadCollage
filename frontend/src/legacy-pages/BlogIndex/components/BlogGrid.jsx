@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Sparkles } from "lucide-react";
 import { I, toFa } from "./BlogIcons.jsx";
-import BlogCard from "./BlogCard.jsx";
+import BlogCard, { SkeletonBlogIndexCard } from "./BlogCard.jsx";
 import { PAGE_SIZE } from "../data/blogIndexData.js";
 import { getBlogs } from "@/services/blogService.js";
 
@@ -146,23 +146,31 @@ export default function BlogGrid({ activeCategory, searchQuery }) {
           </div>
         </div>
 
-        <div className="bi-blog-grid">
-          {posts.map((p, i) => (
-            <BlogCard
-              key={p.id}
-              post={p}
-              index={i}
-              entering={animState.phase === "enter" && i >= animState.fromIndex}
-              exiting={animState.phase === "exit" && i >= animState.fromIndex}
-              animDelay={(i - animState.fromIndex) * (animState.phase === "exit" ? EXIT_STAGGER : ENTER_STAGGER)}
-            />
-          ))}
-        </div>
-
-        {sorted.length === 0 && (
+        {loading ? (
+          <div className="bi-blog-grid" aria-busy="true">
+            <SkeletonBlogIndexCard size="lg" index={0} />
+            <SkeletonBlogIndexCard size="sm" index={1} />
+            <SkeletonBlogIndexCard size="sm" index={2} />
+            <SkeletonBlogIndexCard size="sm" index={3} />
+            <SkeletonBlogIndexCard size="sm" index={4} />
+          </div>
+        ) : sorted.length === 0 ? (
           <div style={{ textAlign: "center", color: "var(--ink-subtle)", fontWeight: 700, padding: "3rem 1rem" }}>
             <p style={{ fontSize: 16, margin: 0 }}>مقاله‌ای مطابق با جست‌وجوی شما پیدا نشد.</p>
             <p style={{ fontSize: 13, opacity: 0.8, marginTop: 6 }}>می‌توانید کلمهٔ دیگری را جست‌وجو کنید یا دسته‌بندی را تغییر دهید.</p>
+          </div>
+        ) : (
+          <div className="bi-blog-grid">
+            {posts.map((p, i) => (
+              <BlogCard
+                key={p.id}
+                post={p}
+                index={i}
+                entering={animState.phase === "enter" && i >= animState.fromIndex}
+                exiting={animState.phase === "exit" && i >= animState.fromIndex}
+                animDelay={(i - animState.fromIndex) * (animState.phase === "exit" ? EXIT_STAGGER : ENTER_STAGGER)}
+              />
+            ))}
           </div>
         )}
 

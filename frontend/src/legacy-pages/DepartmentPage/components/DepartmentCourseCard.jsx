@@ -86,3 +86,40 @@ export default function DepartmentCourseCard({ c, rot, persona: cardPersona, sto
     </Link>
   );
 }
+
+export function SkeletonDepartmentCourseCard({ rot = 0 }) {
+  return (
+    <div
+      className="dp-card"
+      aria-hidden="true"
+      style={{
+        "--rot": `rotate(${rot}deg)`,
+        pointerEvents: "none",
+      }}
+    >
+      <div className="dp-card-cover rk-skeleton-shimmer" style={{ background: "rgba(0,0,0,0.05)" }}>
+        <div style={{ width: 34, height: 34, borderRadius: 8, background: "rgba(0,0,0,0.08)" }} />
+      </div>
+      <div className="dp-card-body">
+        <div className="dp-card-top-row">
+          <div className="rk-skeleton-line" style={{ width: "65px", height: "18px", borderRadius: "6px" }} />
+          <div className="rk-skeleton-line" style={{ width: "70px", height: "18px", borderRadius: "6px" }} />
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginBlock: "8px" }}>
+          <div className="rk-skeleton-line" style={{ width: "85%", height: "20px" }} />
+          <div className="rk-skeleton-line" style={{ width: "60%", height: "20px" }} />
+        </div>
+        <div className="dp-card-meta" style={{ marginTop: "auto", display: "flex", gap: "10px", marginBlock: "10px" }}>
+          <div className="rk-skeleton-line" style={{ width: "40px", height: "14px" }} />
+          <div className="rk-skeleton-line" style={{ width: "45px", height: "14px" }} />
+          <div className="rk-skeleton-line" style={{ width: "45px", height: "14px" }} />
+        </div>
+        <div className="dp-card-foot" style={{ marginTop: "12px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div className="rk-skeleton-line" style={{ width: "70px", height: "22px" }} />
+          <div className="rk-skeleton-line" style={{ width: "80px", height: "32px", borderRadius: "8px" }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+

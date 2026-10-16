@@ -30,8 +30,8 @@
   margin: 0 auto 3.5rem;
 }
 .dept5-head h2 {
-  font-size: clamp(28px, 4.4vw, 52px); line-height: 1.2;
-  font-weight: 900; color: var(--ink); margin: 0 0 1rem; letter-spacing: -.01em;
+  font-size: clamp(32px, 4.4vw, 52px); line-height: 1.25;
+  font-weight: 950; color: var(--ink); margin: 0 0 1rem; letter-spacing: -.01em;
 }
 .dept5-head h2 .w { display: inline-block; }
 .dept5-head h2 .w1 { transform: rotate(-1.5deg); margin-left: .35rem; }
@@ -41,16 +41,16 @@
   display: inline-flex; align-items: center; gap: .5rem;
   margin-top: 1.75rem;
   background: var(--college); color: var(--ink);
-  border: 2px solid var(--ink); border-radius: 12px;
+  border: 2px solid var(--ink); border-radius: 10px;
   corner-shape: squircle; -webkit-corner-shape: squircle;
   box-shadow: 3px 3px 0 0 var(--ink);
-  padding: .8rem 1.6rem; font-weight: 900; font-size: 15px;
+  padding: 9px 18px; font-weight: 850; font-size: 13.5px;
   transform: rotate(-1.5deg);
   transition: transform .22s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow .22s ease;
   will-change: transform;
 }
 .dept5-cta-top:hover { transform: rotate(-1.5deg) translateY(-3px) scale(1.02); box-shadow: 5px 5px 0 0 var(--ink); }
-.dept5-cta-top svg { width: 16px; height: 16px; }
+.dept5-cta-top svg { width: 15px; height: 15px; }
 
 /* ---- Grid: ۴ ستونه در یک ردیف در دسکتاپ ---- */
 .dept5-grid,
@@ -275,7 +275,8 @@
 
 /* ---- Responsive ---- */
 @media (max-width: 640px) {
-  .dept5-head h2 { font-size: 24px; line-height: 1.35; }
+  .dept5-inner { padding: 44px 16px; }
+  .dept5-head { margin-bottom: 2rem; }
   .dept5-body h3 { font-size: 20px; }
   .dept5-header { min-height: 84px; padding: 1.25rem 1.25rem; }
   .dept5-icon-box { width: 52px; height: 52px; }
@@ -283,4 +284,19 @@
   .dept5-stack.wide .dept5-header { min-height: 96px; padding: 1.4rem 1.25rem; }
   .dept5-stack.wide .dept5-icon-box { width: 64px; height: 64px; }
   .dept5-stack.wide .dept5-icon-box svg { width: 32px; height: 32px; }
+  .dept5-stack::before { top: 4px; left: 4px; right: -4px; bottom: -4px; }
 }
+
+@media (max-width: 400px) {
+  .dept5-inner { padding: 36px 12px; }
+  .dept5-header { min-height: 72px; padding: 1rem; }
+  .dept5-icon-box { width: 44px; height: 44px; }
+  .dept5-icon-box svg { width: 22px; height: 22px; }
+  .dept5-body { padding: 0.85rem 0.9rem 1rem; }
+  .dept5-body h3 { font-size: 18px; }
+  .dept5-desc { font-size: 12px; }
+  .dept5-stack.wide .dept5-header { min-height: 76px; padding: 1rem; }
+  .dept5-stack.wide .dept5-icon-box { width: 50px; height: 50px; }
+  .dept5-stack.wide .dept5-icon-box svg { width: 25px; height: 25px; }
+}
+
