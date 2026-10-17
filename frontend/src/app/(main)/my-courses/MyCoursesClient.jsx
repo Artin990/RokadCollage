@@ -17,6 +17,7 @@ import { getPanelStore } from "@/data/panelStore";
 import { isWishlisted, isEnrolledIn, isCourseInPerson } from "@/data/selectors";
 import { useHorizontalDragScroll } from "@/legacy-pages/CoursesPage/hooks/useHorizontalDragScroll.js";
 import MyCourseCard, { SkeletonMyCourseCard } from "./components/MyCourseCard";
+import SkeletonMyCourses from "./components/SkeletonMyCourses";
 import SpotPlayerLicenseModal from "@/legacy-pages/CourseSingle/components/SpotPlayerLicenseModal";
 import "@/legacy-pages/DepartmentPage/department.css";
 import "./my-courses.css";
@@ -48,10 +49,10 @@ const SORTS = [
 ];
 
 export default function MyCoursesClient() {
-  const [enrollments, setEnrollments] = useState(MOCK_STATIC_ENROLLMENTS);
+  const [enrollments, setEnrollments] = useState([]);
   const [allCourses, setAllCourses] = useState([]);
   const [store, setStore] = useState(getPanelStore);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // جستجو، فیلترها و مرتب‌سازی
   const [searchQuery, setSearchQuery] = useState("");
@@ -308,6 +309,10 @@ export default function MyCoursesClient() {
     });
   };
 
+  if (loading) {
+    return <SkeletonMyCourses />;
+  }
+
   return (
     <div className="mc-page">
       {/* ========================================================
@@ -442,17 +447,7 @@ export default function MyCoursesClient() {
           </div>
         </div>
 
-        {/* وضعیت لودینگ */}
-        {loading && (
-          <div className="mc-grid py-6" aria-busy="true">
-            <SkeletonMyCourseCard />
-            <SkeletonMyCourseCard />
-            <SkeletonMyCourseCard />
-          </div>
-        )}
-
-        {!loading && (
-          <>
+        <>
             {/* ========================================================
                 ۱. سکشن دوره‌های خریداری‌شده
                 ======================================================== */}
@@ -560,8 +555,7 @@ export default function MyCoursesClient() {
                 )}
               </section>
             )}
-          </>
-        )}
+        </>
       </main>
 
       {/* ========================================================

@@ -1,4 +1,6 @@
+import { Suspense } from "react";
 import MyCoursesClient from "./MyCoursesClient";
+import SkeletonMyCourses from "./components/SkeletonMyCourses";
 
 export const metadata = {
   title: "دوره‌های من | کالج رکاد",
@@ -6,5 +8,9 @@ export const metadata = {
 };
 
 export default function MyCoursesPage() {
-  return <MyCoursesClient />;
+  return (
+    <Suspense fallback={<SkeletonMyCourses />}>
+      <MyCoursesClient />
+    </Suspense>
+  );
 }

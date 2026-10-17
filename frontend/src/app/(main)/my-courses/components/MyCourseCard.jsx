@@ -278,14 +278,18 @@ export default function MyCourseCard({ item, onOpenLicense, store }) {
 export function SkeletonMyCourseCard() {
   return (
     <article className="mc-card" aria-hidden="true" style={{ pointerEvents: "none" }}>
-      <div className="mc-card-visual rk-skeleton-shimmer" style={{ background: "rgba(248, 164, 29, 0.15)" }}>
-        <div className="mc-dept-chip" style={{ opacity: 0.6 }}>دپارتمان</div>
-        <div className="mc-icon-wrap" style={{ background: "#ffffff" }}>
-          <div style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(0,0,0,0.08)" }} />
+      <div
+        className="mc-card-visual rk-skeleton-shimmer"
+        style={{ background: "linear-gradient(135deg, rgba(248, 164, 29, 0.12) 0%, rgba(248, 164, 29, 0.22) 100%)" }}
+      >
+        <div className="mc-dept-chip" style={{ width: 68, height: 22, padding: 0 }} />
+        <div
+          className="mc-icon-wrap"
+          style={{ background: "#ffffff", border: "2px solid var(--ink)", boxShadow: "2px 2px 0 var(--ink)" }}
+        >
+          <div style={{ width: 28, height: 28, borderRadius: 6, background: "rgba(0,0,0,0.06)" }} />
         </div>
-        <div className="mc-badge-pill" style={{ background: "rgba(0,0,0,0.1)", opacity: 0.7 }}>
-          <span>دوره تخصصی</span>
-        </div>
+        <div className="mc-badge-pill" style={{ width: 80, height: 24, padding: 0 }} />
       </div>
 
       <div className="mc-card-body" style={{ padding: "16px 18px", display: "flex", flexDirection: "column", gap: 10 }}>
@@ -305,7 +309,7 @@ export function SkeletonMyCourseCard() {
         </div>
 
         <div style={{ marginTop: "auto", paddingTop: 10 }}>
-          <div className="rk-skeleton-line" style={{ width: "100%", height: 38, borderRadius: 8 }} />
+          <div className="rk-skeleton-line" style={{ width: "100%", height: 38, borderRadius: "10px 0 10px 0" }} />
         </div>
       </div>
     </article>
