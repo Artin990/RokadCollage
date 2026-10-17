@@ -17,14 +17,16 @@ export default function VirtualCourseCard({ course, onEdit, onDelete, onView, on
     switch (category) {
       case "فناوری اطلاعات":
         return "blue";
-      case "گرافیک":
-        return "purple";
-      case "زبان":
-        return "success";
+      case "کسب و کار":
       case "MBA":
         return "amber";
+      case "زبان‌های خارجی":
+      case "زبان":
+        return "success";
       case "مشاوره":
         return "pink";
+      case "گرافیک":
+        return "purple";
       default:
         return "primary";
     }

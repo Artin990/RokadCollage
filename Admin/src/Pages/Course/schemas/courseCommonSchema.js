@@ -5,16 +5,23 @@ export { safeTextRegex };
 
 export const categoryOptions = [
   { value: "فناوری اطلاعات", label: "فناوری اطلاعات" },
-  { value: "گرافیک", label: "گرافیک" },
-  { value: "زبان", label: "زبان" },
-  { value: "MBA", label: "MBA" },
+  { value: "کسب و کار", label: "کسب و کار" },
+  { value: "زبان‌های خارجی", label: "زبان‌های خارجی" },
   { value: "مشاوره", label: "مشاوره" },
 ];
 
 export const commonCourseFields = {
   category: Yup.string()
-    .oneOf(["فناوری اطلاعات", "گرافیک", "زبان", "MBA", "مشاوره"], "انتخاب دسته‌بندی معتبر الزامی است")
-    .required("انتخاب دسته‌بندی دوره الزامی است"),
+    .oneOf([
+      "فناوری اطلاعات",
+      "کسب و کار",
+      "زبان‌های خارجی",
+      "مشاوره",
+      "گرافیک",
+      "زبان",
+      "MBA",
+    ], "انتخاب دپارتمان / دسته‌بندی معتبر الزامی است")
+    .required("انتخاب دپارتمان / دسته‌بندی دوره الزامی است"),
   title: Yup.string()
     .matches(safeTextRegex, "عنوان نباید شامل کاراکترهای خاص باشد")
     .required("وارد کردن عنوان دوره الزامی است"),

@@ -29,12 +29,11 @@ export default function InPersonEnrollmentsTab() {
   const filterConfig = [
     {
       field: "category",
-      label: "دسته‌بندی",
+      label: "دپارتمان / دسته‌بندی",
       options: [
         { label: "فناوری اطلاعات", value: "فناوری اطلاعات" },
-        { label: "گرافیک", value: "گرافیک" },
-        { label: "زبان", value: "زبان" },
-        { label: "MBA", value: "MBA" },
+        { label: "کسب و کار", value: "کسب و کار" },
+        { label: "زبان‌های خارجی", value: "زبان‌های خارجی" },
         { label: "مشاوره", value: "مشاوره" },
       ],
     },

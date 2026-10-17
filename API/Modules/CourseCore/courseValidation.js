@@ -8,7 +8,15 @@ import {
 
 export { safeTextRegex, objectIdRegex, hex24Regex };
 
-export const categoryEnum = ["فناوری اطلاعات", "گرافیک", "زبان", "MBA", "مشاوره"];
+export const categoryEnum = [
+    "فناوری اطلاعات",
+    "کسب و کار",
+    "زبان‌های خارجی",
+    "مشاوره",
+    "گرافیک",
+    "زبان",
+    "MBA",
+];
 
 export const timedDiscountSchema = Joi.object({
     percentage: Joi.number().min(0).max(100).optional().default(0).messages({

@@ -46,14 +46,21 @@ export const phoneRegex = /^(\+98|\+۹۸|0|۰)?(9|۹)[\d\u06F0-\u06F9\u0660-\u06
 export const hex24Regex = /^[0-9a-fA-F]{24}$/;
 export const objectIdRegex = hex24Regex;
 
-// Academic Course Categories
-export const courseCategories = ["فناوری اطلاعات", "گرافیک", "زبان", "MBA", "مشاوره"];
+// Academic Course Categories (Departments)
+export const courseCategories = [
+  "فناوری اطلاعات",
+  "کسب و کار",
+  "زبان‌های خارجی",
+  "مشاوره",
+  "گرافیک",
+  "زبان",
+  "MBA",
+];
 
 export const courseCategoryOptions = [
   { value: "فناوری اطلاعات", label: "فناوری اطلاعات" },
-  { value: "گرافیک", label: "گرافیک" },
-  { value: "زبان", label: "زبان" },
-  { value: "MBA", label: "MBA" },
+  { value: "کسب و کار", label: "کسب و کار" },
+  { value: "زبان‌های خارجی", label: "زبان‌های خارجی" },
   { value: "مشاوره", label: "مشاوره" },
 ];
 
