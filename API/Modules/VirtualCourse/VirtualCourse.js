@@ -86,7 +86,7 @@ export default virtualCourseRouter;
  *           type: string
  *         category:
  *           type: string
- *           enum: [فناوری اطلاعات, گرافیک, زبان, MBA]
+ *           enum: [فناوری اطلاعات, گرافیک, زبان, MBA, مشاوره]
  *         tags:
  *           type: array
  *           items:
@@ -150,7 +150,7 @@ export default virtualCourseRouter;
  *       properties:
  *         category:
  *           type: string
- *           enum: [فناوری اطلاعات, گرافیک, زبان, MBA]
+ *           enum: [فناوری اطلاعات, گرافیک, زبان, MBA, مشاوره]
  *         tags:
  *           type: array
  *           items:
@@ -190,7 +190,7 @@ export default virtualCourseRouter;
  *       properties:
  *         category:
  *           type: string
- *           enum: [فناوری اطلاعات, گرافیک, زبان, MBA]
+ *           enum: [فناوری اطلاعات, گرافیک, زبان, MBA, مشاوره]
  *         tags:
  *           type: array
  *           items:
@@ -271,7 +271,7 @@ export default virtualCourseRouter;
  *         name: category
  *         schema:
  *           type: string
- *           enum: [فناوری اطلاعات, گرافیک, زبان, MBA]
+ *           enum: [فناوری اطلاعات, گرافیک, زبان, MBA, مشاوره]
  *     responses:
  *       200:
  *         description: لیست دوره‌های مجازی با موفقیت دریافت شد

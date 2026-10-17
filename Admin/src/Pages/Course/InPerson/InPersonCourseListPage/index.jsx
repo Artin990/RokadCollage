@@ -39,6 +39,7 @@ export default function InPersonCourseListPage() {
         { label: "گرافیک", value: "گرافیک" },
         { label: "زبان", value: "زبان" },
         { label: "MBA", value: "MBA" },
+        { label: "مشاوره", value: "مشاوره" },
       ],
     },
   ];

@@ -1,4 +1,5 @@
 "use client";
+import { MOCK_STATIC_PROFILE } from "@/services/userService.js";
 
 import React, { useState, useEffect } from "react";
 import {
@@ -17,15 +18,15 @@ import { getMyProfile, updateMyProfile } from "@/services/userService";
 import { getPanelStore, updateProfile } from "@/data/panelStore";
 
 export default function UserProfileSettings() {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [successMsg, setSuccessMsg] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
   const [formData, setFormData] = useState({
-    fullName: "",
-    phoneNumber: "",
-    birthDate: "",
+    fullName: MOCK_STATIC_PROFILE.fullName,
+    phoneNumber: MOCK_STATIC_PROFILE.phoneNumber,
+    birthDate: MOCK_STATIC_PROFILE.birthDate,
     newPassword: "",
     confirmPassword: "",
   });

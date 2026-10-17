@@ -8,11 +8,12 @@ export const categoryOptions = [
   { value: "گرافیک", label: "گرافیک" },
   { value: "زبان", label: "زبان" },
   { value: "MBA", label: "MBA" },
+  { value: "مشاوره", label: "مشاوره" },
 ];
 
 export const commonCourseFields = {
   category: Yup.string()
-    .oneOf(["فناوری اطلاعات", "گرافیک", "زبان", "MBA"], "انتخاب دسته‌بندی معتبر الزامی است")
+    .oneOf(["فناوری اطلاعات", "گرافیک", "زبان", "MBA", "مشاوره"], "انتخاب دسته‌بندی معتبر الزامی است")
     .required("انتخاب دسته‌بندی دوره الزامی است"),
   title: Yup.string()
     .matches(safeTextRegex, "عنوان نباید شامل کاراکترهای خاص باشد")

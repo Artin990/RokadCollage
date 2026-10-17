@@ -14,6 +14,8 @@ export default function SingleCourseHero({ course }) {
         return "success";
       case "MBA":
         return "amber";
+      case "مشاوره":
+        return "pink";
       default:
         return "primary";
     }

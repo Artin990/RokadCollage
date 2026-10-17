@@ -47,13 +47,14 @@ export const hex24Regex = /^[0-9a-fA-F]{24}$/;
 export const objectIdRegex = hex24Regex;
 
 // Academic Course Categories
-export const courseCategories = ["فناوری اطلاعات", "گرافیک", "زبان", "MBA"];
+export const courseCategories = ["فناوری اطلاعات", "گرافیک", "زبان", "MBA", "مشاوره"];
 
 export const courseCategoryOptions = [
   { value: "فناوری اطلاعات", label: "فناوری اطلاعات" },
   { value: "گرافیک", label: "گرافیک" },
   { value: "زبان", label: "زبان" },
   { value: "MBA", label: "MBA" },
+  { value: "مشاوره", label: "مشاوره" },
 ];
 
 // Blog Categories

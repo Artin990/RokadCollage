@@ -1,3 +1,4 @@
+import { SUGGESTED_BY_DEPT, FLAGSHIP_COURSES, TOP_INSTRUCTORS } from "./data/coursesHubData.js";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import "./courses-hub.css";
@@ -59,9 +60,10 @@ const DEPT_CONFIG = {
 
 export default function CoursesPage() {
   const [store, setStore] = useState(getPanelStore);
-  const [courses, setCourses] = useState([]);
-  const [instructors, setInstructors] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const fallbackInitCourses = [ ...Object.values(SUGGESTED_BY_DEPT).flatMap(d => d.courses.map(c => ({ ...c, _id: c.id, price: parseInt(c.price.replace(/[^0-9]/g, '')), category: d.deptName }))) ];
+  const [courses, setCourses] = useState(fallbackInitCourses);
+  const [instructors, setInstructors] = useState(TOP_INSTRUCTORS);
+  const [loading, setLoading] = useState(false);
   const instScroll = useHorizontalDragScroll();
 
   useEffect(() => {
@@ -71,8 +73,9 @@ export default function CoursesPage() {
           getAllCourses().catch(() => []),
           getTeachers().catch(() => []),
         ]);
-        setCourses(Array.isArray(coursesData) ? coursesData : []);
-        setInstructors(Array.isArray(teachersData) ? teachersData : []);
+        const fallbackCourses = [ ...Object.values(SUGGESTED_BY_DEPT).flatMap(d => d.courses.map(c => ({ ...c, _id: c.id, price: parseInt(c.price.replace(/[^0-9]/g, '')), category: d.deptName }))) ];
+        setCourses(Array.isArray(coursesData) && coursesData.length > 0 ? coursesData : fallbackCourses);
+        setInstructors(Array.isArray(teachersData) && teachersData.length > 0 ? teachersData : TOP_INSTRUCTORS);
       } catch (err) {
         console.error("Failed to load courses or instructors:", err);
       } finally {

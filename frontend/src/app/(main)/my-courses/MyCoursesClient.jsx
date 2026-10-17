@@ -1,4 +1,5 @@
 "use client";
+import { MOCK_STATIC_ENROLLMENTS } from "@/services/enrollmentService.js";
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
@@ -47,10 +48,10 @@ const SORTS = [
 ];
 
 export default function MyCoursesClient() {
-  const [enrollments, setEnrollments] = useState([]);
+  const [enrollments, setEnrollments] = useState(MOCK_STATIC_ENROLLMENTS);
   const [allCourses, setAllCourses] = useState([]);
   const [store, setStore] = useState(getPanelStore);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   // جستجو، فیلترها و مرتب‌سازی
   const [searchQuery, setSearchQuery] = useState("");

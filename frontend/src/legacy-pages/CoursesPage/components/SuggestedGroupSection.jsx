@@ -99,12 +99,12 @@ function SuggestedDeptGroup({ group, store, isMobile }) {
           <DeptIcon size={14} />
           دپارتمان {group.deptName}
         </span>
-        <a href={`#dept/${group.deptId}`} className="ch-dept-more-link">
+        <Link href={`/dept/${group.deptId}`} className="ch-dept-more-link">
           <span>مشاهده همه دوره‌های {group.deptName}</span>
           <span className="ch-dept-more-arrow" aria-hidden="true">
             <ChevronLeft size={15} strokeWidth={2.8} />
           </span>
-        </a>
+        </Link>
       </div>
 
       <div

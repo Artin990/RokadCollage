@@ -164,7 +164,7 @@ export default inPersonCourseRouter;
  *           type: string
  *         category:
  *           type: string
- *           enum: [فناوری اطلاعات, گرافیک, زبان, MBA]
+ *           enum: [فناوری اطلاعات, گرافیک, زبان, MBA, مشاوره]
  *         tags:
  *           type: array
  *           items:

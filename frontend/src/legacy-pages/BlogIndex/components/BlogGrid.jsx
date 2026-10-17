@@ -1,3 +1,4 @@
+import { MOCK_STATIC_BLOGS } from "@/services/blogService.js";
 import React, { useState, useRef, useEffect } from "react";
 import { Sparkles } from "lucide-react";
 import { I, toFa } from "./BlogIcons.jsx";
@@ -9,7 +10,7 @@ const ENTER_STAGGER = 60, ENTER_MS = 550, EXIT_STAGGER = 45, EXIT_MS = 420;
 
 export default function BlogGrid({ activeCategory, searchQuery }) {
   const [blogsList, setBlogsList] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [sortBy, setSortBy] = useState("newest");
   const [sortOpen, setSortOpen] = useState(false);
   const [visible, setVisible] = useState(PAGE_SIZE);

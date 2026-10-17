@@ -1,3 +1,4 @@
+import { MOCK_STATIC_COURSES } from "@/services/courseService.js";
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import "./course.css";
 import PatternLayer from "../../components/PatternLayer";
@@ -32,8 +33,8 @@ export default function CourseSingle({ slug, initialCourse }) {
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [activeLesson, setActiveLesson] = useState(null);
 
-  const [course, setCourse] = useState(() => initialCourse || null);
-  const [loading, setLoading] = useState(!initialCourse);
+    const [course, setCourse] = useState(() => initialCourse || MOCK_STATIC_COURSES[0]);
+  const [loading, setLoading] = useState(false);
   const [store, setStore] = useState(getPanelStore);
   const [enrollToast, setEnrollToast] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);

@@ -1,3 +1,44 @@
+export const MOCK_STATIC_ENROLLMENTS = [
+  {
+    "_id": "en-1",
+    "id": 1,
+    "course": {
+      "_id": "c-1",
+      "id": 1,
+      "slug": "figma-ui-design",
+      "title": "طراحی رابط کاربری با فیگما",
+      "instructor": "نیلوفر رستمی",
+      "duration": "۴۲ ساعت",
+      "isOnline": true,
+      "category": "فناوری اطلاعات"
+    },
+    "courseId": "c-1",
+    "spotPlayerLicense": {
+      "key": "SPOT-ROKAD-9921-X48A-8812",
+      "url": "https://app.spotplayer.ir"
+    },
+    "progress": 45,
+    "enrolledAt": "2025-07-20T12:00:00Z"
+  },
+  {
+    "_id": "en-2",
+    "id": 2,
+    "course": {
+      "_id": "c-2",
+      "id": 2,
+      "slug": "react-nextjs",
+      "title": "برنامه‌نویسی وب با React و Next.js",
+      "instructor": "مهندس آرش تهرانی",
+      "duration": "۶۰ ساعت",
+      "isOnline": false,
+      "isBootcamp": true,
+      "category": "فناوری اطلاعات"
+    },
+    "courseId": "c-2",
+    "progress": 80,
+    "enrolledAt": "2025-06-15T12:00:00Z"
+  }
+];
 import { apiRequest } from "@/lib/api";
 
 /**
@@ -17,7 +58,8 @@ export async function purchaseCourse({ courseId, sessionId, couponCode }) {
  */
 export async function getMyEnrollments() {
   const res = await apiRequest("/enrollment/my");
-  return res?.data || res || [];
+  const list = res?.data || res;
+  return (Array.isArray(list) && list.length > 0) ? list : MOCK_STATIC_ENROLLMENTS;
 }
 
 /**

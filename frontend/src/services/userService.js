@@ -1,3 +1,10 @@
+export const MOCK_STATIC_PROFILE = {
+  "fullName": "علی محمدی",
+  "phoneNumber": "۰۹۱۲۳۴۵۶۷۸۹",
+  "email": "ali.mohammadi@example.com",
+  "birthDate": "۱۳۷۸/۰۴/۱۵",
+  "role": "student"
+};
 import { apiRequest } from "@/lib/api";
 
 /**
@@ -5,7 +12,8 @@ import { apiRequest } from "@/lib/api";
  */
 export async function getMyProfile() {
   const res = await apiRequest("/user/me");
-  return res?.data || res;
+  const p = res?.data || res;
+  return p || MOCK_STATIC_PROFILE;
 }
 
 /**

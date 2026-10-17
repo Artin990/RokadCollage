@@ -23,6 +23,8 @@ export default function VirtualCourseCard({ course, onEdit, onDelete, onView, on
         return "success";
       case "MBA":
         return "amber";
+      case "مشاوره":
+        return "pink";
       default:
         return "primary";
     }

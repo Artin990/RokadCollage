@@ -21,6 +21,8 @@ export default function InPersonCourseCard({ course, onEdit, onDelete, onView })
         return "success";
       case "MBA":
         return "amber";
+      case "مشاوره":
+        return "pink";
       default:
         return "primary";
     }

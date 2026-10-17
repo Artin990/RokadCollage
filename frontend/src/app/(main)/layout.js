@@ -6,12 +6,8 @@ import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 
 // Dynamic import for off-screen modals & toasts to shave bundle size
-const ConsultationModal = dynamic(() => import("@/components/ConsultationModal/index.jsx"), {
-  ssr: false,
-});
-const AuthPromptToast = dynamic(() => import("@/components/AuthPromptToast/index.jsx"), {
-  ssr: false,
-});
+import ConsultationModal from "@/components/ConsultationModal/index.jsx";
+import AuthPromptToast from "@/components/AuthPromptToast/index.jsx";
 
 export default function MainLayout({ children }) {
   const [consultOpen, setConsultOpen] = useState(false);

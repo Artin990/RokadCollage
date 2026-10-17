@@ -1,3 +1,4 @@
+import { MOCK_STATIC_BLOGS } from "@/services/blogService.js";
 import React, { useState, useEffect } from "react";
 import { getBlogs } from "@/services/blogService.js";
 import BlogHero from "./components/BlogHero.jsx";
@@ -9,7 +10,15 @@ import BlogTrending from "./components/BlogTrending.jsx";
 export default function BlogIndex() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [featured, setFeatured] = useState(null);
+  const [featured, setFeatured] = useState({
+    title: MOCK_STATIC_BLOGS[0].title,
+    slug: MOCK_STATIC_BLOGS[0].slug,
+    excerpt: MOCK_STATIC_BLOGS[0].description,
+    cat: MOCK_STATIC_BLOGS[0].category,
+    date: 'به‌تازگی',
+    readTime: MOCK_STATIC_BLOGS[0].readTime,
+    author: MOCK_STATIC_BLOGS[0].author.name,
+  });
 
   useEffect(() => {
     getBlogs({ limit: 1 })

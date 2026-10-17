@@ -36,6 +36,7 @@ export const catColors = {
   "گرافیک": { bg: "#FCE8EF", fg: "#A81344", border: "#F5B8CC", accent: "var(--female)", btnHoverFg: "#fff" },
   "زبان و MBA": { bg: "#E6F5F3", fg: "#28544F", border: "#CCEAE6", accent: "var(--ecosystem)", btnHoverFg: "#fff" },
   "زبان‌های خارجی": { bg: "#E6F5F3", fg: "#28544F", border: "#CCEAE6", accent: "var(--ecosystem)", btnHoverFg: "#fff" },
+  "مشاوره": { bg: "#FCE8EF", fg: "#A81344", border: "#F5B8CC", accent: "var(--female)", btnHoverFg: "#fff" },
 };
 
 export const courseIcons = [
