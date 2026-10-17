@@ -10,7 +10,7 @@ const ENTER_STAGGER = 60, ENTER_MS = 550, EXIT_STAGGER = 45, EXIT_MS = 420;
 
 export default function BlogGrid({ activeCategory, searchQuery }) {
   const [blogsList, setBlogsList] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState("newest");
   const [sortOpen, setSortOpen] = useState(false);
   const [visible, setVisible] = useState(PAGE_SIZE);
