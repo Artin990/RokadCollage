@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import BlogArticleClient from "./BlogArticleClient";
 import { getBlogBySlugOrId } from "@/services/blogService";
+import SkeletonBlogArticle from "@/legacy-pages/BlogArticle/components/SkeletonBlogArticle";
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -68,13 +69,7 @@ export default async function SingleArticleRoute({ params }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
         />
       )}
-      <Suspense
-        fallback={
-          <div className="min-h-screen flex items-center justify-center font-['IRANSansX'] text-stone-500">
-            در حال بارگذاری مقاله...
-          </div>
-        }
-      >
+      <Suspense fallback={<SkeletonBlogArticle />}>
         <BlogArticleClient slug={decodedSlug} initialArticle={article} />
       </Suspense>
     </>

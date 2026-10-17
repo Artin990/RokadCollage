@@ -20,29 +20,53 @@ const toneGrad = (t) =>
 
 const H2_COLORS = ["var(--college)", "var(--navy)", "var(--accent)"];
 
-export default function BlogArticle({ slug }) {
+export default function BlogArticle({ slug, initialArticle = null }) {
   const [copied, setCopied] = useState(false);
-  const [article, setArticle] = useState(null);
+  const [article, setArticle] = useState(() => initialArticle || null);
   const [relatedArticles, setRelatedArticles] = useState([]);
-  const [headings, setHeadings] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [headings, setHeadings] = useState(() => {
+    if (initialArticle?.content) {
+      const regex = /<h2[^>]*>(.*?)<\/h2>/gi;
+      const found = [];
+      let match;
+      let idx = 0;
+      while ((match = regex.exec(initialArticle.content)) !== null) {
+        found.push({
+          id: `sec-${idx}`,
+          label: match[1].replace(/<[^>]+>/g, "").trim(),
+        });
+        idx++;
+      }
+      return found;
+    }
+    return [];
+  });
+  const [loading, setLoading] = useState(() => !initialArticle);
 
   useEffect(() => {
+    let isMounted = true;
     async function fetchArticle() {
-      if (!slug) return;
+      if (!initialArticle) {
+        setLoading(true);
+      }
       try {
-        const data = await getBlogBySlugOrId(slug);
-        setArticle(data);
+        let data = initialArticle;
+        if (!data && slug) {
+          data = await getBlogBySlugOrId(slug);
+          if (isMounted) setArticle(data);
+        }
 
         // Fetch related articles from same category or newest
         const rel = await getBlogs({ limit: 4 }).catch(() => []);
         const relList = (Array.isArray(rel) ? rel : rel?.data || []).filter(
           (b) => b._id !== data?._id && b.id !== data?.id
         );
-        setRelatedArticles(relList.slice(0, 3));
+        if (isMounted) {
+          setRelatedArticles(relList.slice(0, 3));
+        }
 
         // Parse H2 headings from content or blocks
-        if (data?.content) {
+        if (data?.content && (!initialArticle || headings.length === 0)) {
           const regex = /<h2[^>]*>(.*?)<\/h2>/gi;
           const found = [];
           let match;
@@ -54,16 +78,21 @@ export default function BlogArticle({ slug }) {
             });
             idx++;
           }
-          setHeadings(found);
+          if (isMounted) setHeadings(found);
         }
       } catch (err) {
         console.error("Failed to load blog article:", err);
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     }
     fetchArticle();
-  }, [slug]);
+    return () => {
+      isMounted = false;
+    };
+  }, [slug, initialArticle]);
 
   const scrollTo = (id) => (e) => {
     e.preventDefault();
@@ -80,7 +109,7 @@ export default function BlogArticle({ slug }) {
     }
   };
 
-  if (loading) {
+  if (loading && !article) {
     return <SkeletonBlogArticle />;
   }
 
