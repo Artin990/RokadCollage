@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import CourseSingleClient from "./CourseSingleClient";
 import { getCourseBySlugOrId } from "@/services/courseService";
 import SkeletonCourseSingle from "@/legacy-pages/CourseSingle/components/SkeletonCourseSingle";
+import SkeletonCourseInPerson from "@/legacy-pages/CourseSingle/components/SkeletonCourseInPerson";
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -35,6 +36,14 @@ export default async function SingleCourseRoute({ params }) {
   const { slug } = await params;
   const decodedSlug = decodeURIComponent(slug || "");
   const initialCourse = await getCourseBySlugOrId(decodedSlug).catch(() => null);
+
+  const isInPerson =
+    initialCourse?.mode === "in-person" ||
+    initialCourse?.isInPerson ||
+    initialCourse?.type === "حضوری" ||
+    decodedSlug.includes("bootcamp") ||
+    decodedSlug.includes("حضوری") ||
+    decodedSlug.includes("in-person");
 
   const courseSchema = initialCourse
     ? {
@@ -85,7 +94,7 @@ export default async function SingleCourseRoute({ params }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }}
         />
       )}
-      <Suspense fallback={<SkeletonCourseSingle />}>
+      <Suspense fallback={isInPerson ? <SkeletonCourseInPerson /> : <SkeletonCourseSingle />}>
         <CourseSingleClient slug={decodedSlug} initialCourse={initialCourse} />
       </Suspense>
     </>

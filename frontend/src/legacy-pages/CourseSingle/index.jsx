@@ -12,6 +12,7 @@ const SpotPlayerLicenseModal = dynamic(() => import("./components/SpotPlayerLice
 import CourseSingleInPerson from "./CourseSingleInPerson.jsx";
 import CourseSingleNotFound from "./components/CourseSingleNotFound.jsx";
 import SkeletonCourseSingle from "./components/SkeletonCourseSingle.jsx";
+import SkeletonCourseInPerson from "./components/SkeletonCourseInPerson.jsx";
 import { CourseTopbar, CourseSidebar } from "./components/CourseSidebar.jsx";
 import CourseMobilePlayer from "./components/CourseMobilePlayer.jsx";
 import ResourcesPanel from "./components/ResourcesPanel.jsx";
@@ -79,6 +80,11 @@ export default function CourseSingle({ slug, initialCourse }) {
   }, []);
 
   if (loading && !course) {
+    const isInPersonSlug =
+      slug && (slug.includes("bootcamp") || slug.includes("حضوری") || slug.includes("in-person"));
+    if (isInPersonSlug) {
+      return <SkeletonCourseInPerson />;
+    }
     return <SkeletonCourseSingle />;
   }
 
