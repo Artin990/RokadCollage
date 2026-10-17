@@ -33,7 +33,7 @@ export default function InPersonCourseListPage() {
   const filterConfig = [
     {
       field: "category",
-      label: "دسته‌بندی",
+      label: "دپارتمان / دسته‌بندی",
       options: [
         { label: "فناوری اطلاعات", value: "فناوری اطلاعات" },
         { label: "گرافیک", value: "گرافیک" },

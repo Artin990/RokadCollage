@@ -11,9 +11,9 @@ export default function CourseBasicInfoSection() {
       {/* Category */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <Select
-          label="دسته‌بندی دوره"
+          label="دپارتمان / دسته‌بندی دوره"
           name="category"
-          placeholder="انتخاب دسته‌بندی"
+          placeholder="انتخاب دپارتمان / دسته‌بندی"
           options={categoryOptions}
           value={values.category || ""}
           onChange={handleChange}
