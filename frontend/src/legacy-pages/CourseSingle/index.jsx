@@ -33,8 +33,8 @@ export default function CourseSingle({ slug, initialCourse }) {
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [activeLesson, setActiveLesson] = useState(null);
 
-    const [course, setCourse] = useState(() => initialCourse || MOCK_STATIC_COURSES[0]);
-  const [loading, setLoading] = useState(false);
+  const [course, setCourse] = useState(() => initialCourse || null);
+  const [loading, setLoading] = useState(() => !initialCourse);
   const [store, setStore] = useState(getPanelStore);
   const [enrollToast, setEnrollToast] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
@@ -42,20 +42,29 @@ export default function CourseSingle({ slug, initialCourse }) {
   const [serverEnrolled, setServerEnrolled] = useState(false);
 
   useEffect(() => {
+    let isMounted = true;
     async function fetchCourse() {
+      if (!initialCourse) {
+        setLoading(true);
+      }
       try {
         const live = await getCourseBySlugOrId(slug);
-        if (live) {
+        if (live && isMounted) {
           setCourse(live);
         }
       } catch (err) {
         console.error("Failed to load course details from API:", err);
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     }
     fetchCourse();
-  }, [slug]);
+    return () => {
+      isMounted = false;
+    };
+  }, [slug, initialCourse]);
 
   const allLessons = useMemo(() => {
     return (course?.chapters || []).flatMap((ch) => ch.lessons || []);
@@ -69,7 +78,7 @@ export default function CourseSingle({ slug, initialCourse }) {
     return () => window.removeEventListener("rokad_panel_store_changed", handleStoreChange);
   }, []);
 
-  if (!course && loading) {
+  if (loading && !course) {
     return <SkeletonCourseSingle />;
   }
 

@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import CourseSingleClient from "./CourseSingleClient";
 import { getCourseBySlugOrId } from "@/services/courseService";
+import SkeletonCourseSingle from "@/legacy-pages/CourseSingle/components/SkeletonCourseSingle";
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -84,13 +85,7 @@ export default async function SingleCourseRoute({ params }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }}
         />
       )}
-      <Suspense
-        fallback={
-          <div className="min-h-screen flex items-center justify-center font-sans text-stone-500">
-            در حال بارگذاری دوره...
-          </div>
-        }
-      >
+      <Suspense fallback={<SkeletonCourseSingle />}>
         <CourseSingleClient slug={decodedSlug} initialCourse={initialCourse} />
       </Suspense>
     </>
