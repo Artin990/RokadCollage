@@ -63,7 +63,7 @@ export default function CoursesPage() {
   const fallbackInitCourses = [ ...Object.values(SUGGESTED_BY_DEPT).flatMap(d => d.courses.map(c => ({ ...c, _id: c.id, price: parseInt(c.price.replace(/[^0-9]/g, '')), category: d.deptName }))) ];
   const [courses, setCourses] = useState(fallbackInitCourses);
   const [instructors, setInstructors] = useState(TOP_INSTRUCTORS);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const instScroll = useHorizontalDragScroll();
 
   useEffect(() => {
