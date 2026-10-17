@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import DepartmentClient from "./DepartmentClient";
 import { getAllCourses } from "@/services/courseService";
 import { departments } from "@/data/departments";
+import { SkeletonDepartmentPage } from "@/legacy-pages/DepartmentPage/components/SkeletonDepartmentHub";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
@@ -19,7 +20,7 @@ export default async function SingleDepartmentRoute({ params }) {
   const initialCourses = await getAllCourses().catch(() => []);
 
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center font-['IRANSansX'] text-stone-500">در حال بارگذاری دپارتمان...</div>}>
+    <Suspense fallback={<SkeletonDepartmentPage deptId={decodedId} />}>
       <DepartmentClient deptId={decodedId} initialCourses={initialCourses} />
     </Suspense>
   );
