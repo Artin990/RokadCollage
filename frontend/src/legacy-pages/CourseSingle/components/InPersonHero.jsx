@@ -61,7 +61,7 @@ export default function InPersonHero({
             <span className="sep">›</span>
             <Link href={deptHref}>{deptName}</Link>
             <span className="sep">›</span>
-            <b>{course.title}</b>
+            <b title={course.title}>{course.title}</b>
           </nav>
 
           <div className="cs-inperson-top-actions">

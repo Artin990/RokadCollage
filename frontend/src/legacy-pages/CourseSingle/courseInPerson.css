@@ -30,10 +30,34 @@
   font-weight: 800;
 }
 
+.cs-inperson-wrapper .cs-crumbs {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  white-space: nowrap;
+}
+
 .cs-inperson-wrapper .cs-crumbs a,
 .cs-inperson-wrapper .cs-crumbs a:hover,
 .cs-inperson-wrapper .cs-crumbs a:focus {
   text-decoration: none !important;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.cs-inperson-wrapper .cs-crumbs .sep {
+  flex-shrink: 0;
+}
+
+.cs-inperson-wrapper .cs-crumbs b {
+  display: inline-block;
+  min-width: 0;
+  max-width: min(420px, 40vw);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
 }
 
 .cs-inperson-top-save-btn {
@@ -948,11 +972,12 @@
     flex: 0 0 100% !important;
     font-size: 12px !important;
     gap: 6px !important;
-    display: inline-flex !important;
+    display: flex !important;
     align-items: center !important;
     white-space: nowrap !important;
-    overflow-x: auto !important;
-    scrollbar-width: none !important;
+    overflow: hidden !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
     background: transparent !important;
     border: none !important;
     border-top: 1px dashed var(--ink-light, #e4e4e7) !important;
@@ -960,22 +985,29 @@
     box-shadow: none !important;
     padding: 8px 0 0 !important;
     margin-top: 2px !important;
-    max-width: none !important;
   }
 
-  .cs-inperson-wrapper .cs-crumbs::-webkit-scrollbar,
-  .cs-topbar .cs-crumbs::-webkit-scrollbar {
-    display: none !important;
+  .cs-inperson-wrapper .cs-crumbs a,
+  .cs-topbar .cs-crumbs a {
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  .cs-inperson-wrapper .cs-crumbs .sep,
+  .cs-topbar .cs-crumbs .sep {
+    flex-shrink: 0 !important;
   }
 
   .cs-inperson-wrapper .cs-crumbs b,
   .cs-topbar .cs-crumbs b {
     display: inline-block !important;
-    max-width: 220px !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     white-space: nowrap !important;
-    vertical-align: bottom !important;
+    vertical-align: middle !important;
   }
 
   /* کارت هیرو در موبایل */

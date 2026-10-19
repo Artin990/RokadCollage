@@ -30,7 +30,7 @@ export function CourseTopbar({ course }) {
           <span className="sep">›</span>
           <Link href={deptHref}>{course.category || course.departmentFa || "آنلاین"}</Link>
           <span className="sep">›</span>
-          <b>{course.title}</b>
+          <b title={course.title}>{course.title}</b>
         </nav>
         <span className="cs-students">
           {course.students || "۹۵"} دانشجو
