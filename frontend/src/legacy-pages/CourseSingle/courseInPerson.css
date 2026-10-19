@@ -10,6 +10,21 @@
   width: 100%;
 }
 
+.cs-inperson-wrapper .cs-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #ffffff;
+  border: 1.5px solid var(--ink, #18181B);
+  border-radius: var(--r-lg, 14px);
+  box-shadow: 2.75px 2.75px 0 var(--college, #F8A41D);
+  padding: 14px 22px;
+  margin: 12px 0 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .cs-inperson-top-actions {
   display: inline-flex;
   align-items: center;

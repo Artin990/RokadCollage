@@ -18,15 +18,16 @@
 .cs-topbar {
   display: flex;
   align-items: center;
-  gap: 18px;
+  justify-content: space-between;
+  gap: 16px;
   background: #fff;
   border: 1.5px solid var(--ink);
   border-radius: var(--r-lg);
+  box-shadow: 2.75px 2.75px 0 var(--college);
   padding: 14px 22px;
   margin: 12px 0 24px;
   width: 100%;
   box-sizing: border-box;
-  flex-wrap: wrap;
 }
 .cs-back {
   display: inline-flex;
