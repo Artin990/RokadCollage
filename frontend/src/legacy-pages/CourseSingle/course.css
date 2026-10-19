@@ -298,27 +298,98 @@
 /* تامبنیل گرادیان کهربایی (طرح: s5-card .thumb) */
 .cs-thumb {
   width: 100%;
-  height: 180px;
-  background: linear-gradient(135deg, var(--college) 0%, var(--college-dark) 100%);
-  border: 1.5px solid var(--ink);
+  height: 190px;
+  background: #0f141c;
+  border: 2px solid var(--ink);
   border-radius: var(--r-md);
   position: relative;
   overflow: hidden;
   display: grid;
   place-items: center;
+  box-shadow: 4px 4px 0 var(--ink);
+  transition: all 0.25s ease;
 }
+
+.cs-thumb:hover {
+  transform: translateY(-2px);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+.cs-thumb-side-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
+}
+
+.cs-thumb:hover .cs-thumb-side-img {
+  transform: scale(1.06);
+}
+
+.cs-thumb-side-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15, 20, 28, 0.25) 0%, rgba(15, 20, 28, 0.75) 100%);
+  z-index: 2;
+  transition: background 0.3s ease;
+}
+
+.cs-thumb:hover .cs-thumb-side-overlay {
+  background: linear-gradient(180deg, rgba(15, 20, 28, 0.15) 0%, rgba(15, 20, 28, 0.85) 100%);
+}
+
+.cs-thumb-side-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--college, #F8A41D);
+  color: #121212;
+  border: 1.5px solid #121212;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 900;
+  padding: 3px 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  z-index: 3;
+  box-shadow: 2px 2px 0 #121212;
+  pointer-events: none;
+}
+
+.cs-thumb .play {
+  position: relative;
+  z-index: 3;
+}
+
 .cs-thumb .play span {
-  width: 72px;
-  height: 72px;
-  background: #fff;
-  border: 2px solid var(--ink);
+  width: 64px;
+  height: 64px;
+  background: #ffffff;
+  border: 2.5px solid var(--ink);
   border-radius: 50%;
   display: grid;
   place-items: center;
   color: var(--ink);
-  box-shadow: 2.75px 2.75px 0 var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.cs-thumb .play svg { width: 28px; height: 28px; }
+
+.cs-thumb:hover .play span {
+  transform: scale(1.1);
+  background: var(--college, #F8A41D);
+  color: #121212;
+  box-shadow: 0 0 20px rgba(248, 164, 29, 0.6), 4px 4px 0 var(--ink);
+}
+
+.cs-thumb .play svg {
+  width: 26px;
+  height: 26px;
+  margin-inline-start: 3px;
+}
 
 /* قیمت (طرح: price-block) */
 .cs-price {
@@ -662,8 +733,7 @@
     box-shadow: none;
     border-bottom: 1px solid var(--ink-light);
   }
-  .cs-students,
-  .cs-crumbs { display: none; }
+  .cs-students { display: none; }
   .cs-back { font-size: 13px; }
 
   /* Grid موبایل: تک‌ستونه، همه بچه‌ها عرض کامل */

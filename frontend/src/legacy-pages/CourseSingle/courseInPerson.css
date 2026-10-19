@@ -873,13 +873,21 @@
     gap: 5px;
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
-    min-width: 0;
+    white-space: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    background: #ffffff;
+    border: 1.5px solid var(--ink);
+    border-radius: 9px;
+    box-shadow: 2px 2px 0 var(--ink);
+    padding: 5px 10px;
+    width: fit-content;
+    max-width: 100%;
   }
 
   .cs-inperson-wrapper .cs-crumbs b {
     display: inline-block;
-    max-width: 100%;
+    max-width: 160px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
