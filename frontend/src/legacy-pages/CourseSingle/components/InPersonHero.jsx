@@ -49,35 +49,37 @@ export default function InPersonHero({
 
   return (
     <>
-      <div className="cs-topbar container">
-        <Link href="/courses" className="cs-back">
-          <ArrowLeft size={14} style={{ transform: "rotate(180deg)" }} />
-          <span>همهٔ دوره‌ها</span>
-        </Link>
+      <div className="container">
+        <div className="cs-topbar">
+          <Link href="/courses" className="cs-back">
+            <ArrowLeft size={14} style={{ transform: "rotate(180deg)" }} />
+            <span>همهٔ دوره‌ها</span>
+          </Link>
 
-        <nav className="cs-crumbs" aria-label="مسیر دوره">
-          <Link href="/courses">دوره‌ها</Link>
-          <span className="sep">›</span>
-          <Link href={deptHref}>{deptName}</Link>
-          <span className="sep">›</span>
-          <b>{course.title}</b>
-        </nav>
+          <nav className="cs-crumbs" aria-label="مسیر دوره">
+            <Link href="/courses">دوره‌ها</Link>
+            <span className="sep">›</span>
+            <Link href={deptHref}>{deptName}</Link>
+            <span className="sep">›</span>
+            <b>{course.title}</b>
+          </nav>
 
-        <div className="cs-inperson-top-actions">
-          <div className="cs-inperson-top-badge">
-            <MapPin size={12} strokeWidth={2.5} />
-            <span>کارگاه حضوری</span>
+          <div className="cs-inperson-top-actions">
+            <div className="cs-inperson-top-badge">
+              <MapPin size={12} strokeWidth={2.5} />
+              <span>کارگاه حضوری</span>
+            </div>
+
+            <button
+              type="button"
+              className={`cs-inperson-top-save-btn ${isWished ? "is-saved" : ""}`}
+              onClick={onBookmarkClick}
+              aria-label={isLoggedIn ? (isWished ? "حذف از نشان‌شده‌ها" : "نشان کردن دوره") : "برای ذخیره دوره، ابتدا ثبت‌نام کنید"}
+              title={isLoggedIn ? (isWished ? "حذف از نشان‌شده‌ها" : "نشان کردن دوره") : "برای ذخیره دوره، ابتدا ثبت‌نام کنید"}
+            >
+              <Bookmark size={15} fill={isWished ? "currentColor" : "none"} stroke="currentColor" strokeWidth={2.2} />
+            </button>
           </div>
-
-          <button
-            type="button"
-            className={`cs-inperson-top-save-btn ${isWished ? "is-saved" : ""}`}
-            onClick={onBookmarkClick}
-            aria-label={isLoggedIn ? (isWished ? "حذف از نشان‌شده‌ها" : "نشان کردن دوره") : "برای ذخیره دوره، ابتدا ثبت‌نام کنید"}
-            title={isLoggedIn ? (isWished ? "حذف از نشان‌شده‌ها" : "نشان کردن دوره") : "برای ذخیره دوره، ابتدا ثبت‌نام کنید"}
-          >
-            <Bookmark size={15} fill={isWished ? "currentColor" : "none"} stroke="currentColor" strokeWidth={2.2} />
-          </button>
         </div>
       </div>
 

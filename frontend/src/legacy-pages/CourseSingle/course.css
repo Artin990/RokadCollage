@@ -23,8 +23,9 @@
   border: 1.5px solid var(--ink);
   border-radius: var(--r-lg);
   padding: 14px 22px;
-  box-shadow: 2.75px 2.75px 0 var(--college);
-  margin: 12px auto 24px;
+  margin: 12px 0 24px;
+  width: 100%;
+  box-sizing: border-box;
   flex-wrap: wrap;
 }
 .cs-back {
@@ -730,7 +731,7 @@
     justify-content: space-between;
     gap: 10px;
     padding: 12px 14px;
-    margin: 10px auto 18px;
+    margin: 10px 0 18px;
     width: 100%;
     background: #fff;
     border: 1.5px solid var(--ink);

@@ -5665,7 +5665,7 @@ a:focus-visible, button:focus-visible {
     gap: 10px !important;
     padding: 11px 13px !important;
     width: 100% !important;
-    margin: 8px auto 16px !important;
+    margin: 8px 0 16px !important;
     border-radius: var(--r-lg) !important;
     border: 1.5px solid var(--ink) !important;
     box-shadow: 2.75px 2.75px 0 var(--college) !important;

@@ -17,28 +17,30 @@ export function CourseTopbar({ course }) {
   const deptId = DEPT_MAP[course?.category] || DEPT_MAP[course?.department] || (course?.department ? course.department : null);
   const deptHref = deptId ? `/dept/${deptId}` : "/courses";
   return (
-    <div className="cs-topbar container">
-      <Link href="/courses" className="cs-back">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ width: 14, height: 14, transform: "rotate(180deg)" }}>
-          <path d="M19 12H5M12 5l-7 7 7 7" />
-        </svg>
-        همهٔ دوره‌ها
-      </Link>
-      <nav className="cs-crumbs">
-        <Link href="/courses">دوره‌ها</Link>
-        <span className="sep">›</span>
-        <Link href={deptHref}>{course.category || course.departmentFa || "آنلاین"}</Link>
-        <span className="sep">›</span>
-        <b>{course.title}</b>
-      </nav>
-      <span className="cs-students">
-        {course.students || "۹۵"} دانشجو
-        <span className="avs" aria-hidden="true">
-          <span className="av" />
-          <span className="av" />
-          <span className="av" />
+    <div className="container">
+      <div className="cs-topbar">
+        <Link href="/courses" className="cs-back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ width: 14, height: 14, transform: "rotate(180deg)" }}>
+            <path d="M19 12H5M12 5l-7 7 7 7" />
+          </svg>
+          همهٔ دوره‌ها
+        </Link>
+        <nav className="cs-crumbs">
+          <Link href="/courses">دوره‌ها</Link>
+          <span className="sep">›</span>
+          <Link href={deptHref}>{course.category || course.departmentFa || "آنلاین"}</Link>
+          <span className="sep">›</span>
+          <b>{course.title}</b>
+        </nav>
+        <span className="cs-students">
+          {course.students || "۹۵"} دانشجو
+          <span className="avs" aria-hidden="true">
+            <span className="av" />
+            <span className="av" />
+            <span className="av" />
+          </span>
         </span>
-      </span>
+      </div>
     </div>
   );
 }

@@ -862,7 +862,7 @@
     justify-content: space-between !important;
     gap: 10px !important;
     padding: 12px 14px !important;
-    margin: 10px auto 18px !important;
+    margin: 10px 0 18px !important;
     width: 100% !important;
     background: #fff !important;
     border: 1.5px solid var(--ink) !important;

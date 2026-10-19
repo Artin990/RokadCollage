@@ -9,23 +9,25 @@ export default function SkeletonCourseInPerson() {
       <PatternLayer rotate={0} />
 
       {/* Topbar Skeleton */}
-      <div className="cs-topbar container" style={{ pointerEvents: "none" }}>
-        <div className="cs-back">
-          <div className="rk-skeleton-line" style={{ width: 14, height: 14, borderRadius: 3 }} />
-          <div className="rk-skeleton-line" style={{ width: 75, height: 14 }} />
-        </div>
-        <div className="cs-crumbs">
-          <div className="rk-skeleton-line" style={{ width: 45, height: 14 }} />
-          <span className="sep">›</span>
-          <div className="rk-skeleton-line" style={{ width: 65, height: 14 }} />
-          <span className="sep">›</span>
-          <div className="rk-skeleton-line" style={{ width: 140, height: 14 }} />
-        </div>
-        <div className="cs-inperson-top-actions">
-          <div className="cs-inperson-top-badge">
-            <div className="rk-skeleton-line" style={{ width: 65, height: 12 }} />
+      <div className="container" style={{ pointerEvents: "none" }}>
+        <div className="cs-topbar">
+          <div className="cs-back">
+            <div className="rk-skeleton-line" style={{ width: 14, height: 14, borderRadius: 3 }} />
+            <div className="rk-skeleton-line" style={{ width: 75, height: 14 }} />
           </div>
-          <div className="cs-inperson-top-save-btn rk-skeleton-shimmer" style={{ pointerEvents: "none" }} />
+          <div className="cs-crumbs">
+            <div className="rk-skeleton-line" style={{ width: 45, height: 14 }} />
+            <span className="sep">›</span>
+            <div className="rk-skeleton-line" style={{ width: 65, height: 14 }} />
+            <span className="sep">›</span>
+            <div className="rk-skeleton-line" style={{ width: 140, height: 14 }} />
+          </div>
+          <div className="cs-inperson-top-actions">
+            <div className="cs-inperson-top-badge">
+              <div className="rk-skeleton-line" style={{ width: 65, height: 12 }} />
+            </div>
+            <div className="cs-inperson-top-save-btn rk-skeleton-shimmer" style={{ pointerEvents: "none" }} />
+          </div>
         </div>
       </div>
 

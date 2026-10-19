@@ -8,21 +8,23 @@ export default function SkeletonCourseSingle() {
       <PatternLayer rotate={0} />
 
       {/* Topbar Skeleton */}
-      <div className="cs-topbar container" style={{ pointerEvents: "none" }}>
-        <div className="rk-skeleton-line" style={{ width: 90, height: 16 }} />
-        <div className="cs-crumbs" style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <div className="rk-skeleton-line" style={{ width: 45, height: 14 }} />
-          <span className="sep">›</span>
-          <div className="rk-skeleton-line" style={{ width: 60, height: 14 }} />
-          <span className="sep">›</span>
-          <div className="rk-skeleton-line" style={{ width: 120, height: 14 }} />
-        </div>
-        <div className="cs-students" style={{ marginInlineStart: "auto", display: "flex", gap: 8, alignItems: "center" }}>
-          <div className="rk-skeleton-line" style={{ width: 65, height: 14 }} />
-          <div className="avs" style={{ display: "flex" }}>
-            <div className="rk-skeleton-shimmer" style={{ width: 32, height: 32, borderRadius: "50%", border: "1.5px solid var(--ink)", marginInlineStart: -8 }} />
-            <div className="rk-skeleton-shimmer" style={{ width: 32, height: 32, borderRadius: "50%", border: "1.5px solid var(--ink)", marginInlineStart: -8 }} />
-            <div className="rk-skeleton-shimmer" style={{ width: 32, height: 32, borderRadius: "50%", border: "1.5px solid var(--ink)", marginInlineStart: -8 }} />
+      <div className="container" style={{ pointerEvents: "none" }}>
+        <div className="cs-topbar">
+          <div className="rk-skeleton-line" style={{ width: 90, height: 16 }} />
+          <div className="cs-crumbs" style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <div className="rk-skeleton-line" style={{ width: 45, height: 14 }} />
+            <span className="sep">›</span>
+            <div className="rk-skeleton-line" style={{ width: 60, height: 14 }} />
+            <span className="sep">›</span>
+            <div className="rk-skeleton-line" style={{ width: 120, height: 14 }} />
+          </div>
+          <div className="cs-students" style={{ marginInlineStart: "auto", display: "flex", gap: 8, alignItems: "center" }}>
+            <div className="rk-skeleton-line" style={{ width: 65, height: 14 }} />
+            <div className="avs" style={{ display: "flex" }}>
+              <div className="rk-skeleton-shimmer" style={{ width: 32, height: 32, borderRadius: "50%", border: "1.5px solid var(--ink)", marginInlineStart: -8 }} />
+              <div className="rk-skeleton-shimmer" style={{ width: 32, height: 32, borderRadius: "50%", border: "1.5px solid var(--ink)", marginInlineStart: -8 }} />
+              <div className="rk-skeleton-shimmer" style={{ width: 32, height: 32, borderRadius: "50%", border: "1.5px solid var(--ink)", marginInlineStart: -8 }} />
+            </div>
           </div>
         </div>
       </div>
