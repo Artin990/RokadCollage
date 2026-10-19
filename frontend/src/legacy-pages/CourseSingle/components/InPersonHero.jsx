@@ -92,10 +92,6 @@ export default function InPersonHero({
                 alt={course.title}
                 className="cs-ip-hero-img"
               />
-              <span className="cs-ip-hero-tag">
-                <MapPin size={12} strokeWidth={2.5} />
-                <span>کمپوس آزادی</span>
-              </span>
             </div>
 
             <div className="cs-ip-hero-content">
@@ -149,7 +145,7 @@ export default function InPersonHero({
                       className="cs-ip-btn-main"
                       onClick={onCheckoutOpen}
                     >
-                      <span>ثبت‌نام دوره</span>
+                      <span>ثبت‌نام</span>
                       <ArrowLeft size={16} />
                     </button>
                   )}
@@ -162,14 +158,14 @@ export default function InPersonHero({
                     }}
                   >
                     <Phone size={14} />
-                    <span>درخواست مشاوره</span>
+                    <span>مشاوره</span>
                   </button>
                 </div>
               </div>
 
               <div className="cs-ip-guarantee-strip">
                 <ShieldCheck size={14} strokeWidth={2.4} />
-                <span>گارانتی بازگشت ۱۰۰٪ شهریه تا پایان جلسه اول بدون قید و شرط</span>
+                <span>گارانتی بازگشت ۱۰۰٪ شهریه تا جلسه اول</span>
               </div>
             </div>
           </div>

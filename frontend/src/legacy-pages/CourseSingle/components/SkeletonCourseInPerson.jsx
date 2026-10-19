@@ -66,12 +66,7 @@ export default function SkeletonCourseInPerson({ hasSprints: propHasSprints }) {
                 background: "linear-gradient(135deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0.08) 100%)",
                 position: "relative",
               }}
-            >
-              <span className="cs-ip-hero-tag">
-                <MapPin size={12} strokeWidth={2.5} />
-                <span>کمپوس آزادی</span>
-              </span>
-            </div>
+            />
 
             {/* Content column */}
             <div className="cs-ip-hero-content">
@@ -134,14 +129,14 @@ export default function SkeletonCourseInPerson({ hasSprints: propHasSprints }) {
                     }}
                   >
                     <Phone size={14} />
-                    <span>درخواست مشاوره</span>
+                    <span>مشاوره</span>
                   </div>
                 </div>
               </div>
 
               <div className="cs-ip-guarantee-strip">
                 <ShieldCheck size={14} strokeWidth={2.4} />
-                <span>گارانتی بازگشت ۱۰۰٪ شهریه تا پایان جلسه اول بدون قید و شرط</span>
+                <span>گارانتی بازگشت ۱۰۰٪ شهریه تا جلسه اول</span>
               </div>
             </div>
           </div>
@@ -160,8 +155,7 @@ export default function SkeletonCourseInPerson({ hasSprints: propHasSprints }) {
                   <FileText size={18} />
                 </div>
                 <div className="cs-ip-sec-titles">
-                  <h2 className="cs-ip-sec-title">درباره این کارگاه حضوری</h2>
-                  <span className="cs-ip-sec-sub">مشخصات، اهداف و رویکرد اجرایی دوره</span>
+                  <h2 className="cs-ip-sec-title">درباره کارگاه</h2>
                 </div>
               </div>
               <span className="cs-ip-sec-badge">معرفی کارگاه</span>
@@ -189,8 +183,7 @@ export default function SkeletonCourseInPerson({ hasSprints: propHasSprints }) {
                     <Calendar size={18} />
                   </div>
                   <div className="cs-ip-sec-titles">
-                    <h2 className="cs-ip-sec-title">سرفصل‌ها و اسپرینت‌های عملی</h2>
-                    <span className="cs-ip-sec-sub">برنامه آموزشی هفته‌به‌هفته کارگاه</span>
+                    <h2 className="cs-ip-sec-title">سرفصل‌ها</h2>
                   </div>
                 </div>
                 <span className="cs-ip-sec-badge highlight">سرفصل‌های کارگاه</span>
@@ -223,7 +216,6 @@ export default function SkeletonCourseInPerson({ hasSprints: propHasSprints }) {
                 </div>
                 <div className="cs-ip-sec-titles">
                   <h2 className="cs-ip-sec-title">زمان‌بندی و موقعیت</h2>
-                  <span className="cs-ip-sec-sub">روزهای برگزاری کارگاه، آدرس دقیق و راه‌های دسترسی</span>
                 </div>
               </div>
               <span className="cs-ip-sec-badge">محل و زمان کارگاه</span>
@@ -255,21 +247,20 @@ export default function SkeletonCourseInPerson({ hasSprints: propHasSprints }) {
                         <Calendar size={18} />
                       </div>
                       <div>
-                        <strong>برنامهٔ زمانی و روزهای کلاس</strong>
-                        <span>جلسات هفتگی کارگاه در کمپوس</span>
+                        <strong>برنامه زمانی</strong>
                       </div>
                     </div>
                     <div className="cs-ip-sch-rows">
                       <div className="cs-ip-sch-row">
-                        <span className="sch-label">روزهای برگزاری:</span>
+                        <span className="sch-label">روزها:</span>
                         <div className="rk-skeleton-line" style={{ width: 90, height: 18 }} />
                       </div>
                       <div className="cs-ip-sch-row">
-                        <span className="sch-label">ساعت کارگاه:</span>
+                        <span className="sch-label">ساعت:</span>
                         <div className="rk-skeleton-line" style={{ width: 85, height: 16 }} />
                       </div>
                       <div className="cs-ip-sch-row">
-                        <span className="sch-label">سالن اختصاصی:</span>
+                        <span className="sch-label">سالن:</span>
                         <div className="rk-skeleton-line" style={{ width: 100, height: 16 }} />
                       </div>
                     </div>
@@ -278,11 +269,11 @@ export default function SkeletonCourseInPerson({ hasSprints: propHasSprints }) {
 
                 <div className="cs-inperson-map-actions">
                   <div className="map-link-btn" style={{ opacity: 0.85 }}>
-                    <span>مسیریابی با نشان</span>
+                    <span>نشان</span>
                     <ExternalLink size={13} />
                   </div>
                   <div className="map-link-btn" style={{ opacity: 0.85 }}>
-                    <span>مسیریابی با بلد</span>
+                    <span>بلد</span>
                     <ExternalLink size={13} />
                   </div>
                   <div className="map-link-btn" style={{ opacity: 0.85 }}>
@@ -303,8 +294,7 @@ export default function SkeletonCourseInPerson({ hasSprints: propHasSprints }) {
                   <UserCheck size={18} />
                 </div>
                 <div className="cs-ip-sec-titles">
-                  <h2 className="cs-ip-sec-title">مدرس و سرپرست کارگاه</h2>
-                  <span className="cs-ip-sec-sub">راهبری مستقیم پروژه، حل تمرین و انتقال تجربه</span>
+                  <h2 className="cs-ip-sec-title">مدرس کارگاه</h2>
                 </div>
               </div>
               <span className="cs-ip-sec-badge">راهبر کارگاه</span>

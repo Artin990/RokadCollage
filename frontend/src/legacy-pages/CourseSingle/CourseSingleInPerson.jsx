@@ -217,15 +217,15 @@ export default function CourseSingleInPerson({ course, slug }) {
             </div>
 
             <h3 className="font-black text-lg text-stone-900 mb-2">{course.title}</h3>
-            <p className="text-sm font-semibold text-stone-600 mb-4 leading-relaxed">
-              ثبت‌نام شما در این کارگاه حضوری تکمیل گردیده است. مشخصات حضور در کارگاه به شرح زیر است:
+            <p className="text-sm font-semibold text-stone-600 mb-4">
+              اطلاعات برگزاری کارگاه:
             </p>
 
             <div className="space-y-3 bg-stone-50 border border-stone-200 rounded-xl p-4 text-sm font-bold text-stone-800">
               <div className="flex items-start gap-2.5">
                 <MapPin size={16} className="text-stone-500 mt-0.5 flex-shrink-0" />
                 <div>
-                  <div className="text-xs text-stone-500">محل برگزاری:</div>
+                  <div className="text-xs text-stone-500">محل:</div>
                   <div>{venue.name} — {venue.room}</div>
                   <div className="text-xs text-stone-600 font-normal mt-0.5">{venue.address}</div>
                 </div>
@@ -234,7 +234,7 @@ export default function CourseSingleInPerson({ course, slug }) {
               <div className="flex items-center gap-2.5 pt-2 border-t border-stone-200">
                 <Calendar size={16} className="text-stone-500 flex-shrink-0" />
                 <div>
-                  <span className="text-xs text-stone-500">روزهای برگزاری: </span>
+                  <span className="text-xs text-stone-500">روزها: </span>
                   <span>{schedule.days}</span>
                 </div>
               </div>
@@ -242,7 +242,7 @@ export default function CourseSingleInPerson({ course, slug }) {
               <div className="flex items-center gap-2.5 pt-2 border-t border-stone-200">
                 <Clock size={16} className="text-stone-500 flex-shrink-0" />
                 <div>
-                  <span className="text-xs text-stone-500">ساعت کلاس: </span>
+                  <span className="text-xs text-stone-500">ساعت: </span>
                   <span>{schedule.hours}</span>
                 </div>
               </div>
@@ -254,7 +254,7 @@ export default function CourseSingleInPerson({ course, slug }) {
                 onClick={() => setInfoModalOpen(false)}
                 className="w-full py-2.5 bg-stone-900 text-white font-black text-sm rounded-[10px_0_10px_0] shadow-[3px_3px_0_#000] hover:bg-stone-800 transition-all text-center"
               >
-                متوجه شدم
+                بستن
               </button>
             </div>
           </div>

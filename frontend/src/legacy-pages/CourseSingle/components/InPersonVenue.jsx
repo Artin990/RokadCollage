@@ -12,7 +12,6 @@ export default function InPersonVenue({ venue, cleanDays, cleanHours, cleanRoom 
           </div>
           <div className="cs-ip-sec-titles">
             <h2 className="cs-ip-sec-title">زمان‌بندی و موقعیت</h2>
-            <span className="cs-ip-sec-sub">روزهای برگزاری کارگاه، آدرس دقیق و راه‌های دسترسی</span>
           </div>
         </div>
         <span className="cs-ip-sec-badge">محل و زمان کارگاه</span>
@@ -44,22 +43,21 @@ export default function InPersonVenue({ venue, cleanDays, cleanHours, cleanRoom 
                   <Calendar size={18} />
                 </div>
                 <div>
-                  <strong>برنامهٔ زمانی و روزهای کلاس</strong>
-                  <span>جلسات هفتگی کارگاه در کمپوس</span>
+                  <strong>برنامه زمانی</strong>
                 </div>
               </div>
 
               <div className="cs-ip-sch-rows">
                 <div className="cs-ip-sch-row">
-                  <span className="sch-label">روزهای برگزاری:</span>
+                  <span className="sch-label">روزها:</span>
                   <span className="sch-val highlight">{cleanDays}</span>
                 </div>
                 <div className="cs-ip-sch-row">
-                  <span className="sch-label">ساعت کارگاه:</span>
+                  <span className="sch-label">ساعت:</span>
                   <span className="sch-val">{cleanHours}</span>
                 </div>
                 <div className="cs-ip-sch-row">
-                  <span className="sch-label">سالن اختصاصی:</span>
+                  <span className="sch-label">سالن:</span>
                   <span className="sch-val">{cleanRoom}</span>
                 </div>
               </div>
@@ -68,11 +66,11 @@ export default function InPersonVenue({ venue, cleanDays, cleanHours, cleanRoom 
 
           <div className="cs-inperson-map-actions">
             <a href={venue.neshanUrl || "https://nshn.ir"} target="_blank" rel="noreferrer" className="map-link-btn">
-              <span>مسیریابی با نشان</span>
+              <span>نشان</span>
               <ExternalLink size={13} />
             </a>
             <a href={venue.baladUrl || "https://balad.ir"} target="_blank" rel="noreferrer" className="map-link-btn">
-              <span>مسیریابی با بلد</span>
+              <span>بلد</span>
               <ExternalLink size={13} />
             </a>
             <a href={venue.googleMapUrl || "https://maps.google.com"} target="_blank" rel="noreferrer" className="map-link-btn">
