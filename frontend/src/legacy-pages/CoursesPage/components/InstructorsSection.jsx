@@ -1,7 +1,10 @@
 import React from "react";
 import { Users, ChevronRight, ChevronLeft } from "lucide-react";
+import { useHorizontalDragScroll } from "../hooks/useHorizontalDragScroll.js";
 
-export default function InstructorsSection({ topInstructors, instScroll }) {
+export default function InstructorsSection({ topInstructors, instScroll: externalScroll }) {
+  const localScroll = useHorizontalDragScroll();
+  const instScroll = externalScroll || localScroll;
   return (
     <section className="ch-sec" id="ch-instructors">
       <div className="ch-sec-head">
