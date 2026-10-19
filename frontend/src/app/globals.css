@@ -2194,6 +2194,12 @@ ul { list-style: none; }
   .cta5-title { font-size: 28px; }
   .cta5-stub { margin-top: 24px; transform: rotate(0); }
 }
+@media (max-width: 768px) {
+  .cta5-title br,
+  .cta5-stub .big br { display: none; }
+  .mag-desc,
+  .mag-head p { display: none !important; }
+}
 
 /* =============================================
    FAQ : V5 · Chat bubble style
@@ -2953,6 +2959,10 @@ a:focus-visible, button:focus-visible {
 /* Magazine card */
 .mag-card {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 260px;
+  height: 100%;
   transform: rotate(-1deg);
   transition: transform .25s cubic-bezier(0.2, 0.8, 0.2, 1);
   will-change: transform;
@@ -2970,6 +2980,9 @@ a:focus-visible, button:focus-visible {
   position: relative; z-index: 1; background: var(--white);
   border: 2px solid var(--ink); border-radius: 1.5rem 0 1.5rem 0;
   display: grid; grid-template-columns: 180px 1fr; overflow: hidden;
+  min-height: 260px;
+  height: 100%;
+  flex: 1;
 }
 
 /* Cover */
@@ -3099,8 +3112,8 @@ a:focus-visible, button:focus-visible {
   .mag-head p,
   .mag-head .left p,
   .mag-desc {
-    grid-column: 1 / -1 !important;
-    grid-row: 2 !important;
+    display: none !important;
+
     margin: 4px 0 0 !important;
     font-size: 13px !important;
     line-height: 1.65 !important;
@@ -3150,6 +3163,7 @@ a:focus-visible, button:focus-visible {
   }
   .mag-card {
     flex: 0 0 100%;
+    min-height: 380px;
     transform: none !important;
   }
   .mag-card:nth-child(even) {
@@ -3163,6 +3177,7 @@ a:focus-visible, button:focus-visible {
   }
   .mag-card .body {
     grid-template-columns: 1fr;
+    min-height: 380px;
   }
   .mag-card .info {
     border-right: none;
@@ -3300,7 +3315,7 @@ a:focus-visible, button:focus-visible {
   corner-shape: squircle; -webkit-corner-shape: squircle;
   font-family: var(--font);
 }
-.v2-cover .v2-num span { color: var(--cat); }
+.v2-cover .v2-num span { color: #ffffff; }
 
 /* ---- ستون محتوا (بادی + اکشن پشت‌سرهم مثل cp-card) ---- */
 .v2-content {
@@ -4883,22 +4898,58 @@ a:focus-visible, button:focus-visible {
   border: 1.5px solid rgba(41, 40, 39, .1);
 }
 .bi-trend-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  align-items: stretch;
 }
 .bi-trend-cell {
-  position: relative; transform-origin: center;
+  position: relative;
+  transform-origin: center;
   transition: transform .3s ease;
-  display: flex; /* سلول کش می‌آید تا کارت‌ها هم‌ارتفاع شوند و سایهٔ مشکی کوتاه نماند */
+  display: flex;
+  flex-direction: column;
+  min-height: 330px;
+  height: 100%;
+  width: 100%;
 }
 .bi-trend-cell:hover { transform: rotate(0deg) translateY(-4px) !important; }
 .bi-trend-sh {
-  position: absolute; top: 5px; left: 5px; right: -5px; bottom: -5px;
-  background: var(--ink); border-radius: 0 24px 0 24px; z-index: 0;
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  right: -6px;
+  bottom: -6px;
+  background: var(--ink);
+  border-radius: 0 24px 0 24px;
+  z-index: 0;
+  pointer-events: none;
+}
+.bi-trend-cell > a,
+.bi-trend-cell a {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 330px !important;
+  text-decoration: none !important;
+  color: inherit !important;
+  position: relative !important;
+  z-index: 1 !important;
 }
 .bi-trend-card {
-  position: relative; z-index: 1; display: flex; flex-direction: column;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  background: #fff; border: 2px solid var(--ink); border-radius: 0 24px 0 24px;
+  height: 100%;
+  flex: 1;
+  min-height: 330px;
+  background: #fff;
+  border: 2px solid var(--ink);
+  border-radius: 0 24px 0 24px;
   overflow: hidden;
 }
 /* تصویر هدر گرادیانی کارت پرخواننده */
@@ -5562,7 +5613,14 @@ a:focus-visible, button:focus-visible {
 
   /* بنر پایانی ترغیب به ثبت‌نام (CTA Ticket) */
   .cta5 { padding: 22px 16px; border-radius: 18px; box-shadow: 4px 4px 0 var(--college); }
+  .cta5-title {
+    font-size: clamp(17px, 5vw, 24px) !important;
+    white-space: nowrap !important;
+  }
+  .cta5-title br { display: none !important; }
   .cta5-desc { font-size: 13px !important; line-height: 1.65 !important; }
+  .cta5-stub .big { white-space: nowrap !important; }
+  .cta5-stub .big br { display: none !important; }
   .cta5-actions .btn { width: 100%; justify-content: center; transform: none !important; font-size: 13px !important; padding: 9px 16px !important; }
 
   /* سوالات متداول (FAQ) */
@@ -5582,7 +5640,9 @@ a:focus-visible, button:focus-visible {
   .bi-featured-body { padding: 1.25rem 1rem 1.4rem; gap: 1rem; }
   .bi-read-btn { width: 100%; justify-content: center; transform: none !important; }
   .bi-trend-grid { grid-template-columns: 1fr; }
-  .bi-trend-card { border-radius: 0 18px 0 18px; }
+  .bi-trend-cell { min-height: 300px; }
+  .bi-trend-cell > a, .bi-trend-cell a { min-height: 300px !important; }
+  .bi-trend-card { border-radius: 0 18px 0 18px; min-height: 300px; }
   .bi-trend-sh { border-radius: 0 18px 0 18px; top: 4px; left: 4px; right: -4px; bottom: -4px; }
 
   /* تک‌مقاله بلاگ */

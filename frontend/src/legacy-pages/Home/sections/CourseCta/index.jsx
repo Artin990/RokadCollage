@@ -58,8 +58,7 @@ export default function CourseCta() {
             {/* Main part */}
             <div className="cta5-main">
               <h3 className="cta5-title">
-                نمی‌دونی از کجا
-                <br />
+                نمی‌دونی از کجا <br />
                 <span className="hl">شروع</span> کنی؟
               </h3>
               <p className="cta5-desc">
@@ -81,8 +80,7 @@ export default function CourseCta() {
               <span className="pin">۱۰۰٪ رایگان</span>
               <span className="tag">CONSULTATION</span>
               <div className="big">
-                مشاوره‌ی
-                <br />
+                مشاوره‌ی <br />
                 رایگان
               </div>
               <a href="#consult" className="btn" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6 }}>

@@ -177,7 +177,6 @@ export default function Blogs() {
         <div className="mag-head">
           <div className="left">
             <h2 className="mag-title">
-              <span className="w w1">روایت‌ها،</span>
               <span className="w w2">بینش‌ها</span>
               <span className="w w3">و تجربه‌ها</span>
             </h2>
