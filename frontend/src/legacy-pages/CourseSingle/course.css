@@ -722,14 +722,14 @@
 @media (max-width: 720px) {
   .cs-page { padding: 0 0 60px; background: #fff; }
 
-  /* topbar موبایل: دیزاین کامل دسکتاپ به صورت تمام‌عرض */
+  /* topbar موبایل: دیزاین کامل دسکتاپ به صورت تمام‌عرض با تفکیک تنفس‌پذیر دو ردیفه */
   .cs-topbar {
     display: flex;
-    flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: 10px;
-    padding: 11px 14px;
+    padding: 12px 14px;
     margin: 10px auto 18px;
     width: 100%;
     background: #fff;
@@ -737,9 +737,20 @@
     border-radius: var(--r-lg);
     box-shadow: 2.75px 2.75px 0 var(--college);
     box-sizing: border-box;
-    flex-wrap: nowrap;
+  }
+  .cs-back {
+    order: 1;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    color: var(--ink);
+    font-weight: 600;
   }
   .cs-students {
+    order: 2;
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -749,15 +760,10 @@
     margin-inline-start: auto;
     flex-shrink: 0;
   }
-  .cs-back {
-    font-size: 12.5px;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
   .cs-crumbs {
+    order: 3;
+    width: 100%;
+    flex: 0 0 100%;
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -765,14 +771,22 @@
     white-space: nowrap;
     overflow-x: auto;
     scrollbar-width: none;
-    flex: 1;
-    min-width: 0;
     background: transparent;
     border: none;
+    border-top: 1px dashed var(--ink-light, #e4e4e7);
     box-shadow: none;
-    padding: 0;
+    padding: 8px 0 0;
+    margin-top: 2px;
   }
   .cs-crumbs::-webkit-scrollbar { display: none; }
+  .cs-crumbs b {
+    display: inline-block;
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: bottom;
+  }
 
   /* Grid موبایل: تک‌ستونه، همه بچه‌ها عرض کامل */
   .cs-grid {
