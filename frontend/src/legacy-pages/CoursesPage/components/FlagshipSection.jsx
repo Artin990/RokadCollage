@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Award, Sparkles, Star, Clock, Users, CheckCircle2, ArrowLeft, ChevronLeft } from "lucide-react";
+import { Award, Sparkles, Star, Clock, Users, CheckCircle2, ArrowLeft } from "lucide-react";
 import { CourseModeBadge, CourseSaveButton } from "./CourseCardComponents.jsx";
 
 export default function FlagshipSection({ flagshipCourses, store }) {
@@ -178,12 +178,8 @@ export default function FlagshipSection({ flagshipCourses, store }) {
 
                     <div className="ch-flag-btn-group">
                       <Link href={`/courses/${f.slug}`} className="ch-btn-view-course">
-                        <span>مشاهده سرفصل دوره</span>
+                        <span>مشاهده دوره</span>
                         <ArrowLeft size={14} />
-                      </Link>
-                      <Link href={f.deptHref} className="ch-btn-dept-gateway">
-                        <span>{f.deptBtnText}</span>
-                        <ChevronLeft size={16} />
                       </Link>
                     </div>
                   </div>
