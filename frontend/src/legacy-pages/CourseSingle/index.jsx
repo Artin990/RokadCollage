@@ -88,8 +88,17 @@ export default function CourseSingle({ slug, initialCourse }) {
         slug.includes("bootcamp") ||
         slug.includes("حضوری") ||
         slug.includes("in-person") ||
+        slug.includes("inperson") ||
         slug.includes("workshop") ||
+        slug.includes("کارگاه") ||
+        slug.includes("بوت‌کمپ") ||
+        slug.includes("بوتکمپ") ||
+        slug.includes("figma") ||
+        slug.includes("فیگما") ||
+        slug.includes("ui-ux") ||
         slug.includes("ux") ||
+        slug.includes("ui") ||
+        slug.includes("camp") ||
         slug === "6acd22418fb60eb8907d8af5" ||
         slug === "6acd22418fb60eb8907d8af6"
       );
@@ -111,8 +120,17 @@ export default function CourseSingle({ slug, initialCourse }) {
       slug.includes("bootcamp") ||
       slug.includes("حضوری") ||
       slug.includes("in-person") ||
+      slug.includes("inperson") ||
       slug.includes("workshop") ||
+      slug.includes("کارگاه") ||
+      slug.includes("بوت‌کمپ") ||
+      slug.includes("بوتکمپ") ||
+      slug.includes("figma") ||
+      slug.includes("فیگما") ||
+      slug.includes("ui-ux") ||
       slug.includes("ux") ||
+      slug.includes("ui") ||
+      slug.includes("camp") ||
       slug === "6acd22418fb60eb8907d8af5" ||
       slug === "6acd22418fb60eb8907d8af6"
     ))

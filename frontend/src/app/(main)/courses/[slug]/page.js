@@ -43,7 +43,20 @@ export default async function SingleCourseRoute({ params }) {
     initialCourse?.type === "حضوری" ||
     decodedSlug.includes("bootcamp") ||
     decodedSlug.includes("حضوری") ||
-    decodedSlug.includes("in-person");
+    decodedSlug.includes("in-person") ||
+    decodedSlug.includes("inperson") ||
+    decodedSlug.includes("workshop") ||
+    decodedSlug.includes("کارگاه") ||
+    decodedSlug.includes("بوت‌کمپ") ||
+    decodedSlug.includes("بوتکمپ") ||
+    decodedSlug.includes("figma") ||
+    decodedSlug.includes("فیگما") ||
+    decodedSlug.includes("ui-ux") ||
+    decodedSlug.includes("ux") ||
+    decodedSlug.includes("ui") ||
+    decodedSlug.includes("camp") ||
+    decodedSlug === "6acd22418fb60eb8907d8af5" ||
+    decodedSlug === "6acd22418fb60eb8907d8af6";
 
   const courseSchema = initialCourse
     ? {
