@@ -2056,7 +2056,7 @@ ul { list-style: none; }
 .cta5-desc {
   margin: 0 0 20px;
   color: var(--ink-faq);
-  font-size: 14.5px;
+  font-size: 15.5px;
   line-height: 1.8;
   max-width: 500px;
   font-weight: 500;
@@ -5614,11 +5614,12 @@ a:focus-visible, button:focus-visible {
   /* بنر پایانی ترغیب به ثبت‌نام (CTA Ticket) */
   .cta5 { padding: 22px 16px; border-radius: 18px; box-shadow: 4px 4px 0 var(--college); }
   .cta5-title {
-    font-size: clamp(17px, 5vw, 24px) !important;
+    font-size: clamp(20px, 5.8vw, 26px) !important;
+    margin-bottom: 10px !important;
     white-space: nowrap !important;
   }
   .cta5-title br { display: none !important; }
-  .cta5-desc { font-size: 13px !important; line-height: 1.65 !important; }
+  .cta5-desc { font-size: 13px !important; line-height: 1.7 !important; margin-bottom: 16px !important; color: var(--ink-subtle) !important; }
   .cta5-stub .big { white-space: nowrap !important; }
   .cta5-stub .big br { display: none !important; }
   .cta5-actions .btn { width: 100%; justify-content: center; transform: none !important; font-size: 13px !important; padding: 9px 16px !important; }
