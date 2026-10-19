@@ -2,7 +2,7 @@ import { MOCK_STATIC_COURSES } from "@/services/courseService.js";
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import "./course.css";
 import PatternLayer from "../../components/PatternLayer";
-import { getPanelStore, enrollInCourse, toggleWishlist } from "../../data/panelStore.js";
+import { DEFAULT_STATE, getPanelStore, enrollInCourse, toggleWishlist } from "../../data/panelStore.js";
 import { isEnrolledIn, isWishlisted as checkWishlisted } from "../../data/selectors.js";
 import dynamic from "next/dynamic";
 
@@ -27,6 +27,7 @@ import { getCourseBySlugOrId } from "@/services/courseService.js";
 import { getCourseLicense } from "@/services/enrollmentService.js";
 
 export default function CourseSingle({ slug, initialCourse }) {
+  const [mounted, setMounted] = useState(false);
   const [tab, setTab] = useState(0);
   const [openChapter, setOpenChapter] = useState(0);
   const headRef = useRef(null);
@@ -36,7 +37,7 @@ export default function CourseSingle({ slug, initialCourse }) {
 
   const [course, setCourse] = useState(() => initialCourse || null);
   const [loading, setLoading] = useState(() => !initialCourse);
-  const [store, setStore] = useState(getPanelStore);
+  const [store, setStore] = useState(DEFAULT_STATE);
   const [enrollToast, setEnrollToast] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [licenseModalOpen, setLicenseModalOpen] = useState(false);
@@ -72,6 +73,8 @@ export default function CourseSingle({ slug, initialCourse }) {
   }, [course]);
 
   useEffect(() => {
+    setMounted(true);
+    setStore(getPanelStore());
     const handleStoreChange = (e) => {
       setStore(e.detail || getPanelStore());
     };
@@ -102,12 +105,13 @@ export default function CourseSingle({ slug, initialCourse }) {
   }
 
   const courseSlug = course.slug || slug;
-  const isEnrolled =
+  const isEnrolled = mounted && Boolean(
     serverEnrolled ||
     isEnrolledIn(courseSlug, store) ||
     (course._id && isEnrolledIn(course._id, store)) ||
-    (slug && isEnrolledIn(slug, store));
-  const isWishlisted = Boolean(store?.auth?.isLoggedIn) && checkWishlisted(courseSlug, store);
+    (slug && isEnrolledIn(slug, store))
+  );
+  const isWishlisted = mounted && Boolean(store?.auth?.isLoggedIn && checkWishlisted(courseSlug, store));
 
   useEffect(() => {
     const hasToken = typeof window !== "undefined" && Boolean(localStorage.getItem("rokad_token"));
