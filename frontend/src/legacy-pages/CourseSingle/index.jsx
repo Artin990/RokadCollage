@@ -84,7 +84,15 @@ export default function CourseSingle({ slug, initialCourse }) {
 
   if (loading && !course) {
     const isInPersonSlug =
-      slug && (slug.includes("bootcamp") || slug.includes("حضوری") || slug.includes("in-person"));
+      slug && (
+        slug.includes("bootcamp") ||
+        slug.includes("حضوری") ||
+        slug.includes("in-person") ||
+        slug.includes("workshop") ||
+        slug.includes("ux") ||
+        slug === "6acd22418fb60eb8907d8af5" ||
+        slug === "6acd22418fb60eb8907d8af6"
+      );
     if (isInPersonSlug) {
       return <SkeletonCourseInPerson />;
     }
@@ -99,7 +107,15 @@ export default function CourseSingle({ slug, initialCourse }) {
     course.mode === "in-person" ||
     course.isInPerson ||
     course.type === "حضوری" ||
-    (slug && (slug.includes("bootcamp") || slug.includes("حضوری") || slug.includes("in-person")))
+    (slug && (
+      slug.includes("bootcamp") ||
+      slug.includes("حضوری") ||
+      slug.includes("in-person") ||
+      slug.includes("workshop") ||
+      slug.includes("ux") ||
+      slug === "6acd22418fb60eb8907d8af5" ||
+      slug === "6acd22418fb60eb8907d8af6"
+    ))
   ) {
     return <CourseSingleInPerson course={course} slug={slug} />;
   }
