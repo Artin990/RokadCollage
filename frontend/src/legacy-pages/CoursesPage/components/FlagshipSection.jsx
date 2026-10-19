@@ -91,7 +91,7 @@ export default function FlagshipSection({ flagshipCourses, store }) {
       <div className="ch-sec-head">
         <div className="ch-sec-title-wrap">
           <span className="ch-sec-tag">
-            <Award size={13} /> دوره‌های منتخب و برگزیده
+            <Award size={13} /> دوره‌های منتخب
           </span>
           <h2 className="ch-sec-title">دوره‌های منتخب و برتر هر دپارتمان</h2>
         </div>
@@ -124,7 +124,7 @@ export default function FlagshipSection({ flagshipCourses, store }) {
                 <div className="ch-flag-visual">
                   <img src={f.pattern} alt="" className="ch-flag-pattern" aria-hidden="true" />
                   <CourseSaveButton slug={f.slug} store={store} className="ch-flag-save-btn" />
-                  <span className="ch-flag-dept-chip">دپارتمان {f.deptName}</span>
+                  <span className="ch-flag-dept-chip">{f.deptName}</span>
                   <div className="ch-flag-icon-wrap">
                     <FlagIcon size={44} style={{ color: "var(--ink)" }} />
                   </div>

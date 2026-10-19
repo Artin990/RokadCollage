@@ -1,4 +1,3 @@
-import { SUGGESTED_BY_DEPT, FLAGSHIP_COURSES, TOP_INSTRUCTORS } from "./data/coursesHubData.js";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import "./courses-hub.css";
@@ -24,7 +23,7 @@ const DEPT_CONFIG = {
     pattern: "/assets/StatCard/blue.png",
     icon: Code,
     themeClass: "flag-it",
-    badge: "دپارتمان فناوری اطلاعات",
+    badge: "فناوری اطلاعات",
   },
   "کسب و کار": {
     deptId: "business",
@@ -34,7 +33,7 @@ const DEPT_CONFIG = {
     pattern: "/assets/StatCard/yellow.png",
     icon: Briefcase,
     themeClass: "flag-business",
-    badge: "دپارتمان کسب و کار",
+    badge: "کسب و کار",
   },
   "زبان‌های خارجی": {
     deptId: "languages",
@@ -44,7 +43,7 @@ const DEPT_CONFIG = {
     pattern: "/assets/StatCard/green.png",
     icon: Globe,
     themeClass: "flag-languages",
-    badge: "دپارتمان زبان‌های خارجی",
+    badge: "زبان‌های خارجی",
   },
   "مشاوره": {
     deptId: "counseling",
@@ -54,15 +53,14 @@ const DEPT_CONFIG = {
     pattern: "/assets/StatCard/pink.png",
     icon: Sparkles,
     themeClass: "flag-female",
-    badge: "دپارتمان مشاوره",
+    badge: "مشاوره",
   },
 };
 
 export default function CoursesPage() {
   const [store, setStore] = useState(getPanelStore);
-  const fallbackInitCourses = [ ...Object.values(SUGGESTED_BY_DEPT).flatMap(d => d.courses.map(c => ({ ...c, _id: c.id, price: parseInt(c.price.replace(/[^0-9]/g, '')), category: d.deptName }))) ];
-  const [courses, setCourses] = useState(fallbackInitCourses);
-  const [instructors, setInstructors] = useState(TOP_INSTRUCTORS);
+  const [courses, setCourses] = useState([]);
+  const [instructors, setInstructors] = useState([]);
   const [loading, setLoading] = useState(true);
   const instScroll = useHorizontalDragScroll();
 
@@ -73,9 +71,8 @@ export default function CoursesPage() {
           getAllCourses().catch(() => []),
           getTeachers().catch(() => []),
         ]);
-        const fallbackCourses = [ ...Object.values(SUGGESTED_BY_DEPT).flatMap(d => d.courses.map(c => ({ ...c, _id: c.id, price: parseInt(c.price.replace(/[^0-9]/g, '')), category: d.deptName }))) ];
-        setCourses(Array.isArray(coursesData) && coursesData.length > 0 ? coursesData : fallbackCourses);
-        setInstructors(Array.isArray(teachersData) && teachersData.length > 0 ? teachersData : TOP_INSTRUCTORS);
+        setCourses(Array.isArray(coursesData) ? coursesData : []);
+        setInstructors(Array.isArray(teachersData) ? teachersData : []);
       } catch (err) {
         console.error("Failed to load courses or instructors:", err);
       } finally {
@@ -119,7 +116,7 @@ export default function CoursesPage() {
       slug: c.slug || c.id || c._id,
       mode: isCourseInPerson(c) ? "in-person" : "online",
       deptHref: `/dept/${deptInfo.deptId}`,
-      deptBtnText: `مشاهده دپارتمان ${c.category || deptInfo.deptName}`,
+      deptBtnText: `مشاهده ${c.category || deptInfo.deptName}`,
       icon: deptInfo.icon,
     };
   });
@@ -182,14 +179,23 @@ export default function CoursesPage() {
              نمای کامل کاتالوگ دوره‌ها
              ======================================================== */
           <>
-            {flagshipCourses.length > 0 && (
-              <FlagshipSection flagshipCourses={flagshipCourses} store={store} />
-            )}
-            {displayedSuggestedGroups.length > 0 && (
-              <SuggestedGroupSection suggestedGroups={displayedSuggestedGroups} store={store} />
-            )}
-            {displayedInstructors.length > 0 && (
-              <InstructorsSection topInstructors={displayedInstructors} instScroll={instScroll} />
+            {courses.length === 0 ? (
+              <div style={{ textAlign: "center", padding: "5rem 1rem", color: "var(--ink-soft)" }}>
+                <h3 style={{ fontSize: "18px", fontWeight: "800", color: "var(--ink)" }}>در حال حاضر دوره‌ای ثبت نشده است</h3>
+                <p style={{ fontSize: "14px", marginTop: "8px" }}>دوره‌های جدید به زودی به این بخش اضافه خواهند شد.</p>
+              </div>
+            ) : (
+              <>
+                {flagshipCourses.length > 0 && (
+                  <FlagshipSection flagshipCourses={flagshipCourses} store={store} />
+                )}
+                {displayedSuggestedGroups.length > 0 && (
+                  <SuggestedGroupSection suggestedGroups={displayedSuggestedGroups} store={store} />
+                )}
+                {displayedInstructors.length > 0 && (
+                  <InstructorsSection topInstructors={displayedInstructors} instScroll={instScroll} />
+                )}
+              </>
             )}
           </>
         )}

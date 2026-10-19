@@ -15,7 +15,7 @@ export default function CoursesHubHero() {
 
         <div className="ch-hero-badge">
           <Sparkles size={14} />
-          <span>کاتالوگ جامع دوره‌های کالج رکاد</span>
+          <span>کاتالوگ دوره‌ها</span>
         </div>
 
         <h1 className="ch-hero-title">
