@@ -11,7 +11,7 @@ export default function InPersonVenue({ venue, cleanDays, cleanHours, cleanRoom 
             <MapPin size={18} />
           </div>
           <div className="cs-ip-sec-titles">
-            <h2 className="cs-ip-sec-title">زمان‌بندی، موقعیت و دسترسی کمپوس</h2>
+            <h2 className="cs-ip-sec-title">زمان‌بندی و موقعیت</h2>
             <span className="cs-ip-sec-sub">روزهای برگزاری کارگاه، آدرس دقیق و راه‌های دسترسی</span>
           </div>
         </div>
