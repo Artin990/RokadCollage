@@ -93,7 +93,7 @@ export default function FlagshipSection({ flagshipCourses, store }) {
           <span className="ch-sec-tag">
             <Award size={13} /> دوره‌های منتخب
           </span>
-          <h2 className="ch-sec-title">دوره‌های منتخب و برتر هر دپارتمان</h2>
+          <h2 className="ch-sec-title">دوره‌های برتر هر دپارتمان</h2>
         </div>
       </div>
 
