@@ -1111,9 +1111,7 @@
   }
 
   .cs-ip-sec-badge {
-    font-size: 10.5px;
-    padding: 3px 10px;
-    align-self: flex-start;
+    display: none !important;
   }
 
   .cs-ip-sec-body,
