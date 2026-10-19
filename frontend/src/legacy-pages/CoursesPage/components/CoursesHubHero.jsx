@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { Sparkles } from "lucide-react";
 import PatternLayer from "@/components/PatternLayer";
 
@@ -8,7 +9,7 @@ export default function CoursesHubHero() {
       <PatternLayer rotate={0} />
       <div className="ch-hero-inner">
         <nav className="ch-crumb" aria-label="مسیر راهنما">
-          <a href="#">خانه</a>
+          <Link href="/">خانه</Link>
           <span className="ch-crumb-sep">›</span>
           <span className="ch-crumb-cur">دوره‌ها و دپارتمان‌ها</span>
         </nav>
