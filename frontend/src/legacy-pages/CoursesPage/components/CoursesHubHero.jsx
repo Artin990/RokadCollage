@@ -1,5 +1,5 @@
 import React from "react";
-import { Sparkles, BookOpen, Users, Award } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import PatternLayer from "@/components/PatternLayer";
 
 export default function CoursesHubHero() {
@@ -26,21 +26,6 @@ export default function CoursesHubHero() {
         <p className="ch-hero-desc">
           مجموعه‌ای منتخب از کاربردی‌ترین دوره‌های پروژه‌محور در دپارتمان‌های فناوری اطلاعات، کسب‌وکار و زبان‌های خارجی، تدریس‌شده توسط برجسته‌ترین اساتید و مدیران صنعت.
         </p>
-
-        <div className="ch-stats">
-          <div className="ch-stat-pill">
-            <BookOpen size={16} />
-            <span>بیش از <strong>۵۰+</strong> دوره تخصصی</span>
-          </div>
-          <div className="ch-stat-pill">
-            <Users size={16} />
-            <span>بیش از <strong>۱۲٬۰۰۰+</strong> هنرجوی فعال</span>
-          </div>
-          <div className="ch-stat-pill">
-            <Award size={16} />
-            <span><strong>۹۲٪</strong> نرخ موفقیت در اشتغال</span>
-          </div>
-        </div>
       </div>
     </header>
   );
