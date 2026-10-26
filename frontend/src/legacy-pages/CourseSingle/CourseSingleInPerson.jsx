@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./course.css";
 import "./courseInPerson.css";
 import PatternLayer from "../../components/PatternLayer";
-import { getPanelStore, toggleWishlist, enrollInCourse } from "../../data/panelStore.js";
+import { DEFAULT_STATE, getPanelStore, toggleWishlist, enrollInCourse } from "../../data/panelStore.js";
 import { isEnrolledIn, isWishlisted as checkWishlisted } from "../../data/selectors.js";
 import { getCourseLicense } from "@/services/enrollmentService.js";
 import CheckoutModal from "../Checkout/CheckoutModal.jsx";
@@ -15,13 +15,16 @@ import InPersonJoujman from "./components/InPersonJoujman.jsx";
 import { CheckCircle2, MapPin, Calendar, Clock, X } from "lucide-react";
 
 export default function CourseSingleInPerson({ course, slug }) {
-  const [store, setStore] = useState(getPanelStore);
+  const [mounted, setMounted] = useState(false);
+  const [store, setStore] = useState(DEFAULT_STATE);
   const [openSprint, setOpenSprint] = useState(0);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [serverEnrolled, setServerEnrolled] = useState(false);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+    setStore(getPanelStore());
     const handleStoreChange = (e) => {
       setStore(e.detail || getPanelStore());
     };
@@ -30,7 +33,7 @@ export default function CourseSingleInPerson({ course, slug }) {
   }, []);
 
   const courseSlug = course.slug || slug;
-  const isLoggedIn = Boolean(
+  const isLoggedIn = mounted && Boolean(
     store?.auth?.isLoggedIn || (typeof window !== "undefined" && localStorage.getItem("rokad_token"))
   );
 
@@ -54,12 +57,13 @@ export default function CourseSingleInPerson({ course, slug }) {
       .catch(() => {});
   }, [isLoggedIn, course?._id, course?.id, slug, courseSlug, course?.proposedTeacher]);
 
-  const isEnrolled =
+  const isEnrolled = mounted && Boolean(
     serverEnrolled ||
     isEnrolledIn(courseSlug, store) ||
     (course._id && isEnrolledIn(course._id, store)) ||
-    (slug && isEnrolledIn(slug, store));
-  const isWished = isLoggedIn && checkWishlisted(courseSlug, store);
+    (slug && isEnrolledIn(slug, store))
+  );
+  const isWished = mounted && Boolean(isLoggedIn && checkWishlisted(courseSlug, store));
 
   const isWorkshop =
     course.courseType === "کارگاه حضوری" ||
@@ -262,7 +266,7 @@ export default function CourseSingleInPerson({ course, slug }) {
               <div className="flex items-start gap-2.5">
                 <MapPin size={16} className="text-stone-500 mt-0.5 flex-shrink-0" />
                 <div>
-                  <div className="text-xs text-stone-500">محل برگزاری:</div>
+                  <div className="text-xs text-stone-500">محل:</div>
                   <div>{venue.name} — {venue.room}</div>
                   <div className="text-xs text-stone-600 font-normal mt-0.5">{venue.address}</div>
                 </div>
@@ -271,7 +275,7 @@ export default function CourseSingleInPerson({ course, slug }) {
               <div className="flex items-center gap-2.5 pt-2 border-t border-stone-200">
                 <Calendar size={16} className="text-stone-500 flex-shrink-0" />
                 <div>
-                  <span className="text-xs text-stone-500">روزهای برگزاری: </span>
+                  <span className="text-xs text-stone-500">روزها: </span>
                   <span>{schedule.days}</span>
                 </div>
               </div>
@@ -279,7 +283,7 @@ export default function CourseSingleInPerson({ course, slug }) {
               <div className="flex items-center gap-2.5 pt-2 border-t border-stone-200">
                 <Clock size={16} className="text-stone-500 flex-shrink-0" />
                 <div>
-                  <span className="text-xs text-stone-500">ساعت کلاس: </span>
+                  <span className="text-xs text-stone-500">ساعت: </span>
                   <span>{schedule.hours}</span>
                 </div>
               </div>
@@ -291,7 +295,7 @@ export default function CourseSingleInPerson({ course, slug }) {
                 onClick={() => setInfoModalOpen(false)}
                 className="w-full py-2.5 bg-stone-900 text-white font-black text-sm rounded-[10px_0_10px_0] shadow-[3px_3px_0_#000] hover:bg-stone-800 transition-all text-center"
               >
-                متوجه شدم
+                بستن
               </button>
             </div>
           </div>

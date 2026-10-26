@@ -3,30 +3,44 @@ import Link from "next/link";
 import { CheckCircle2, Star as LucideStar } from "lucide-react";
 
 export function CourseTopbar({ course }) {
-  const deptHref = course.department ? `/dept/${course.department}` : "/courses";
+  const DEPT_MAP = {
+    "فناوری اطلاعات": "it",
+    it: "it",
+    "کسب و کار": "business",
+    "کسب‌وکار": "business",
+    business: "business",
+    "زبان‌های خارجی": "languages",
+    languages: "languages",
+    "مشاوره": "counseling",
+    counseling: "counseling",
+  };
+  const deptId = DEPT_MAP[course?.category] || DEPT_MAP[course?.department] || (course?.department ? course.department : null);
+  const deptHref = deptId ? `/dept/${deptId}` : "/courses";
   return (
-    <div className="cs-topbar container">
-      <Link href="/courses" className="cs-back">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ width: 14, height: 14, transform: "rotate(180deg)" }}>
-          <path d="M19 12H5M12 5l-7 7 7 7" />
-        </svg>
-        همهٔ دوره‌ها
-      </Link>
-      <nav className="cs-crumbs">
-        <Link href="/courses">دوره‌ها</Link>
-        <span className="sep">›</span>
-        <Link href={deptHref}>{course.category || course.departmentFa || "آنلاین"}</Link>
-        <span className="sep">›</span>
-        <b>{course.title}</b>
-      </nav>
-      <span className="cs-students">
-        {course.students || "۹۵"} دانشجو
-        <span className="avs" aria-hidden="true">
-          <span className="av" />
-          <span className="av" />
-          <span className="av" />
+    <div className="container">
+      <div className="cs-topbar">
+        <Link href="/courses" className="cs-back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ width: 14, height: 14, transform: "rotate(180deg)" }}>
+            <path d="M19 12H5M12 5l-7 7 7 7" />
+          </svg>
+          همهٔ دوره‌ها
+        </Link>
+        <nav className="cs-crumbs">
+          <Link href="/courses">دوره‌ها</Link>
+          <span className="sep">›</span>
+          <Link href={deptHref}>{course.category || course.departmentFa || "آنلاین"}</Link>
+          <span className="sep">›</span>
+          <b title={course.title}>{course.title}</b>
+        </nav>
+        <span className="cs-students">
+          {course.students || "۹۵"} دانشجو
+          <span className="avs" aria-hidden="true">
+            <span className="av" />
+            <span className="av" />
+            <span className="av" />
+          </span>
         </span>
-      </span>
+      </div>
     </div>
   );
 }
@@ -60,9 +74,19 @@ export function CourseSidebar({
         <div
           className="cs-thumb cs-thumb-side"
           onClick={onOpenVideo}
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer", position: "relative", overflow: "hidden" }}
           title="کلیک برای پخش ویدیو با پلیر پیشرفته"
         >
+          <img
+            src={course.img ? (course.img.startsWith("http") ? course.img : `${process.env.NEXT_PUBLIC_FILE_URL || "http://localhost:5000/"}${course.img.replace(/^\//, "")}`) : (course.pattern || course.previewPoster || "/assets/StatCard/blue.png")}
+            alt={course.title}
+            className="cs-thumb-side-img"
+          />
+          <div className="cs-thumb-side-overlay" />
+          <span className="cs-thumb-side-badge">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12"><path d="M8 5v14l11-7z" /></svg>
+            <span>پیش‌نمایش ویدیو</span>
+          </span>
           <span className="play">
             <span>
               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>

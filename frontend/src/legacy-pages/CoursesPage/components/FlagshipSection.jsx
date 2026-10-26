@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Award, Sparkles, Star, Clock, Users, CheckCircle2, ArrowLeft, ChevronLeft } from "lucide-react";
+import { Award, Sparkles, Star, Clock, Users, CheckCircle2, ArrowLeft } from "lucide-react";
 import { CourseModeBadge, CourseSaveButton } from "./CourseCardComponents.jsx";
 
 export default function FlagshipSection({ flagshipCourses, store }) {
@@ -91,9 +91,9 @@ export default function FlagshipSection({ flagshipCourses, store }) {
       <div className="ch-sec-head">
         <div className="ch-sec-title-wrap">
           <span className="ch-sec-tag">
-            <Award size={13} /> دوره‌های منتخب و برگزیده
+            <Award size={13} /> دوره‌های منتخب
           </span>
-          <h2 className="ch-sec-title">دوره‌های منتخب و برتر هر دپارتمان</h2>
+          <h2 className="ch-sec-title">دوره‌های برتر هر دپارتمان</h2>
         </div>
       </div>
 
@@ -124,7 +124,7 @@ export default function FlagshipSection({ flagshipCourses, store }) {
                 <div className="ch-flag-visual">
                   <img src={f.pattern} alt="" className="ch-flag-pattern" aria-hidden="true" />
                   <CourseSaveButton slug={f.slug} store={store} className="ch-flag-save-btn" />
-                  <span className="ch-flag-dept-chip">دپارتمان {f.deptName}</span>
+                  <span className="ch-flag-dept-chip">{f.deptName}</span>
                   <div className="ch-flag-icon-wrap">
                     <FlagIcon size={44} style={{ color: "var(--ink)" }} />
                   </div>
@@ -178,12 +178,8 @@ export default function FlagshipSection({ flagshipCourses, store }) {
 
                     <div className="ch-flag-btn-group">
                       <Link href={`/courses/${f.slug}`} className="ch-btn-view-course">
-                        <span>مشاهده سرفصل دوره</span>
+                        <span>مشاهده دوره</span>
                         <ArrowLeft size={14} />
-                      </Link>
-                      <Link href={f.deptHref} className="ch-btn-dept-gateway">
-                        <span>{f.deptBtnText}</span>
-                        <ChevronLeft size={16} />
                       </Link>
                     </div>
                   </div>

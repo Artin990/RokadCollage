@@ -13,11 +13,11 @@ export default function VideoLessonsFooter({
         style={{
           fontSize: "11px",
           fontWeight: 900,
-          color: "#9ca3af",
+          color: "#94a3b8",
           whiteSpace: "nowrap",
         }}
       >
-        لیست دروس:
+        سرفصل‌ها:
       </span>
       {lessons.map((les, idx) => {
         const isActive = currentLesson
@@ -40,7 +40,7 @@ export default function VideoLessonsFooter({
         );
       })}
       <div className="vpm-shortcuts-hint">
-        کلیدها: Space (توقف/پخش) | ← → (۱۰ ثانیه پرش) | M (بی‌صدا) | F (تمام‌صفحه)
+        Space (پخش) · M (صدا) · F (تمام‌صفحه)
       </div>
     </div>
   );

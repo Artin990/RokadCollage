@@ -36,29 +36,6 @@ export function SkeletonCoursesHero() {
           <div className="rk-skeleton-line" style={{ width: "95%", height: 16, borderRadius: 4 }} />
           <div className="rk-skeleton-line" style={{ width: "70%", height: 16, borderRadius: 4 }} />
         </div>
-
-        {/* Hero Stats */}
-        <div className="ch-stats">
-          {[120, 140, 110].map((w, idx) => (
-            <div
-              key={idx}
-              className="ch-stat-pill"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 10,
-                background: "#ffffff",
-                border: "2px solid var(--ink)",
-                borderRadius: 14,
-                padding: "8px 18px",
-                boxShadow: "3px 3px 0 var(--ink)",
-              }}
-            >
-              <div className="rk-skeleton-shimmer" style={{ width: 16, height: 16, borderRadius: 4 }} />
-              <div className="rk-skeleton-line" style={{ width: w, height: 16, borderRadius: 4 }} />
-            </div>
-          ))}
-        </div>
       </div>
     </header>
   );
@@ -169,18 +146,6 @@ export function SkeletonFlagshipCard({ theme = "it" }) {
               }}
             >
               <div className="rk-skeleton-line" style={{ width: 110, height: 15, borderRadius: 4 }} />
-            </div>
-            <div
-              className="ch-btn-dept-gateway"
-              style={{
-                background: bgGateway,
-                boxShadow: "3px 3px 0 var(--ink)",
-                border: "2px solid var(--ink)",
-                padding: "8px 18px",
-                borderRadius: 10,
-              }}
-            >
-              <div className="rk-skeleton-line" style={{ width: 100, height: 15, borderRadius: 4 }} />
             </div>
           </div>
         </div>

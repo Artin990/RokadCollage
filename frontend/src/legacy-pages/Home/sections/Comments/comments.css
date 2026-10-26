@@ -31,6 +31,8 @@
 .cmt3-card {
   flex: 0 0 calc(50% - 12px);
   @apply relative flex flex-col;
+  min-height: 320px;
+  height: 100%;
   transform: rotate(-.4deg);
   transition: transform .25s cubic-bezier(0.2, 0.8, 0.2, 1);
   will-change: transform;
@@ -53,6 +55,7 @@
   grid-template-columns: 160px 1fr;
   grid-template-rows: 1fr;
   min-height: 320px;
+  height: 100%;
 }
 
 /* Avatar side */
@@ -197,8 +200,8 @@
 
 /* Mobile: swipe + dots & compact controls */
 @media (max-width: 720px) {
-  .cmt3-card { flex: 0 0 100%; }
-  .cmt3-card .body { grid-template-columns: 1fr; min-height: auto; }
+  .cmt3-card { flex: 0 0 100%; min-height: 360px; }
+  .cmt3-card .body { grid-template-columns: 1fr; min-height: 360px; }
   .cmt3-card .avatar-side { border-left: none; border-bottom: 2px solid var(--ink); padding: 22px 16px; }
   .cmt3-card .content-side { padding: 20px 18px; }
   .cmt3-nav { display: flex; justify-content: center; gap: 12px; margin-top: 20px; }
@@ -208,6 +211,8 @@
 }
 
 @media (max-width: 480px) {
+  .cmt3-card { min-height: 340px; }
+  .cmt3-card .body { min-height: 340px; }
   .cmt3-card .avatar-side { padding: 18px 12px; }
   .cmt3-card .avatar-big { width: 64px; height: 64px; font-size: 24px; }
   .cmt3-card .content-side { padding: 16px 14px; gap: 10px; }

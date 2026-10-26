@@ -10,6 +10,21 @@
   width: 100%;
 }
 
+.cs-inperson-wrapper .cs-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #ffffff;
+  border: 1.5px solid var(--ink, #18181B);
+  border-radius: var(--r-lg, 14px);
+  box-shadow: 2.75px 2.75px 0 var(--college, #F8A41D);
+  padding: 14px 22px;
+  margin: 12px 0 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .cs-inperson-top-actions {
   display: inline-flex;
   align-items: center;
@@ -30,10 +45,34 @@
   font-weight: 800;
 }
 
+.cs-inperson-wrapper .cs-crumbs {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  white-space: nowrap;
+}
+
 .cs-inperson-wrapper .cs-crumbs a,
 .cs-inperson-wrapper .cs-crumbs a:hover,
 .cs-inperson-wrapper .cs-crumbs a:focus {
   text-decoration: none !important;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.cs-inperson-wrapper .cs-crumbs .sep {
+  flex-shrink: 0;
+}
+
+.cs-inperson-wrapper .cs-crumbs b {
+  display: inline-block;
+  min-width: 0;
+  max-width: min(420px, 40vw);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
 }
 
 .cs-inperson-top-save-btn {
@@ -220,12 +259,15 @@
 .cs-ip-price-col {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
   gap: 8px;
 }
 
 .cs-ip-price-row {
   display: flex;
   align-items: baseline;
+  justify-content: center;
   gap: 10px;
 }
 
@@ -260,6 +302,7 @@
 .cs-ip-seat-alert {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   font-size: 12px;
   font-weight: 800;
@@ -827,6 +870,22 @@
     gap: 16px;
   }
 
+  .cs-ip-price-col {
+    width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+
+  .cs-ip-price-row {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .cs-ip-seat-alert {
+    justify-content: center;
+    width: 100%;
+  }
+
   .cs-ip-btns-row {
     flex-direction: column;
     gap: 10px;
@@ -853,47 +912,117 @@
 }
 
 @media (max-width: 768px) {
-  /* نوار مسیر و هدر دوم در موبایل */
-  .cs-inperson-wrapper .cs-topbar {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-    padding: 12px 14px;
-    margin-bottom: 20px;
+  /* نوار مسیر و تاپ‌بار دوره در موبایل: ساختار تنفس‌پذیر دو ردیفه بدون فشردگی */
+  .cs-inperson-wrapper .cs-topbar,
+  .cs-topbar {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    padding: 12px 14px !important;
+    margin: 10px 0 18px !important;
+    width: 100% !important;
+    background: #fff !important;
+    border: 1.5px solid var(--ink) !important;
+    border-radius: var(--r-lg) !important;
+    box-shadow: 2.75px 2.75px 0 var(--college) !important;
+    box-sizing: border-box !important;
   }
 
-  .cs-inperson-wrapper .cs-topbar .cs-back {
-    font-size: 12.5px;
-    align-self: flex-start;
-  }
-
-  .cs-inperson-wrapper .cs-crumbs {
-    font-size: 12px;
-    gap: 5px;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    min-width: 0;
-  }
-
-  .cs-inperson-wrapper .cs-crumbs b {
-    display: inline-block;
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    vertical-align: bottom;
+  .cs-inperson-wrapper .cs-topbar .cs-back,
+  .cs-topbar .cs-back {
+    order: 1 !important;
+    font-size: 13px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    color: var(--ink) !important;
+    font-weight: 600 !important;
   }
 
   .cs-inperson-top-actions {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 10px;
-    border-top: 1px dashed var(--ink-light, #E4E4E7);
-    margin-inline-start: 0;
+    order: 2 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-inline-start: auto !important;
+    flex-shrink: 0 !important;
+    width: auto !important;
+    border-top: none !important;
+    padding-top: 0 !important;
+  }
+
+  .cs-topbar .cs-students {
+    order: 2 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: var(--ink) !important;
+    margin-inline-start: auto !important;
+    flex-shrink: 0 !important;
+  }
+
+  .cs-inperson-top-badge {
+    font-size: 11.5px !important;
+    padding: 4px 10px !important;
+    white-space: nowrap !important;
+    border-radius: 99px !important;
+  }
+
+  .cs-inperson-top-save-btn {
+    width: 34px !important;
+    height: 34px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .cs-inperson-wrapper .cs-crumbs,
+  .cs-topbar .cs-crumbs {
+    order: 3 !important;
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    font-size: 12px !important;
+    gap: 6px !important;
+    display: flex !important;
+    align-items: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    background: transparent !important;
+    border: none !important;
+    border-top: 1px dashed var(--ink-light, #e4e4e7) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 8px 0 0 !important;
+    margin-top: 2px !important;
+  }
+
+  .cs-inperson-wrapper .cs-crumbs a,
+  .cs-topbar .cs-crumbs a {
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  .cs-inperson-wrapper .cs-crumbs .sep,
+  .cs-topbar .cs-crumbs .sep {
+    flex-shrink: 0 !important;
+  }
+
+  .cs-inperson-wrapper .cs-crumbs b,
+  .cs-topbar .cs-crumbs b {
+    display: inline-block !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    vertical-align: middle !important;
   }
 
   /* کارت هیرو در موبایل */
@@ -942,6 +1071,7 @@
     flex-wrap: wrap;
     gap: 6px 10px;
     align-items: baseline;
+    justify-content: center;
   }
 
   .cs-ip-price-row .main-price {
@@ -954,6 +1084,7 @@
 
   .cs-ip-seat-alert {
     font-size: 11.5px;
+    justify-content: center;
   }
 
   .cs-ip-btn-main {
@@ -1027,9 +1158,7 @@
   }
 
   .cs-ip-sec-badge {
-    font-size: 10.5px;
-    padding: 3px 10px;
-    align-self: flex-start;
+    display: none !important;
   }
 
   .cs-ip-sec-body,

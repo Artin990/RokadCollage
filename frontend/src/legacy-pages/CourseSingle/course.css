@@ -18,14 +18,16 @@
 .cs-topbar {
   display: flex;
   align-items: center;
-  gap: 18px;
+  justify-content: space-between;
+  gap: 16px;
   background: #fff;
   border: 1.5px solid var(--ink);
   border-radius: var(--r-lg);
-  padding: 14px 22px;
   box-shadow: 2.75px 2.75px 0 var(--college);
-  margin: 12px auto 24px;
-  flex-wrap: wrap;
+  padding: 14px 22px;
+  margin: 12px 0 24px;
+  width: 100%;
+  box-sizing: border-box;
 }
 .cs-back {
   display: inline-flex;
@@ -39,11 +41,37 @@
 }
 .cs-back:hover { color: var(--college-dark); }
 .cs-back svg { width: 14px; height: 14px; }
-.cs-crumbs { color: var(--ink-subtle); font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 7px; flex-wrap: wrap; }
-.cs-crumbs a { color: var(--ink-faq); text-decoration: none; font-weight: 600; transition: color 0.2s ease; }
+.cs-crumbs {
+  color: var(--ink-subtle);
+  font-size: 13px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  white-space: nowrap;
+}
+.cs-crumbs a {
+  color: var(--ink-faq);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
 .cs-crumbs a:hover { color: var(--college-dark); text-decoration: none; }
-.cs-crumbs .sep { color: var(--ink-light); font-weight: 400; }
-.cs-crumbs b { color: var(--ink); font-weight: 700; }
+.cs-crumbs .sep { color: var(--ink-light); font-weight: 400; flex-shrink: 0; }
+.cs-crumbs b {
+  color: var(--ink);
+  font-weight: 700;
+  display: inline-block;
+  min-width: 0;
+  max-width: min(420px, 40vw);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
 .cs-students {
   margin-inline-start: auto;
   display: flex;
@@ -298,27 +326,98 @@
 /* تامبنیل گرادیان کهربایی (طرح: s5-card .thumb) */
 .cs-thumb {
   width: 100%;
-  height: 180px;
-  background: linear-gradient(135deg, var(--college) 0%, var(--college-dark) 100%);
-  border: 1.5px solid var(--ink);
+  height: 190px;
+  background: #0f141c;
+  border: 2px solid var(--ink);
   border-radius: var(--r-md);
   position: relative;
   overflow: hidden;
   display: grid;
   place-items: center;
+  box-shadow: 4px 4px 0 var(--ink);
+  transition: all 0.25s ease;
 }
+
+.cs-thumb:hover {
+  transform: translateY(-2px);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+.cs-thumb-side-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
+}
+
+.cs-thumb:hover .cs-thumb-side-img {
+  transform: scale(1.06);
+}
+
+.cs-thumb-side-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15, 20, 28, 0.25) 0%, rgba(15, 20, 28, 0.75) 100%);
+  z-index: 2;
+  transition: background 0.3s ease;
+}
+
+.cs-thumb:hover .cs-thumb-side-overlay {
+  background: linear-gradient(180deg, rgba(15, 20, 28, 0.15) 0%, rgba(15, 20, 28, 0.85) 100%);
+}
+
+.cs-thumb-side-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--college, #F8A41D);
+  color: #121212;
+  border: 1.5px solid #121212;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 900;
+  padding: 3px 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  z-index: 3;
+  box-shadow: 2px 2px 0 #121212;
+  pointer-events: none;
+}
+
+.cs-thumb .play {
+  position: relative;
+  z-index: 3;
+}
+
 .cs-thumb .play span {
-  width: 72px;
-  height: 72px;
-  background: #fff;
-  border: 2px solid var(--ink);
+  width: 64px;
+  height: 64px;
+  background: #ffffff;
+  border: 2.5px solid var(--ink);
   border-radius: 50%;
   display: grid;
   place-items: center;
   color: var(--ink);
-  box-shadow: 2.75px 2.75px 0 var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.cs-thumb .play svg { width: 28px; height: 28px; }
+
+.cs-thumb:hover .play span {
+  transform: scale(1.1);
+  background: var(--college, #F8A41D);
+  color: #121212;
+  box-shadow: 0 0 20px rgba(248, 164, 29, 0.6), 4px 4px 0 var(--ink);
+}
+
+.cs-thumb .play svg {
+  width: 26px;
+  height: 26px;
+  margin-inline-start: 3px;
+}
 
 /* قیمت (طرح: price-block) */
 .cs-price {
@@ -651,20 +750,80 @@
 @media (max-width: 720px) {
   .cs-page { padding: 0 0 60px; background: #fff; }
 
-  /* topbar موبایل: فقط دکمهٔ بازگشت، باریک و بدون کارت */
+  /* topbar موبایل: دیزاین کامل دسکتاپ به صورت تمام‌عرض با تفکیک تنفس‌پذیر دو ردیفه */
   .cs-topbar {
-    border-radius: 0;
-    border-inline: none;
-    border-top: none;
-    margin: 0;
-    padding: 10px 16px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
     gap: 10px;
-    box-shadow: none;
-    border-bottom: 1px solid var(--ink-light);
+    padding: 12px 14px;
+    margin: 10px 0 18px;
+    width: 100%;
+    background: #fff;
+    border: 1.5px solid var(--ink);
+    border-radius: var(--r-lg);
+    box-shadow: 2.75px 2.75px 0 var(--college);
+    box-sizing: border-box;
   }
-  .cs-students,
-  .cs-crumbs { display: none; }
-  .cs-back { font-size: 13px; }
+  .cs-back {
+    order: 1;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .cs-students {
+    order: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-inline-start: auto;
+    flex-shrink: 0;
+  }
+  .cs-crumbs {
+    order: 3;
+    width: 100%;
+    flex: 0 0 100%;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    min-width: 0;
+    max-width: 100%;
+    background: transparent;
+    border: none;
+    border-top: 1px dashed var(--ink-light, #e4e4e7);
+    box-shadow: none;
+    padding: 8px 0 0;
+    margin-top: 2px;
+  }
+  .cs-crumbs a {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .cs-crumbs .sep {
+    flex-shrink: 0;
+  }
+  .cs-crumbs b {
+    display: inline-block;
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
 
   /* Grid موبایل: تک‌ستونه، همه بچه‌ها عرض کامل */
   .cs-grid {

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Rocket, Lightbulb, Smartphone } from "lucide-react";
 import { I, toFa, coverBg, TONES } from "./BlogIcons.jsx";
-import { TRENDING_ITEMS } from "../data/blogIndexData.js";
 import { getBlogs } from "@/services/blogService.js";
 
 const DEFAULT_ICONS = [Rocket, Lightbulb, Smartphone];
@@ -19,7 +18,7 @@ function formatReads(views) {
 }
 
 export default function BlogTrending() {
-  const [items, setItems] = useState(TRENDING_ITEMS);
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
     let isMounted = true;
@@ -29,14 +28,13 @@ export default function BlogTrending() {
         const list = Array.isArray(res) ? res : res?.data || [];
         if (list.length > 0) {
           const mapped = list.map((b, i) => {
-            const fallback = TRENDING_ITEMS[i] || {};
             return {
               id: b._id || b.id,
               rank: i + 1,
               title: b.title,
               slug: b.slug || b._id || b.id,
-              author: b.author?.name || b.author?.fullName || fallback.author || "تحریریه رکاد",
-              reads: formatReads(b.views ?? 12000),
+              author: b.author?.name || b.author?.fullName || "تحریریه رکاد",
+              reads: formatReads(b.views ?? 0),
               tone: DEFAULT_TONES[i % DEFAULT_TONES.length],
               rot: DEFAULT_ROTS[i % DEFAULT_ROTS.length],
               icon: DEFAULT_ICONS[i % DEFAULT_ICONS.length],
@@ -51,6 +49,8 @@ export default function BlogTrending() {
       isMounted = false;
     };
   }, []);
+
+  if (!items || items.length === 0) return null;
 
   return (
     <section className="bi-trending">
@@ -77,8 +77,8 @@ export default function BlogTrending() {
             return (
               <div key={it.id || i} className="bi-trend-cell" style={{ transform: `rotate(${it.rot})` }}>
                 <div className="bi-trend-sh" />
-                <Link href={href} style={{ textDecoration: "none", color: "inherit", display: "block" }}>
-                  <article className="bi-trend-card">
+                <Link href={href} style={{ textDecoration: "none", color: "inherit", display: "flex", flexDirection: "column", flex: 1, width: "100%", height: "100%", minHeight: 330, position: "relative", zIndex: 1 }}>
+                  <article className="bi-trend-card" style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 330, width: "100%", height: "100%" }}>
                     <div className="bi-trend-media" style={{ background: coverBg(it.tone) }}>
                       <div className="bi-card-circle" style={{ background: "rgba(255,255,255,.25)" }} />
                       <div className="bi-card-square" />

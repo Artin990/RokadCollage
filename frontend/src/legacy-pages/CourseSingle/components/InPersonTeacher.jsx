@@ -19,8 +19,7 @@ export function InPersonAbout({ course }) {
             <FileText size={18} />
           </div>
           <div className="cs-ip-sec-titles">
-            <h2 className="cs-ip-sec-title">درباره این {typeLabel}</h2>
-            <span className="cs-ip-sec-sub">مشخصات، اهداف آموزشی و رویکرد اجرایی دوره</span>
+            <h2 className="cs-ip-sec-title">درباره {typeLabel}</h2>
           </div>
         </div>
         <span className="cs-ip-sec-badge">معرفی {typeLabel}</span>
@@ -62,8 +61,7 @@ export function InPersonTeacher({ teacher, isWorkshop = false }) {
             <UserCheck size={18} />
           </div>
           <div className="cs-ip-sec-titles">
-            <h2 className="cs-ip-sec-title">مدرس و راهبر {typeLabel}</h2>
-            <span className="cs-ip-sec-sub">راهبری مستقیم پروژه، حل تمرین و انتقال تجربه</span>
+            <h2 className="cs-ip-sec-title">مدرس {typeLabel}</h2>
           </div>
         </div>
         <span className="cs-ip-sec-badge">راهبر {typeLabel}</span>

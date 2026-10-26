@@ -1,15 +1,18 @@
 import React from "react";
-import { Users, ChevronRight, ChevronLeft, BookOpen, Star } from "lucide-react";
+import { Users, ChevronRight, ChevronLeft } from "lucide-react";
+import { useHorizontalDragScroll } from "../hooks/useHorizontalDragScroll.js";
 
-export default function InstructorsSection({ topInstructors, instScroll }) {
+export default function InstructorsSection({ topInstructors, instScroll: externalScroll }) {
+  const localScroll = useHorizontalDragScroll();
+  const instScroll = externalScroll || localScroll;
   return (
     <section className="ch-sec" id="ch-instructors">
       <div className="ch-sec-head">
         <div className="ch-sec-title-wrap">
           <span className="ch-sec-tag">
-            <Users size={13} /> منتورها و مربیان صنعت
+            <Users size={13} /> منتورها و مربیان
           </span>
-          <h2 className="ch-sec-title">اساتید و مربیان برجستهٔ کالج رکاد</h2>
+          <h2 className="ch-sec-title">اساتید و مربیان کالج</h2>
         </div>
         <div className="ch-inst-nav-btns" aria-label="هدایت اسلاید اساتید">
           <button
@@ -72,21 +75,6 @@ export default function InstructorsSection({ topInstructors, instScroll }) {
                 <h3 className="ch-inst-name">{inst.name}</h3>
                 <div className="ch-inst-role">{inst.role}</div>
                 <p className="ch-inst-bio">{inst.bio}</p>
-
-                <div className="ch-inst-stats">
-                  <span className="ch-inst-stat-item">
-                    <BookOpen size={13} />
-                    <span>{inst.courses}</span>
-                  </span>
-                  <span className="ch-inst-stat-item">
-                    <Users size={13} />
-                    <span>{inst.students} هنرجو</span>
-                  </span>
-                  <span className="ch-inst-stat-item ch-rate">
-                    <Star size={13} fill="#f5a623" color="#f5a623" />
-                    <span>{inst.rating}</span>
-                  </span>
-                </div>
               </div>
             </div>
           ))}

@@ -12,8 +12,7 @@ export default function InPersonSprints({ sprints, schedule, openSprint, setOpen
             <BookOpen size={18} />
           </div>
           <div className="cs-ip-sec-titles">
-            <h2 className="cs-ip-sec-title">سرفصل‌ها و اسپرینت‌های کارگاهی</h2>
-            <span className="cs-ip-sec-sub">{toFa(sprints.length)} اسپرینت عملیاتی · {schedule.totalHours}</span>
+            <h2 className="cs-ip-sec-title">سرفصل‌ها</h2>
           </div>
         </div>
         <span className="cs-ip-sec-badge highlight">مسیر یادگیری</span>

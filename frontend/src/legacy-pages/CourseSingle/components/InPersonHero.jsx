@@ -55,37 +55,54 @@ export default function InPersonHero({
     ? `%${toFa(course.activeDiscountPercentage || course.timedDiscount?.percentage)} تخفیف`
     : course.discount;
 
+  const DEPT_MAP = {
+    "فناوری اطلاعات": "it",
+    it: "it",
+    "کسب و کار": "business",
+    "کسب‌وکار": "business",
+    business: "business",
+    "زبان‌های خارجی": "languages",
+    languages: "languages",
+    "مشاوره": "counseling",
+    counseling: "counseling",
+  };
+  const deptId = DEPT_MAP[course.category] || DEPT_MAP[course.department] || (course.department ? course.department : null);
+  const deptHref = deptId ? `/dept/${deptId}` : "/courses";
+  const deptName = course.category || course.departmentFa || (deptId === "it" ? "فناوری اطلاعات" : deptId === "business" ? "کسب و کار" : deptId === "languages" ? "زبان‌های خارجی" : deptId === "counseling" ? "مشاوره" : "حضوری");
+
   return (
     <>
-      <div className="cs-topbar container">
-        <Link href="/courses" className="cs-back">
-          <ArrowLeft size={14} style={{ transform: "rotate(180deg)" }} />
-          <span>همهٔ دوره‌ها</span>
-        </Link>
+      <div className="container">
+        <div className="cs-topbar">
+          <Link href="/courses" className="cs-back">
+            <ArrowLeft size={14} style={{ transform: "rotate(180deg)" }} />
+            <span>همهٔ دوره‌ها</span>
+          </Link>
 
-        <nav className="cs-crumbs" aria-label="مسیر دوره">
-          <Link href="/courses">دوره‌ها</Link>
-          <span className="sep">›</span>
-          <Link href="/courses">{course.category || "حضوری"}</Link>
-          <span className="sep">›</span>
-          <b>{course.title}</b>
-        </nav>
+          <nav className="cs-crumbs" aria-label="مسیر دوره">
+            <Link href="/courses">دوره‌ها</Link>
+            <span className="sep">›</span>
+            <Link href={deptHref}>{deptName}</Link>
+            <span className="sep">›</span>
+            <b title={course.title}>{course.title}</b>
+          </nav>
 
-        <div className="cs-inperson-top-actions">
-          <div className="cs-inperson-top-badge">
-            <MapPin size={12} strokeWidth={2.5} />
-            <span>{typeLabel}</span>
+          <div className="cs-inperson-top-actions">
+            <div className="cs-inperson-top-badge">
+              <MapPin size={12} strokeWidth={2.5} />
+              <span>{typeLabel}</span>
+            </div>
+
+            <button
+              type="button"
+              className={`cs-inperson-top-save-btn ${isWished ? "is-saved" : ""}`}
+              onClick={onBookmarkClick}
+              aria-label={isLoggedIn ? (isWished ? "حذف از نشان‌شده‌ها" : "نشان کردن دوره") : "برای ذخیره دوره، ابتدا ثبت‌نام کنید"}
+              title={isLoggedIn ? (isWished ? "حذف از نشان‌شده‌ها" : "نشان کردن دوره") : "برای ذخیره دوره، ابتدا ثبت‌نام کنید"}
+            >
+              <Bookmark size={15} fill={isWished ? "currentColor" : "none"} stroke="currentColor" strokeWidth={2.2} />
+            </button>
           </div>
-
-          <button
-            type="button"
-            className={`cs-inperson-top-save-btn ${isWished ? "is-saved" : ""}`}
-            onClick={onBookmarkClick}
-            aria-label={isLoggedIn ? (isWished ? "حذف از نشان‌شده‌ها" : "نشان کردن دوره") : "برای ذخیره دوره، ابتدا ثبت‌نام کنید"}
-            title={isLoggedIn ? (isWished ? "حذف از نشان‌شده‌ها" : "نشان کردن دوره") : "برای ذخیره دوره، ابتدا ثبت‌نام کنید"}
-          >
-            <Bookmark size={15} fill={isWished ? "currentColor" : "none"} stroke="currentColor" strokeWidth={2.2} />
-          </button>
         </div>
       </div>
 
@@ -98,10 +115,6 @@ export default function InPersonHero({
                 alt={course.title}
                 className="cs-ip-hero-img"
               />
-              <span className="cs-ip-hero-tag">
-                <MapPin size={12} strokeWidth={2.5} />
-                <span>{course.location?.room || "کمپوس آزادی"}</span>
-              </span>
             </div>
 
             <div className="cs-ip-hero-content">
@@ -173,7 +186,7 @@ export default function InPersonHero({
                       className="cs-ip-btn-main"
                       onClick={onCheckoutOpen}
                     >
-                      <span>ثبت‌نام {typeLabel}</span>
+                      <span>ثبت‌نام</span>
                       <ArrowLeft size={16} />
                     </button>
                   )}
@@ -186,14 +199,14 @@ export default function InPersonHero({
                     }}
                   >
                     <Phone size={14} />
-                    <span>درخواست مشاوره</span>
+                    <span>مشاوره</span>
                   </button>
                 </div>
               </div>
 
               <div className="cs-ip-guarantee-strip">
                 <ShieldCheck size={14} strokeWidth={2.4} />
-                <span>گارانتی بازگشت ۱۰۰٪ شهریه تا پایان جلسه اول بدون قید و شرط</span>
+                <span>گارانتی بازگشت ۱۰۰٪ شهریه تا جلسه اول</span>
               </div>
             </div>
           </div>

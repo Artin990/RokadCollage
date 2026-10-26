@@ -40,8 +40,8 @@ export default function DepartmentPage({ deptId, initialCourses = [] }) {
           initialCourses && initialCourses.length > 0 ? Promise.resolve(initialCourses) : getAllCourses().catch(() => []),
           getComments().catch(() => []),
         ]);
-        const fallbackList = Array.isArray(dept?.suggestedCourses) && dept.suggestedCourses.length > 0 ? dept.suggestedCourses : (Array.isArray(dept?.featuredCourses) ? dept.featuredCourses : []);
-        setLiveCourses(Array.isArray(coursesRes) && coursesRes.length > 0 ? coursesRes : fallbackList);
+        const courseList = Array.isArray(coursesRes) ? coursesRes : (coursesRes?.data || []);
+        setLiveCourses(courseList);
         const commList = Array.isArray(commentsRes) ? commentsRes : (commentsRes?.data || []);
         setLiveComments(commList);
       } catch (err) {

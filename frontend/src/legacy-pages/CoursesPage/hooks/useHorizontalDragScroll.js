@@ -1,45 +1,80 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 export function useHorizontalDragScroll() {
+  const [node, setNode] = useState(null);
   const rowRef = useRef(null);
-  const animRef = useRef(0);
-  const modelRef = useRef("flip"); // flip = Chrome/Firefox (RTL negative), legacy = Safari
-  const [nav, setNav] = useState({ prev: false, next: true });
+  const [nav, setNav] = useState({ prev: false, next: false });
   const isDraggingRef = useRef(false);
   const dragInfoRef = useRef({ startX: 0, scrollLeft: 0, hasMoved: false });
 
-  const metrics = () => {
-    const el = rowRef.current;
-    if (!el) return { max: 0, pos: 0 };
-    const max = el.scrollWidth - el.clientWidth;
-    const rtl = getComputedStyle(el).direction === "rtl";
-    if (!rtl) return { max, pos: el.scrollLeft };
-    return { max, pos: modelRef.current === "legacy" ? max - el.scrollLeft : -el.scrollLeft };
-  };
+  // Callback ref so hook works even when component mounts dynamically after data loading
+  const refCallback = useCallback((el) => {
+    rowRef.current = el;
+    setNode(el);
+  }, []);
+  // Support both ref={scroll.rowRef} and ref object accesses
+  refCallback.current = node;
 
-  const update = () => {
-    const el = rowRef.current;
+  const getMetrics = useCallback((el) => {
+    if (!el) return { max: 0, pos: 0 };
+    const max = Math.max(0, el.scrollWidth - el.clientWidth);
+    const isRtl = getComputedStyle(el).direction === "rtl";
+    if (!isRtl) {
+      return { max, pos: Math.max(0, el.scrollLeft) };
+    }
+    // RTL handling: in standard modern browsers, scrollLeft in RTL is 0 at start and negative when scrolled.
+    // In legacy browsers, it may be max down to 0.
+    const raw = el.scrollLeft;
+    if (raw <= 0) {
+      return { max, pos: Math.min(max, Math.abs(raw)) };
+    }
+    if (raw <= max) {
+      return { max, pos: Math.min(max, max - raw) };
+    }
+    return { max, pos: Math.min(max, Math.abs(raw)) };
+  }, []);
+
+  const update = useCallback(() => {
+    const el = node || rowRef.current;
     if (!el) return;
-    const { max, pos } = metrics();
-    setNav({ prev: pos > 4, next: max > 0 && max - pos > 4 });
-  };
+    const { max, pos } = getMetrics(el);
+    const threshold = 8;
+    setNav({
+      prev: pos > threshold,
+      next: max > threshold && pos < max - threshold,
+    });
+  }, [node, getMetrics]);
+
+  // Fallback to check if rowRef.current was populated directly as a ref object
+  useEffect(() => {
+    if (!node && rowRef.current) {
+      setNode(rowRef.current);
+    }
+  });
 
   useEffect(() => {
-    const el = rowRef.current;
+    const el = node || rowRef.current;
     if (!el) return;
-    const max = el.scrollWidth - el.clientWidth;
-    if (getComputedStyle(el).direction === "rtl" && max > 0) {
-      modelRef.current = Math.abs(el.scrollLeft) < max / 2 ? "flip" : "legacy";
-    }
+
     update();
+
     el.addEventListener("scroll", update, { passive: true });
     window.addEventListener("resize", update);
+
+    let ro = null;
+    if (typeof ResizeObserver !== "undefined") {
+      ro = new ResizeObserver(() => {
+        update();
+      });
+      ro.observe(el);
+      Array.from(el.children).forEach((child) => ro.observe(child));
+    }
 
     const onMouseDown = (e) => {
       if (e.button !== 0) return;
       isDraggingRef.current = true;
       dragInfoRef.current = {
-        startX: e.pageX - el.offsetLeft,
+        startX: e.pageX,
         scrollLeft: el.scrollLeft,
         hasMoved: false,
       };
@@ -48,15 +83,13 @@ export function useHorizontalDragScroll() {
 
     const onMouseMove = (e) => {
       if (!isDraggingRef.current) return;
-      const x = e.pageX - el.offsetLeft;
-      const delta = x - dragInfoRef.current.startX;
-      if (Math.abs(delta) > 6) {
+      const delta = e.pageX - dragInfoRef.current.startX;
+      if (Math.abs(delta) > 5) {
         dragInfoRef.current.hasMoved = true;
         e.preventDefault();
       }
       if (dragInfoRef.current.hasMoved) {
-        const walk = delta * 1.25;
-        el.scrollLeft = dragInfoRef.current.scrollLeft - walk;
+        el.scrollLeft = dragInfoRef.current.scrollLeft - delta;
       }
     };
 
@@ -76,32 +109,28 @@ export function useHorizontalDragScroll() {
     window.addEventListener("mouseup", onMouseUp);
 
     return () => {
-      cancelAnimationFrame(animRef.current);
       el.removeEventListener("scroll", update);
       window.removeEventListener("resize", update);
+      if (ro) ro.disconnect();
       el.removeEventListener("mousedown", onMouseDown);
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mouseup", onMouseUp);
     };
-  }, []);
+  }, [node, update]);
 
-  const scroll = (toNext) => {
-    const el = rowRef.current;
+  const scroll = useCallback((toNext) => {
+    const el = node || rowRef.current;
     if (!el) return;
-    cancelAnimationFrame(animRef.current);
-    const rtl = getComputedStyle(el).direction === "rtl";
-    const dir = rtl ? (toNext ? -1 : 1) : (toNext ? 1 : -1);
-    const from = el.scrollLeft;
-    const to = from + dir * el.clientWidth * 0.75;
-    const t0 = performance.now();
-    const ease = (p) => 1 - Math.pow(1 - p, 3);
-    const step = (now) => {
-      const p = Math.min(1, (now - t0) / 450);
-      el.scrollLeft = from + (to - from) * ease(p);
-      if (p < 1) animRef.current = requestAnimationFrame(step);
-    };
-    animRef.current = requestAnimationFrame(step);
-  };
+    const isRtl = getComputedStyle(el).direction === "rtl";
+    const step = Math.max(300, Math.round(el.clientWidth * 0.75));
+    // In RTL: next items are to the left (-step), previous items are to the right (+step)
+    const delta = isRtl ? (toNext ? -step : step) : (toNext ? step : -step);
 
-  return { rowRef, nav, update, scroll };
+    el.scrollBy({
+      left: delta,
+      behavior: "smooth",
+    });
+  }, [node]);
+
+  return { rowRef: refCallback, nav, update, scroll };
 }

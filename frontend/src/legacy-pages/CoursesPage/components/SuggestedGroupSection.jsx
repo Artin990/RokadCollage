@@ -97,10 +97,10 @@ function SuggestedDeptGroup({ group, store, isMobile }) {
           }}
         >
           <DeptIcon size={14} />
-          دپارتمان {group.deptName}
+          {group.deptName}
         </span>
         <Link href={`/dept/${group.deptId}`} className="ch-dept-more-link">
-          <span>مشاهده همه دوره‌های {group.deptName}</span>
+          <span>مشاهده همه</span>
           <span className="ch-dept-more-arrow" aria-hidden="true">
             <ChevronLeft size={15} strokeWidth={2.8} />
           </span>
@@ -225,9 +225,9 @@ export default function SuggestedGroupSection({ suggestedGroups, store }) {
       <div className="ch-sec-head">
         <div className="ch-sec-title-wrap">
           <span className="ch-sec-tag">
-            <Compass size={13} /> دوره‌های پیشنهادی
+            <Compass size={13} /> شروع مسیر
           </span>
-          <h2 className="ch-sec-title">دوره‌های پیشنهادی برای شروع هر مسیر</h2>
+          <h2 className="ch-sec-title">دوره‌های پیشنهادی</h2>
         </div>
       </div>
 

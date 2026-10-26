@@ -8,18 +8,14 @@ import {
   Lock,
   Eye,
   EyeOff,
-  Sparkles,
   ShieldCheck,
   ArrowLeft,
-  Check,
 } from "lucide-react";
 import { login } from "../../Store/Slices/authSlice";
 import axiosInstance from "../../Utils/axiosInstance";
 import Notify from "../../Utils/notify";
 import { normalizePersianDigits, phoneRegex } from "../../Constants/validationRules";
 
-const DEFAULT_ADMIN_PHONE = "09123456789";
-const DEFAULT_ADMIN_PASSWORD = "adminPassword123";
 
 const loginValidationSchema = Yup.object({
   phoneNumber: Yup.string()
@@ -41,7 +37,6 @@ export default function AdminLogin() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
-  const [justAutofilled, setJustAutofilled] = useState(false);
 
   const formik = useFormik({
     initialValues: { phoneNumber: "", password: "" },
@@ -79,16 +74,6 @@ export default function AdminLogin() {
     },
   });
 
-  const handleQuickFill = () => {
-    formik.setValues({
-      phoneNumber: DEFAULT_ADMIN_PHONE,
-      password: DEFAULT_ADMIN_PASSWORD,
-    });
-    formik.setErrors({});
-    formik.setTouched({});
-    setJustAutofilled(true);
-    setTimeout(() => setJustAutofilled(false), 2000);
-  };
 
   return (
     <div
@@ -196,43 +181,6 @@ export default function AdminLogin() {
             )}
           </div>
 
-          {/* Google-Style Default Admin Quick-Fill Pill */}
-          <div className="pt-1">
-            <div className="bg-slate-50/90 hover:bg-amber-50/40 border border-slate-200/80 hover:border-amber-200 rounded-2xl p-2.5 sm:p-3 transition-all flex items-center justify-between gap-2.5">
-              <div className="flex items-center gap-2 min-w-0">
-                <div className="w-7 h-7 rounded-xl bg-amber-100/70 text-amber-700 flex items-center justify-center shrink-0">
-                  <Sparkles className="w-3.5 h-3.5" />
-                </div>
-                <div className="min-w-0">
-                  <div className="text-[11px] font-bold text-slate-700 truncate">
-                    حساب مدیر پیش‌فرض
-                  </div>
-                  <div className="text-[10px] text-slate-400 font-mono tracking-tight dir-ltr text-right truncate">
-                    {DEFAULT_ADMIN_PHONE} • {DEFAULT_ADMIN_PASSWORD}
-                  </div>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={handleQuickFill}
-                className={`text-[11px] font-bold px-2.5 py-1.5 rounded-lg border transition-all flex items-center gap-1 shrink-0 cursor-pointer ${
-                  justAutofilled
-                    ? "bg-emerald-500 text-white border-emerald-500 shadow-sm"
-                    : "bg-white text-slate-700 border-slate-200 hover:bg-amber-500 hover:text-slate-900 hover:border-amber-400 shadow-sm"
-                }`}
-              >
-                {justAutofilled ? (
-                  <>
-                    <Check className="w-3 h-3" />
-                    <span>تکمیل شد</span>
-                  </>
-                ) : (
-                  <span>تکمیل سریع</span>
-                )}
-              </button>
-            </div>
-          </div>
 
           {/* Primary Submit Button */}
           <div className="pt-2">

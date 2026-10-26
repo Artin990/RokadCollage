@@ -57,19 +57,21 @@ export default function VideoPlayerModal({
       }}
     >
       <div className="vpm-modal" ref={containerRef} onMouseMove={handleMouseMove}>
+        <div className="vpm-top-glow" />
         <div className="vpm-header">
           <div className="vpm-header-info">
-            <span className="vpm-badge" style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
-              <Play size={11} fill="currentColor" />
-              <span>ویدیو پلیر رکاد</span>
+            <span className="vpm-badge">
+              <span className="vpm-badge-dot" />
+              <Play size={10} fill="currentColor" />
+              <span>پیش‌نمایش دوره</span>
             </span>
             <div className="vpm-titles">
               <h3 className="vpm-title">{title}</h3>
-              <p className="vpm-subtitle">{lessonTitle}</p>
+              {lessonTitle && <p className="vpm-subtitle">{lessonTitle}</p>}
             </div>
           </div>
           <div className="vpm-header-actions">
-            <button className="vpm-close-btn" onClick={onClose} aria-label="بستن پنجره" style={{ display: "grid", placeItems: "center" }}>
+            <button className="vpm-close-btn" onClick={onClose} aria-label="بستن" title="بستن (Esc)">
               <X size={18} strokeWidth={2.5} />
             </button>
           </div>
