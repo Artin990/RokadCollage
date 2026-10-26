@@ -119,7 +119,7 @@ export default function DepartmentCoursesSection({
                   className="dp-view-all-btn primary"
                   onClick={() => setShowAll(true)}
                 >
-                  <span>مشاهده همه دوره‌ها ({faNum(allCourses.length)})</span>
+                  <span>همه دوره‌ها</span>
                   <ChevronDown size={17} strokeWidth={2.5} />
                 </button>
               ) : (
