@@ -102,16 +102,21 @@ export default function DepartmentPage({ deptId, initialCourses = [] }) {
         cat: c.category || targetCategory,
         department: currentId,
         mode: isHp ? "حضوری" : "غیر حضوری",
-        hours: c.duration || `${c.hours || 35} ساعت`,
-        rating: "۴.۹",
-        students: `${Number(c.studentCount || 95).toLocaleString("fa-IR")}`,
+        hours: c.totalHours ? c.totalHours : (c.duration ? c.duration : (c.hours ? `${c.hours} ساعت` : null)),
+        sessions: c.approximateSessions ? c.approximateSessions : null,
+        rating: (c.rating !== undefined && c.rating !== null && Number(c.rating) > 0)
+          ? Number(c.rating).toLocaleString("fa-IR")
+          : (c.score && Number(c.score) > 0 ? Number(c.score).toLocaleString("fa-IR") : null),
+        students: (c.enrolledCount !== undefined && c.enrolledCount !== null && Number(c.enrolledCount) > 0)
+          ? `${Number(c.enrolledCount).toLocaleString("fa-IR")}`
+          : (c.studentCount && Number(c.studentCount) > 0 ? `${Number(c.studentCount).toLocaleString("fa-IR")}` : null),
         price: priceNum ? `${Number(priceNum).toLocaleString("fa-IR")} تومان` : "رایگان",
         old: hasDiscount ? `${Number(c.price).toLocaleString("fa-IR")} تومان` : null,
         free: !priceNum || priceNum === 0,
         slug: c.slug || c.id || c._id,
         inst: teacherName,
         ic: currentId,
-        tag: isHp ? "کارگاه حضوری" : "آنلاین",
+        tag: isHp ? "دوره حضوری" : "آنلاین",
       };
     });
   }, [deptLiveCourses, currentId, targetCategory]);
@@ -143,7 +148,7 @@ export default function DepartmentPage({ deptId, initialCourses = [] }) {
       { num: `${Number(formattedDeptCourses.length).toLocaleString("fa-IR")}`, lab: "دوره تخصصی" },
     ];
     if (inPersonCount > 0) {
-      stats.push({ num: `${Number(inPersonCount).toLocaleString("fa-IR")}`, lab: "کارگاه حضوری" });
+      stats.push({ num: `${Number(inPersonCount).toLocaleString("fa-IR")}`, lab: "دوره حضوری" });
     }
     if (onlineCount > 0) {
       stats.push({ num: `${Number(onlineCount).toLocaleString("fa-IR")}`, lab: "دوره آنلاین" });

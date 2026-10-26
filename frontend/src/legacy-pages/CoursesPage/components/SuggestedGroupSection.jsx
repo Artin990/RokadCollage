@@ -133,6 +133,13 @@ function SuggestedDeptGroup({ group, store, isMobile }) {
               href={`/courses/${c.slug}`}
               className="ch-card"
               data-dept={group.deptId}
+              onClick={() => {
+                try {
+                  const m = c.mode === "online" ? "online" : "in-person";
+                  sessionStorage.setItem(`rokad_course_mode_${c.slug}`, m);
+                  sessionStorage.setItem("rokad_last_course_mode", m);
+                } catch (_) {}
+              }}
             >
               <div className="ch-card-cover" style={{ background: group.badgeBg }}>
                 <img src={group.pattern} alt="" className="ch-cover-pat" aria-hidden="true" />

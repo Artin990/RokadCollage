@@ -97,7 +97,17 @@ export function CourseCard({ course, index, store }) {
                 {priceFormatted !== "رایگان" ? priceFormatted : durationText}
               </div>
             </div>
-            <Link href={`/courses/${slug}`} className={`v2-btn ${hoverColorClass}`}>
+            <Link
+              href={`/courses/${slug}`}
+              className={`v2-btn ${hoverColorClass}`}
+              onClick={() => {
+                try {
+                  const m = mode === "onsite" ? "in-person" : "online";
+                  sessionStorage.setItem(`rokad_course_mode_${slug}`, m);
+                  sessionStorage.setItem("rokad_last_course_mode", m);
+                } catch (_) {}
+              }}
+            >
               {"مشاهده "} <ArrowIcon width={14} height={14} />
             </Link>
           </div>

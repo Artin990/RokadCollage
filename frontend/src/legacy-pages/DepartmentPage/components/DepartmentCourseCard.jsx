@@ -3,7 +3,7 @@ import { Bookmark, MapPin, Monitor } from "lucide-react";
 import { DEPT_PERSONA } from "@/data/departments.js";
 import { toggleWishlist } from "@/data/panelStore.js";
 import { isWishlisted } from "@/data/selectors.js";
-import { CourseIcon, StarIcon, ClockIcon, UsersIcon } from "./DepartmentIcons.jsx";
+import { CourseIcon, StarIcon, ClockIcon, UsersIcon, BookIcon } from "./DepartmentIcons.jsx";
 
 export const getSlugForDeptCourse = (c) => {
   if (c?.slug) return c.slug;
@@ -23,6 +23,13 @@ export default function DepartmentCourseCard({ c, rot, persona: cardPersona, sto
       className="dp-card"
       data-dept={cardTheme.id}
       href={`/courses/${slug}`}
+      onClick={() => {
+        try {
+          const m = isOnline ? "online" : "in-person";
+          sessionStorage.setItem(`rokad_course_mode_${slug}`, m);
+          sessionStorage.setItem("rokad_last_course_mode", m);
+        } catch (_) {}
+      }}
       style={{
         "--rot": `rotate(${rot}deg)`,
         "--dp": cardTheme.colorVar,
@@ -63,9 +70,18 @@ export default function DepartmentCourseCard({ c, rot, persona: cardPersona, sto
           <span>{c.inst}</span>
         </div>
         <div className="dp-card-meta">
-          <span className="dp-rate"><StarIcon /> {c.rating}</span>
-          <span><ClockIcon /> {c.hours}</span>
-          <span><UsersIcon /> {c.students}</span>
+          {c.rating ? (
+            <span className="dp-rate"><StarIcon /> {c.rating}</span>
+          ) : null}
+          {c.hours ? (
+            <span><ClockIcon /> {c.hours}</span>
+          ) : null}
+          {c.sessions ? (
+            <span><BookIcon /> {c.sessions}</span>
+          ) : null}
+          {c.students ? (
+            <span><UsersIcon /> {c.students}</span>
+          ) : null}
         </div>
         <div className="dp-card-foot">
           {c.free ? (

@@ -145,6 +145,15 @@ export const update = catchAsync(async (req, res, next) => {
         "sprints",
         "teachers",
         "location",
+        "courseType",
+        "approximateSessions",
+        "totalHours",
+        "scheduleDays",
+        "tuitionPerPerson",
+        "proposedTeacher",
+        "approximateStartDate",
+        "approximateEndDate",
+        "joujmanEvent",
     ];
 
     const updates = {};

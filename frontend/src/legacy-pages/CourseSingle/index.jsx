@@ -82,27 +82,71 @@ export default function CourseSingle({ slug, initialCourse }) {
   }, []);
 
   if (loading && !course) {
+    let storedMode = null;
+    if (typeof window !== "undefined") {
+      try {
+        storedMode =
+          sessionStorage.getItem(`rokad_course_mode_${slug}`) ||
+          sessionStorage.getItem("rokad_last_course_mode");
+      } catch (_) {}
+    }
+
+    const inPersonIdentifiers = [
+      "icdl",
+      "photoshop",
+      "فتوشاپ",
+      "premiere",
+      "پریمیر",
+      "after-effects",
+      "aftereffects",
+      "افترافکت",
+      "wordpress",
+      "وردپرس",
+      "ui-ux",
+      "ui",
+      "ux",
+      "figma",
+      "فیگما",
+      "frontend",
+      "front",
+      "فرانت",
+      "backend",
+      "back",
+      "بک",
+      "ai",
+      "هوش-مصنوعی",
+      "سواد-دیجیتال",
+      "bootcamp",
+      "بوت‌کمپ",
+      "بوتکمپ",
+      "حضوری",
+      "in-person",
+      "inperson",
+      "workshop",
+      "کارگاه",
+      "camp",
+      "6adfabec1c8f1dee7a5156e2",
+      "6adfabec1c8f1dee7a5156ed",
+      "6adfabec1c8f1dee7a5156f3",
+      "6adfabec1c8f1dee7a5156f9",
+      "6adfabec1c8f1dee7a5156ff",
+      "6adfabec1c8f1dee7a515705",
+      "6adfabec1c8f1dee7a51570b",
+      "6adfabec1c8f1dee7a515711",
+      "6adfabec1c8f1dee7a515717",
+      "6acd22418fb60eb8907d8af5",
+      "6acd22418fb60eb8907d8af6",
+    ];
+
+    const cleanSlug = String(slug || "").toLowerCase();
     const isInPersonSlug =
-      slug && (
-        slug.includes("bootcamp") ||
-        slug.includes("حضوری") ||
-        slug.includes("in-person") ||
-        slug.includes("inperson") ||
-        slug.includes("workshop") ||
-        slug.includes("کارگاه") ||
-        slug.includes("بوت‌کمپ") ||
-        slug.includes("بوتکمپ") ||
-        slug.includes("figma") ||
-        slug.includes("فیگما") ||
-        slug.includes("ui-ux") ||
-        slug.includes("ux") ||
-        slug.includes("ui") ||
-        slug.includes("camp") ||
-        slug === "6acd22418fb60eb8907d8af5" ||
-        slug === "6acd22418fb60eb8907d8af6"
-      );
+      storedMode === "in-person" ||
+      storedMode === "onsite" ||
+      inPersonIdentifiers.some((id) => cleanSlug.includes(id));
+
     if (isInPersonSlug) {
-      return <SkeletonCourseInPerson />;
+      const isWorkshop = cleanSlug.includes("workshop") || cleanSlug.includes("کارگاه");
+      return <SkeletonCourseInPerson isWorkshop={isWorkshop} />;
     }
     return <SkeletonCourseSingle />;
   }
@@ -111,10 +155,16 @@ export default function CourseSingle({ slug, initialCourse }) {
     return <CourseSingleNotFound />;
   }
 
-  if (
+  const isBootcampOrInPerson =
     course.mode === "in-person" ||
     course.isInPerson ||
     course.type === "حضوری" ||
+    course.courseType === "دوره حضوری" ||
+    course.courseType === "کارگاه حضوری" ||
+    (typeof course.courseType === "string" && course.courseType.includes("حضوری")) ||
+    Boolean(course.approximateSessions) ||
+    Boolean(course.tuitionPerPerson) ||
+    Boolean(course.location?.address) ||
     (slug && (
       slug.includes("bootcamp") ||
       slug.includes("حضوری") ||
@@ -132,8 +182,9 @@ export default function CourseSingle({ slug, initialCourse }) {
       slug.includes("camp") ||
       slug === "6acd22418fb60eb8907d8af5" ||
       slug === "6acd22418fb60eb8907d8af6"
-    ))
-  ) {
+    ));
+
+  if (isBootcampOrInPerson) {
     return <CourseSingleInPerson course={course} slug={slug} />;
   }
 

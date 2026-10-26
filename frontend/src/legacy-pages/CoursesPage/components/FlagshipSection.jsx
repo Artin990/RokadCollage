@@ -177,7 +177,17 @@ export default function FlagshipSection({ flagshipCourses, store }) {
                     </div>
 
                     <div className="ch-flag-btn-group">
-                      <Link href={`/courses/${f.slug}`} className="ch-btn-view-course">
+                      <Link
+                        href={`/courses/${f.slug}`}
+                        className="ch-btn-view-course"
+                        onClick={() => {
+                          try {
+                            const m = f.mode === "online" ? "online" : "in-person";
+                            sessionStorage.setItem(`rokad_course_mode_${f.slug}`, m);
+                            sessionStorage.setItem("rokad_last_course_mode", m);
+                          } catch (_) {}
+                        }}
+                      >
                         <span>مشاهده دوره</span>
                         <ArrowLeft size={14} />
                       </Link>

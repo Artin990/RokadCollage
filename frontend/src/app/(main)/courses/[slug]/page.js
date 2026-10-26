@@ -41,22 +41,27 @@ export default async function SingleCourseRoute({ params }) {
     initialCourse?.mode === "in-person" ||
     initialCourse?.isInPerson ||
     initialCourse?.type === "حضوری" ||
-    decodedSlug.includes("bootcamp") ||
-    decodedSlug.includes("حضوری") ||
-    decodedSlug.includes("in-person") ||
-    decodedSlug.includes("inperson") ||
+    initialCourse?.courseType === "دوره حضوری" ||
+    initialCourse?.courseType === "کارگاه حضوری" ||
+    initialCourse?.courseType?.includes("حضوری") ||
+    Boolean(initialCourse?.approximateSessions) ||
+    Boolean(initialCourse?.tuitionPerPerson) ||
+    Boolean(initialCourse?.location?.address) ||
+    [
+      "icdl", "photoshop", "فتوشاپ", "premiere", "پریمیر", "after-effects", "aftereffects", "افترافکت",
+      "wordpress", "وردپرس", "ui-ux", "ui", "ux", "figma", "فیگما", "frontend", "front", "فرانت",
+      "backend", "back", "بک", "ai", "هوش-مصنوعی", "سواد-دیجیتال", "bootcamp", "بوت‌کمپ", "بوتکمپ",
+      "حضوری", "in-person", "inperson", "workshop", "کارگاه", "camp",
+      "6adfabec1c8f1dee7a5156e2", "6adfabec1c8f1dee7a5156ed", "6adfabec1c8f1dee7a5156f3",
+      "6adfabec1c8f1dee7a5156f9", "6adfabec1c8f1dee7a5156ff", "6adfabec1c8f1dee7a515705",
+      "6adfabec1c8f1dee7a51570b", "6adfabec1c8f1dee7a515711", "6adfabec1c8f1dee7a515717",
+      "6acd22418fb60eb8907d8af5", "6acd22418fb60eb8907d8af6"
+    ].some((id) => decodedSlug.includes(id));
+
+  const isWorkshop =
+    initialCourse?.courseType === "کارگاه حضوری" ||
     decodedSlug.includes("workshop") ||
-    decodedSlug.includes("کارگاه") ||
-    decodedSlug.includes("بوت‌کمپ") ||
-    decodedSlug.includes("بوتکمپ") ||
-    decodedSlug.includes("figma") ||
-    decodedSlug.includes("فیگما") ||
-    decodedSlug.includes("ui-ux") ||
-    decodedSlug.includes("ux") ||
-    decodedSlug.includes("ui") ||
-    decodedSlug.includes("camp") ||
-    decodedSlug === "6acd22418fb60eb8907d8af5" ||
-    decodedSlug === "6acd22418fb60eb8907d8af6";
+    decodedSlug.includes("کارگاه");
 
   const courseSchema = initialCourse
     ? {
@@ -107,7 +112,7 @@ export default async function SingleCourseRoute({ params }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }}
         />
       )}
-      <Suspense fallback={isInPerson ? <SkeletonCourseInPerson /> : <SkeletonCourseSingle />}>
+      <Suspense fallback={isInPerson ? <SkeletonCourseInPerson isWorkshop={isWorkshop} /> : <SkeletonCourseSingle />}>
         <CourseSingleClient slug={decodedSlug} initialCourse={initialCourse} />
       </Suspense>
     </>
