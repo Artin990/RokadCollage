@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { I } from "./BlogIcons.jsx";
-import { POPULAR_TAGS, POSTS } from "../data/blogIndexData.js";
+import { POPULAR_TAGS } from "../data/blogIndexData.js";
 
 function SuggestLabel({ text, q }) {
   const idx = text.toLowerCase().indexOf(q.toLowerCase());
@@ -18,12 +18,7 @@ export default function BlogHero({ searchQuery, setSearchQuery, setActiveCategor
   const [showSuggest, setShowSuggest] = useState(false);
 
   const q = searchQuery.trim().toLowerCase();
-  const suggestions = q
-    ? [...new Set([
-        ...POSTS.filter((p) => p.title.toLowerCase().includes(q)).map((p) => p.title),
-        ...[...new Set(POSTS.map((p) => p.tag))].filter((t) => t.toLowerCase().includes(q)),
-      ])].slice(0, 6)
-    : [];
+  const suggestions = [];
 
   const line1 = [
     { text: "داستان‌ها،", rot: "-1deg" },

@@ -49,7 +49,7 @@ export default function HeaderAuthButtons({ user, store, unreadCount, onRequestL
           ورود / ثبت‌نام
         </a>
         <a href="#consult" className="cta-pill desktop-only">
-          مشاورهٔ رایگان
+          مشاوره رایگان
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -133,7 +133,7 @@ export default function HeaderAuthButtons({ user, store, unreadCount, onRequestL
         </a>
       )}
       <a href="#consult" className="cta-pill desktop-only">
-        مشاورهٔ رایگان
+        مشاوره رایگان
         <svg
           viewBox="0 0 24 24"
           fill="none"

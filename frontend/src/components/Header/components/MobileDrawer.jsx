@@ -154,7 +154,7 @@ export default function MobileDrawer({
           className="hb1-cta"
           onClick={() => setMobileOpen(false)}
         >
-          مشاورهٔ رایگان
+          مشاوره رایگان
         </a>
       </div>
     </div>

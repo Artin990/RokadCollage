@@ -26,7 +26,7 @@ services:
 
   backend:
     build:
-      context: ./API
+      context: ./backend/API
       dockerfile: Dockerfile
       target: production
     image: rokad-backend:latest
@@ -64,7 +64,7 @@ services:
 
   admin:
     build:
-      context: ./Admin
+      context: ./backend/Admin
       dockerfile: Dockerfile
       target: production
     image: rokad-admin:latest
@@ -94,6 +94,7 @@ services:
     environment:
       - NODE_ENV=production
       - NEXT_PUBLIC_API_URL=http://localhost:5000/api
+      - NEXT_PUBLIC_SITE_URL=http://college.rokadschool.ir
     networks:
       - rokad_network
     depends_on:

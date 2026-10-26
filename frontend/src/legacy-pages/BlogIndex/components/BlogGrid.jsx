@@ -1,4 +1,3 @@
-import { MOCK_STATIC_BLOGS } from "@/services/blogService.js";
 import React, { useState, useRef, useEffect } from "react";
 import { Sparkles } from "lucide-react";
 import { I, toFa } from "./BlogIcons.jsx";

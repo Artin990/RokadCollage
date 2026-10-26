@@ -1,4 +1,3 @@
-import { MOCK_STATIC_BLOGS } from "@/services/blogService.js";
 import React, { useState, useEffect } from "react";
 import { getBlogs } from "@/services/blogService.js";
 import BlogHero from "./components/BlogHero.jsx";
@@ -10,15 +9,7 @@ import BlogTrending from "./components/BlogTrending.jsx";
 export default function BlogIndex() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [featured, setFeatured] = useState({
-    title: MOCK_STATIC_BLOGS[0].title,
-    slug: MOCK_STATIC_BLOGS[0].slug,
-    excerpt: MOCK_STATIC_BLOGS[0].description,
-    cat: MOCK_STATIC_BLOGS[0].category,
-    date: 'به‌تازگی',
-    readTime: MOCK_STATIC_BLOGS[0].readTime,
-    author: MOCK_STATIC_BLOGS[0].author.name,
-  });
+  const [featured, setFeatured] = useState(null);
 
   useEffect(() => {
     getBlogs({ limit: 1 })
@@ -29,11 +20,11 @@ export default function BlogIndex() {
           setFeatured({
             title: item.title,
             slug: item.slug || item._id,
-            excerpt: item.description,
-            cat: item.category,
-            date: "به‌تازگی",
-            readTime: item.readTime || "۵ دقیقه",
-            author: "تحریریه کالج رکاد",
+            excerpt: item.description || item.headline || (item.content ? item.content.replace(/<[^>]+>/g, "").slice(0, 120) + "..." : ""),
+            cat: item.category || "آموزش",
+            date: item.createdAt ? new Date(item.createdAt).toLocaleDateString("fa-IR") : "به‌تازگی",
+            readTime: item.readTime ? (typeof item.readTime === "number" ? item.readTime + " دقیقه" : item.readTime) : "۵ دقیقه",
+            author: item.author?.fullName || item.author?.name || "تحریریه کالج رکاد",
           });
         }
       })

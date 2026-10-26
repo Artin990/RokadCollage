@@ -11,7 +11,7 @@ export default function DepartmentCtaSection({ dept, currentId, persona, onScrol
           <p>{dept.cta.text}</p>
           <div style={{ display: "flex", gap: 14, flexWrap: "wrap", alignItems: "center" }}>
             <a href="#consult" className="dp-btn dp-btn-ink">
-              دریافت مشاورهٔ تخصصی {dept.name}
+              دریافت مشاوره تخصصی {dept.name}
               <ArrowIcon />
             </a>
             <a href="#dp-all" onClick={(e) => onScrollTo(e, "dp-all")} className="dp-btn dp-btn-ghost">

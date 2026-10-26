@@ -1,25 +1,24 @@
 /* ============================================================
-   مودال ویدیویی و ویدیو پلیر پیشرفته کالج رکاد
-   - دیزاین سیستم Neo-Brutalist + Glassmorphic Overlay
-   - کنترل‌های کامل: سیک‌بار (Scrubber), ۱۰ ثانیه عقب/جلو,
-     تنظیم سرعت پخش, کنترل صدا و میوت, فول‌اسکرین,
-     سوییچ آسان بین سرفصل‌ها و دروس
+   مودال ویدیویی و ویدیو پلیر سینمایی فوق پیشرفته کالج رکاد
+   - Ultra-Luxury Cinema Theater Experience + Floating Glass Deck
+   - کامپوننت‌های کنترل شناور و شیشه‌ای (Island Floating Dock)
+   - پالس رادیانت نورانی دکمه بزرگ پخش و تایم‌لاین نئونی
    ============================================================ */
 
 .vpm-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(12, 16, 24, 0.88);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: radial-gradient(circle at 50% 40%, rgba(248, 164, 29, 0.08) 0%, rgba(4, 7, 14, 0.94) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   z-index: 99999;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: 24px;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .vpm-backdrop.open {
@@ -30,16 +29,19 @@
 .vpm-modal {
   position: relative;
   width: 100%;
-  max-width: 1100px;
-  background: #0f141c;
-  border: 2.5px solid #121212;
-  border-radius: 20px 0 20px 0;
-  box-shadow: 8px 8px 0 var(--college, #F8A41D);
+  max-width: 1040px;
+  background: #090d16;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  box-shadow: 
+    0 35px 100px -15px rgba(0, 0, 0, 0.95),
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 0 80px -20px rgba(248, 164, 29, 0.28);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  transform: scale(0.95) translateY(12px);
-  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: scale(0.94) translateY(16px);
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.32s ease;
   color: #fff;
 }
 
@@ -47,15 +49,26 @@
   transform: scale(1) translateY(0);
 }
 
+/* خط نورانی طلایی در بالاترین نقطه مودال */
+.vpm-top-glow {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, rgba(248, 164, 29, 0.4) 25%, #F8A41D 50%, rgba(248, 164, 29, 0.4) 75%, transparent 100%);
+  box-shadow: 0 0 12px rgba(248, 164, 29, 0.6);
+  flex-shrink: 0;
+}
+
 /* ---------- هدر بالای مودال ---------- */
 .vpm-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 20px;
-  background: #18202c;
-  border-bottom: 2px solid #222d3d;
-  gap: 12px;
+  padding: 14px 22px;
+  background: rgba(13, 18, 29, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 14px;
 }
 
 .vpm-header-info {
@@ -65,19 +78,35 @@
   min-width: 0;
 }
 
+/* بچ پلیر با نقطه نئونی فعال */
 .vpm-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: var(--college, #F8A41D);
-  color: #121212;
+  gap: 7px;
+  background: linear-gradient(135deg, rgba(248, 164, 29, 0.16) 0%, rgba(248, 164, 29, 0.06) 100%);
+  color: #F8A41D;
+  border: 1px solid rgba(248, 164, 29, 0.35);
   font-size: 11px;
-  font-weight: 900;
-  padding: 3px 10px;
-  border-radius: 4px;
-  border: 1px solid #121212;
+  font-weight: 800;
+  padding: 5px 12px;
+  border-radius: 100px;
   white-space: nowrap;
   flex-shrink: 0;
+  box-shadow: 0 0 15px rgba(248, 164, 29, 0.12);
+}
+
+.vpm-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #F8A41D;
+  box-shadow: 0 0 8px #F8A41D;
+  animation: vpmDotPulse 1.8s infinite ease-in-out;
+}
+
+@keyframes vpmDotPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.75); }
 }
 
 .vpm-titles {
@@ -89,20 +118,22 @@
 .vpm-title {
   font-size: 15px;
   font-weight: 800;
-  color: #f3f4f6;
+  color: #f8fafc;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  letter-spacing: -0.2px;
 }
 
 .vpm-subtitle {
   font-size: 12px;
-  color: #9ca3af;
+  color: #94a3b8;
   margin: 2px 0 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-weight: 600;
 }
 
 .vpm-header-actions {
@@ -112,39 +143,40 @@
   flex-shrink: 0;
 }
 
+/* دکمه دایره‌ای بستن مودال */
 .vpm-close-btn {
-  background: #253346;
-  border: 1.5px solid #3b4d66;
-  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
   width: 36px;
   height: 36px;
-  border-radius: 8px 0 8px 0;
+  border-radius: 50%;
   display: grid;
   place-items: center;
   cursor: pointer;
-  font-size: 18px;
-  font-weight: 800;
-  transition: all 0.18s ease;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .vpm-close-btn:hover {
-  background: #e02424;
-  border-color: #121212;
-  color: #fff;
-  transform: rotate(90deg);
+  background: rgba(239, 68, 68, 0.18);
+  border-color: rgba(239, 68, 68, 0.45);
+  color: #fca5a5;
+  transform: rotate(90deg) scale(1.08);
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.35);
 }
 
-/* ---------- بدنه اصلی پلیر ---------- */
+/* ---------- بدنه اصلی پلیر و استیج سینمایی ---------- */
 .vpm-body {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
-  max-height: 70vh;
+  max-height: 68vh;
   background: #000;
   display: flex;
   align-items: center;
   justify-content: center;
   user-select: none;
+  overflow: hidden;
 }
 
 .vpm-video-element {
@@ -155,7 +187,7 @@
   cursor: pointer;
 }
 
-/* دکمه بزرگ پخش وسط صفحه هنگام Pause */
+/* دکمه بزرگ پخش وسط صفحه با پالس رادیانت */
 .vpm-center-overlay {
   position: absolute;
   inset: 0;
@@ -163,58 +195,77 @@
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  background: rgba(0, 0, 0, 0.25);
-  transition: opacity 0.2s ease;
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.6) 100%);
+  transition: opacity 0.28s ease;
+  z-index: 10;
 }
 
 .vpm-center-overlay.hidden {
   opacity: 0;
+  pointer-events: none;
 }
 
 .vpm-big-play-btn {
-  width: 72px;
-  height: 72px;
+  width: 82px;
+  height: 82px;
   border-radius: 50%;
-  background: var(--college, #F8A41D);
-  color: #121212;
-  border: 2.5px solid #121212;
-  box-shadow: 4px 4px 0 #121212;
+  background: radial-gradient(circle at 35% 35%, #F8A41D 0%, #ea580c 100%);
+  color: #0b0f17;
+  border: 3px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 0 30px rgba(248, 164, 29, 0.5), 0 14px 30px rgba(0, 0, 0, 0.6);
   display: grid;
   place-items: center;
   pointer-events: auto;
   cursor: pointer;
-  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease;
+  animation: vpmCinemaPulse 2.4s infinite cubic-bezier(0.4, 0, 0.6, 1);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
 }
 
 .vpm-big-play-btn:hover {
-  transform: scale(1.1);
-  box-shadow: 6px 6px 0 #121212;
+  transform: scale(1.12);
+  box-shadow: 0 0 55px rgba(248, 164, 29, 0.85), 0 16px 36px rgba(0, 0, 0, 0.7);
 }
 
 .vpm-big-play-btn svg {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   margin-inline-start: 4px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
-/* انیمیشن بازخورد پرش زمانی (۱۰ ثانیه عقب / جلو) */
+@keyframes vpmCinemaPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(248, 164, 29, 0.65), 0 10px 25px rgba(0, 0, 0, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 22px rgba(248, 164, 29, 0), 0 10px 25px rgba(0, 0, 0, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(248, 164, 29, 0), 0 10px 25px rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* انیمیشن بازخورد پرش زمانی ۱۰ ثانیه‌ای */
 .vpm-skip-anim {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.75);
-  border: 1.5px solid var(--college, #F8A41D);
+  background: rgba(12, 17, 26, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(248, 164, 29, 0.5);
   color: #fff;
   padding: 10px 18px;
-  border-radius: 12px;
+  border-radius: 14px;
   font-weight: 800;
   font-size: 14px;
   display: flex;
   align-items: center;
   gap: 8px;
   pointer-events: none;
-  animation: vpmPop 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  z-index: 10;
+  animation: vpmPop 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  z-index: 15;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
 }
 
 .vpm-skip-anim.left {
@@ -227,32 +278,37 @@
 
 @keyframes vpmPop {
   0% { opacity: 0; transform: translateY(-50%) scale(0.8); }
-  40% { opacity: 1; transform: translateY(-50%) scale(1.1); }
+  40% { opacity: 1; transform: translateY(-50%) scale(1.08); }
   100% { opacity: 0; transform: translateY(-50%) scale(1); }
 }
 
-/* ---------- نوار کنترل‌های ویدیویی (Controls Bar) ---------- */
+/* ---------- نوار کنترل شناور شیشه‌ای (Floating Island Deck) ---------- */
 .vpm-controls {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(0deg, rgba(10, 14, 22, 0.95) 0%, rgba(10, 14, 22, 0.7) 60%, transparent 100%);
-  padding: 24px 18px 14px;
+  bottom: 14px;
+  left: 16px;
+  right: 16px;
+  background: rgba(11, 15, 25, 0.82);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  padding: 10px 18px 12px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  transition: opacity 0.28s ease, transform 0.28s ease;
   z-index: 20;
 }
 
 .vpm-controls.fade-out {
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(10px);
   pointer-events: none;
 }
 
-/* خط زمان / Scrubber */
+/* خط زمان / Scrubber با افکت نئونی */
 .vpm-timeline-container {
   position: relative;
   width: 100%;
@@ -265,15 +321,15 @@
 .vpm-timeline-track {
   position: relative;
   width: 100%;
-  height: 6px;
-  background: rgba(255, 255, 255, 0.25);
-  border-radius: 4px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
   overflow: visible;
-  transition: height 0.15s ease;
+  transition: height 0.18s ease;
 }
 
 .vpm-timeline-container:hover .vpm-timeline-track {
-  height: 9px;
+  height: 8px;
 }
 
 .vpm-timeline-buffer {
@@ -281,8 +337,8 @@
   top: 0;
   right: 0;
   height: 100%;
-  background: rgba(255, 255, 255, 0.4);
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
   pointer-events: none;
 }
 
@@ -291,22 +347,23 @@
   top: 0;
   right: 0;
   height: 100%;
-  background: var(--college, #F8A41D);
-  border-radius: 4px;
+  background: linear-gradient(90deg, #F8A41D 0%, #ffc048 100%);
+  border-radius: 999px;
+  box-shadow: 0 0 14px rgba(248, 164, 29, 0.7);
   pointer-events: none;
 }
 
 .vpm-timeline-thumb {
   position: absolute;
   top: 50%;
-  width: 16px;
-  height: 16px;
-  background: #fff;
-  border: 2px solid #121212;
+  width: 15px;
+  height: 15px;
+  background: #ffffff;
+  border: 3px solid #F8A41D;
   border-radius: 50%;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 12px rgba(248, 164, 29, 0.9);
   transform: translate(50%, -50%) scale(0);
-  transition: transform 0.15s ease;
+  transition: transform 0.16s ease;
   pointer-events: none;
 }
 
@@ -340,66 +397,71 @@
 }
 
 .vpm-ctrl-btn {
-  background: transparent;
-  border: none;
-  color: #fff;
-  padding: 6px 8px;
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
-  font-weight: 700;
-  transition: background 0.15s ease, transform 0.1s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .vpm-ctrl-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.24);
+  color: #fff;
   transform: translateY(-1px);
 }
 
 .vpm-ctrl-btn:active {
-  transform: translateY(0);
+  transform: translateY(0) scale(0.96);
 }
 
 .vpm-ctrl-btn svg {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
 }
 
-/* کلید‌های پرش ۱۰ ثانیه‌ای */
+/* کلید‌های پرش ۱۰ ثانیه‌ای شیشه‌ای */
 .vpm-skip-btn {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
   font-size: 11px;
-  font-weight: 900;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
-  padding: 5px 9px;
-  color: #e5e7eb;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 7px 11px;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .vpm-skip-btn:hover {
-  background: rgba(255, 255, 255, 0.22);
-  color: #fff;
-  border-color: var(--college, #F8A41D);
+  background: rgba(248, 164, 29, 0.16);
+  color: #F8A41D;
+  border-color: rgba(248, 164, 29, 0.4);
+  transform: translateY(-1px);
 }
 
 /* زمان / تایمر */
 .vpm-time-display {
   font-size: 12.5px;
   font-weight: 700;
-  color: #e5e7eb;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  color: #f1f5f9;
   letter-spacing: 0.5px;
-  padding: 0 4px;
+  padding: 0 8px;
   white-space: nowrap;
 }
 
 .vpm-time-display .total {
-  color: #9ca3af;
+  color: #94a3b8;
 }
 
 /* کنترل صدا و اسلایدر صدا */
@@ -410,15 +472,19 @@
 }
 
 .vpm-volume-slider {
-  width: 70px;
-  height: 5px;
+  width: 68px;
+  height: 4px;
   -webkit-appearance: none;
   appearance: none;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
   outline: none;
   cursor: pointer;
-  transition: width 0.2s ease;
+  transition: all 0.2s ease;
+}
+
+.vpm-volume-slider:hover {
+  height: 6px;
 }
 
 .vpm-volume-slider::-webkit-slider-thumb {
@@ -426,78 +492,101 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: var(--college, #F8A41D);
+  background: #F8A41D;
   cursor: pointer;
-  border: 1.5px solid #121212;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 8px rgba(248, 164, 29, 0.8);
 }
 
 /* سلکتور سرعت پخش */
 .vpm-speed-btn {
   font-size: 12px;
-  font-weight: 900;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 4px 8px;
-  border-radius: 6px;
-  color: #fff;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 7px 12px;
+  border-radius: 10px;
+  color: #f1f5f9;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.vpm-speed-btn:hover {
+  background: rgba(248, 164, 29, 0.16);
+  border-color: rgba(248, 164, 29, 0.4);
+  color: #F8A41D;
+  transform: translateY(-1px);
 }
 
 .vpm-speed-menu {
   position: absolute;
-  bottom: 50px;
-  left: 80px;
-  background: #18202c;
-  border: 2px solid #121212;
-  border-radius: 8px 0 8px 0;
-  box-shadow: 4px 4px 0 var(--college, #F8A41D);
+  bottom: 58px;
+  left: 50px;
+  background: rgba(14, 19, 31, 0.98);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(248, 164, 29, 0.15);
   padding: 6px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
   z-index: 30;
 }
 
 .vpm-speed-opt {
   background: transparent;
   border: none;
-  color: #fff;
-  padding: 6px 14px;
-  border-radius: 4px;
+  color: #cbd5e1;
+  padding: 7px 16px;
+  border-radius: 8px;
   font-size: 12px;
   font-weight: 800;
   cursor: pointer;
   text-align: center;
-  transition: background 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .vpm-speed-opt:hover {
   background: rgba(255, 255, 255, 0.12);
+  color: #fff;
 }
 
 .vpm-speed-opt.active {
-  background: var(--college, #F8A41D);
-  color: #121212;
+  background: #F8A41D;
+  color: #0b0f17;
+  box-shadow: 0 2px 10px rgba(248, 164, 29, 0.4);
 }
 
-/* لیست دروس و سرفصل‌ها در پایین یا کناره */
+/* لیست دروس و سرفصل‌ها در پایین */
 .vpm-footer-lessons {
-  padding: 12px 18px;
-  background: #131a24;
-  border-top: 1.5px solid #222d3d;
+  padding: 14px 22px;
+  background: rgba(12, 16, 26, 0.96);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   align-items: center;
   gap: 10px;
   overflow-x: auto;
 }
 
+.vpm-footer-lessons::-webkit-scrollbar {
+  height: 4px;
+}
+
+.vpm-footer-lessons::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
+}
+
 .vpm-lesson-pill {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  background: #1e2837;
-  border: 1.5px solid #334155;
-  border-radius: 6px 0 6px 0;
+  gap: 8px;
+  padding: 7px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
   color: #cbd5e1;
   font-size: 12px;
   font-weight: 700;
@@ -508,50 +597,328 @@
 }
 
 .vpm-lesson-pill:hover {
-  border-color: var(--college, #F8A41D);
+  border-color: rgba(248, 164, 29, 0.5);
   color: #fff;
-  background: #253346;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
 }
 
 .vpm-lesson-pill.active {
-  background: var(--college, #F8A41D);
-  color: #121212;
-  border-color: #121212;
+  background: linear-gradient(135deg, #F8A41D 0%, #ea580c 100%);
+  color: #0b0f17;
+  border-color: transparent;
   font-weight: 900;
+  box-shadow: 0 3px 14px rgba(248, 164, 29, 0.4);
 }
 
 .vpm-lesson-pill.locked {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
 /* کلیدهای میانبر در فوتر */
 .vpm-shortcuts-hint {
   font-size: 11px;
-  color: #6b7280;
+  color: #64748b;
   margin-inline-start: auto;
   white-space: nowrap;
+  font-family: ui-monospace, SFMono-Regular, monospace;
 }
 
-@media (max-width: 720px) {
-  .vpm-backdrop {
-    padding: 0;
-  }
+/* ---------- حالت تمام‌صفحه استاندارد (Fullscreen) ---------- */
+.vpm-modal:fullscreen,
+.vpm-modal:-webkit-full-screen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.vpm-modal:fullscreen .vpm-body,
+.vpm-modal:-webkit-full-screen .vpm-body {
+  flex: 1 !important;
+  max-height: none !important;
+  height: 100% !important;
+  aspect-ratio: auto !important;
+}
+
+.vpm-modal:fullscreen .vpm-controls,
+.vpm-modal:-webkit-full-screen .vpm-controls {
+  bottom: 24px;
+  left: 24px;
+  right: 24px;
+  padding: 12px 20px 14px;
+}
+
+/* ---------- رسپانسیو تبلت و موبایل (Responsive Media Queries) ---------- */
+@media (max-width: 900px) {
   .vpm-modal {
-    border-radius: 0;
-    max-height: 100vh;
-    height: 100vh;
+    max-width: 94vw;
   }
+}
+
+@media (max-width: 768px) {
+  .vpm-backdrop {
+    padding: 10px;
+    background: rgba(3, 5, 10, 0.96);
+  }
+
+  .vpm-modal {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 18px;
+    height: auto;
+    max-height: 94vh;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+  }
+
+  .vpm-header {
+    padding: 10px 14px;
+    gap: 10px;
+  }
+
+  .vpm-header-info {
+    gap: 8px;
+  }
+
+  .vpm-badge {
+    padding: 3px 8px;
+    font-size: 10px;
+    gap: 4px;
+  }
+
+  .vpm-title {
+    font-size: 13.5px;
+  }
+
+  .vpm-subtitle {
+    font-size: 11px;
+  }
+
+  .vpm-close-btn {
+    width: 32px;
+    height: 32px;
+  }
+
   .vpm-body {
-    max-height: 50vh;
+    aspect-ratio: 16 / 9;
+    max-height: none;
   }
-  .vpm-volume-slider {
-    width: 45px;
+
+  .vpm-big-play-btn {
+    width: 62px;
+    height: 62px;
   }
-  .vpm-shortcuts-hint {
-    display: none;
+
+  .vpm-big-play-btn svg {
+    width: 26px;
+    height: 26px;
   }
+
+  /* نوار کنترل‌ها در تبلت و موبایل */
+  .vpm-controls {
+    bottom: 8px;
+    left: 8px;
+    right: 8px;
+    padding: 8px 10px 9px;
+    border-radius: 13px;
+    gap: 6px;
+  }
+
+  .vpm-timeline-container {
+    height: 16px;
+  }
+
+  .vpm-timeline-thumb {
+    width: 13px;
+    height: 13px;
+  }
+
+  .vpm-buttons-row {
+    gap: 6px;
+  }
+
+  .vpm-btn-group {
+    gap: 5px;
+  }
+
+  .vpm-ctrl-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+  }
+
+  .vpm-ctrl-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .vpm-skip-btn {
+    height: 32px;
+    padding: 0 7px;
+    border-radius: 8px;
+  }
+
   .vpm-skip-btn span {
     display: none;
   }
+
+  .vpm-volume-slider {
+    width: 50px;
+  }
+
+  .vpm-time-display {
+    font-size: 11px;
+    padding: 0 4px;
+  }
+
+  .vpm-speed-btn {
+    height: 32px;
+    padding: 0 9px;
+    font-size: 11px;
+    border-radius: 8px;
+  }
+
+  .vpm-speed-menu {
+    bottom: 48px;
+    left: 36px;
+  }
+
+  .vpm-footer-lessons {
+    padding: 10px 14px;
+    gap: 6px;
+  }
+
+  .vpm-lesson-pill {
+    padding: 6px 11px;
+    font-size: 11px;
+  }
+
+  .vpm-shortcuts-hint {
+    display: none;
+  }
 }
+
+@media (max-width: 480px) {
+  .vpm-backdrop {
+    padding: 6px;
+  }
+
+  .vpm-modal {
+    border-radius: 16px;
+  }
+
+  .vpm-header {
+    padding: 8px 12px;
+  }
+
+  .vpm-badge {
+    padding: 2.5px 7px;
+    font-size: 9.5px;
+  }
+
+  .vpm-title {
+    font-size: 12.5px;
+  }
+
+  .vpm-subtitle {
+    font-size: 10.5px;
+  }
+
+  .vpm-close-btn {
+    width: 28px;
+    height: 28px;
+  }
+
+  .vpm-close-btn svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .vpm-big-play-btn {
+    width: 52px;
+    height: 52px;
+  }
+
+  .vpm-big-play-btn svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .vpm-controls {
+    bottom: 6px;
+    left: 6px;
+    right: 6px;
+    padding: 6px 8px 8px;
+    border-radius: 11px;
+    gap: 5px;
+  }
+
+  .vpm-timeline-container {
+    height: 14px;
+  }
+
+  .vpm-btn-group {
+    gap: 3px;
+  }
+
+  .vpm-ctrl-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+  }
+
+  .vpm-ctrl-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .vpm-skip-btn {
+    height: 28px;
+    padding: 0 5px;
+    border-radius: 7px;
+  }
+
+  .vpm-skip-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* در گوشی‌های کوچک اسلایدر صدا مخفی می‌شود چون با دکمه‌های فیزیکی صدا تنظیم می‌شود */
+  .vpm-volume-slider {
+    display: none;
+  }
+
+  .vpm-time-display {
+    font-size: 10px;
+    padding: 0 2px;
+    letter-spacing: -0.2px;
+  }
+
+  .vpm-speed-btn {
+    height: 28px;
+    padding: 0 6px;
+    font-size: 10px;
+    border-radius: 7px;
+  }
+
+  .vpm-speed-menu {
+    bottom: 42px;
+    left: 28px;
+  }
+
+  .vpm-footer-lessons {
+    padding: 8px 12px;
+    gap: 5px;
+  }
+
+  .vpm-lesson-pill {
+    padding: 5px 9px;
+    font-size: 10.5px;
+  }
+}
+
