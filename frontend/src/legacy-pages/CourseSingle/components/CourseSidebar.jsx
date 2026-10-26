@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { CheckCircle2, Star as LucideStar } from "lucide-react";
+import { getCourseImageUrl } from "@/utils/getImageUrl.js";
 
 export function CourseTopbar({ course }) {
   const DEPT_MAP = {
@@ -78,7 +79,7 @@ export function CourseSidebar({
           title="کلیک برای پخش ویدیو با پلیر پیشرفته"
         >
           <img
-            src={course.img ? (course.img.startsWith("http") ? course.img : `${process.env.NEXT_PUBLIC_FILE_URL || "http://localhost:5000/"}${course.img.replace(/^\//, "")}`) : (course.pattern || course.previewPoster || "/assets/StatCard/blue.png")}
+            src={getCourseImageUrl(course.img, course.pattern || course.previewPoster || "/assets/StatCard/blue.png")}
             alt={course.title}
             className="cs-thumb-side-img"
           />

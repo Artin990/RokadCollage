@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { toggleWishlist } from "@/data/panelStore.js";
 import { isWishlisted, isEnrolledIn, isCourseInPerson } from "@/data/selectors.js";
+import { getCourseImageUrl } from "@/utils/getImageUrl.js";
 
 /**
  * دپارتمان‌ها و کانفیگ آیکون و تم
@@ -123,7 +124,7 @@ export default function MyCourseCard({ item, onOpenLicense, store }) {
     <article className="mc-card">
       {/* بخش ویژوال با پترن و آیکون دپارتمان */}
       <div className={`mc-card-visual ${dept.themeClass}`}>
-        <img src={course.img || dept.pattern} alt="" className="mc-card-pattern" aria-hidden="true" />
+        <img src={getCourseImageUrl(course.img, dept.pattern)} alt="" className="mc-card-pattern" aria-hidden="true" />
 
         {/* دکمه نشان کردن در گوشه بالا */}
         <button

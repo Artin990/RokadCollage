@@ -4,6 +4,7 @@ import { DEPT_PERSONA } from "@/data/departments.js";
 import { toggleWishlist } from "@/data/panelStore.js";
 import { isWishlisted } from "@/data/selectors.js";
 import { CourseIcon, StarIcon, ClockIcon, UsersIcon, BookIcon } from "./DepartmentIcons.jsx";
+import { getCourseImageUrl, isCustomImage } from "@/utils/getImageUrl.js";
 
 export const getSlugForDeptCourse = (c) => {
   if (c?.slug) return c.slug;
@@ -17,6 +18,8 @@ export default function DepartmentCourseCard({ c, rot, persona: cardPersona, sto
   const slug = getSlugForDeptCourse(c);
   const isSaved = isWishlisted(slug, store);
   const isOnline = c.mode === "online" || c.mode === "غیرحضوری" || c.mode === "غیر حضوری";
+  const customCover = isCustomImage(c.img);
+  const coverUrl = customCover ? getCourseImageUrl(c.img) : null;
 
   return (
     <Link
@@ -39,7 +42,14 @@ export default function DepartmentCourseCard({ c, rot, persona: cardPersona, sto
       }}
     >
       <div className="dp-card-cover">
-        <img className="dp-cover-pattern" src={cardTheme.pattern} alt="" aria-hidden="true" />
+        {customCover ? (
+          <img className="dp-cover-custom-img" src={coverUrl} alt={c.title || ""} />
+        ) : (
+          <>
+            <img className="dp-cover-pattern" src={cardTheme.pattern} alt="" aria-hidden="true" />
+            <CourseIcon id={c.ic} size={34} />
+          </>
+        )}
         {c.tag && <span className="dp-card-tag">{c.tag}</span>}
         <button
           type="button"
@@ -54,7 +64,6 @@ export default function DepartmentCourseCard({ c, rot, persona: cardPersona, sto
         >
           <Bookmark size={15} fill={isSaved ? "currentColor" : "none"} stroke="currentColor" strokeWidth={2.2} />
         </button>
-        <CourseIcon id={c.ic} size={34} />
       </div>
       <div className="dp-card-body">
         <div className="dp-card-top-row">

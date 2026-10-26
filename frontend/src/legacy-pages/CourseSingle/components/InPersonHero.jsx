@@ -8,6 +8,7 @@ import {
   Phone,
   ShieldCheck,
 } from "lucide-react";
+import { getCourseImageUrl } from "@/utils/getImageUrl.js";
 
 const FA = "۰۱۲۳۴۵۶۷۸۹";
 export const toFa = (n) => String(n ?? "").replace(/\d/g, (d) => FA[d]);
@@ -107,7 +108,7 @@ export default function InPersonHero({
           <div className="cs-ip-hero-grid">
             <div className="cs-ip-hero-media">
               <img
-                src={course.pattern || course.img || "/assets/StatCard/blue.png"}
+                src={getCourseImageUrl(course.img, course.pattern || "/assets/StatCard/blue.png")}
                 alt={course.title}
                 className="cs-ip-hero-img"
               />

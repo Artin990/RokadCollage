@@ -1,6 +1,7 @@
 import React from "react";
 import { Star as LucideStar } from "lucide-react";
 import { PlayGlyph } from "./CoursePanels.jsx";
+import { getCourseImageUrl } from "@/utils/getImageUrl.js";
 
 export default function CourseMobilePlayer({ course, headRef, onOpenVideo }) {
   return (
@@ -11,7 +12,7 @@ export default function CourseMobilePlayer({ course, headRef, onOpenVideo }) {
         onClick={onOpenVideo}
       >
         <img
-          src={course.pattern || "/assets/StatCard/blue.png"}
+          src={getCourseImageUrl(course.img, course.pattern || "/assets/StatCard/blue.png")}
           alt={course.title}
           style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
         />

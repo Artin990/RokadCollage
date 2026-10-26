@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Compass, ChevronLeft, Star, Clock, Users, ArrowLeft, Code } from "lucide-react";
 import { DEPT_ICONS, CourseModeBadge, CourseSaveButton } from "./CourseCardComponents.jsx";
+import { getCourseImageUrl, isCustomImage } from "@/utils/getImageUrl.js";
 
 function SuggestedDeptGroup({ group, store, isMobile }) {
   const [idx, setIdx] = useState(0);
@@ -142,10 +143,16 @@ function SuggestedDeptGroup({ group, store, isMobile }) {
               }}
             >
               <div className="ch-card-cover" style={{ background: group.badgeBg }}>
-                <img src={group.pattern} alt="" className="ch-cover-pat" aria-hidden="true" />
+                {isCustomImage(c.img) ? (
+                  <img src={getCourseImageUrl(c.img)} alt={c.title} className="ch-cover-pat" style={{ objectFit: "cover", opacity: 1, zIndex: 0 }} />
+                ) : (
+                  <>
+                    <img src={group.pattern} alt="" className="ch-cover-pat" aria-hidden="true" />
+                    <DeptIcon size={34} style={{ color: group.badgeColor, position: "relative", zIndex: 1 }} />
+                  </>
+                )}
                 <span className={`ch-card-tag ${c.tagType}`}>{c.tag}</span>
                 <CourseSaveButton slug={c.slug} store={store} />
-                <DeptIcon size={34} style={{ color: group.badgeColor, position: "relative", zIndex: 1 }} />
               </div>
 
               <div className="ch-card-body">

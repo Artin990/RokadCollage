@@ -11,6 +11,7 @@ import {
   MODE_LABEL,
   MODE_ICON,
 } from "./coursesSectionData.jsx";
+import { getCourseImageUrl, isCustomImage } from "@/utils/getImageUrl.js";
 
 export function CourseCard({ course, index, store }) {
   const cat = (course.category && catColors[course.category]) || COLOR_PALETTE[index % COLOR_PALETTE.length];
@@ -62,12 +63,20 @@ export function CourseCard({ course, index, store }) {
             <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
           </svg>
         </button>
-        <div className="v2-cover">
-          <span className="v2-num">
+        <div className="v2-cover" style={isCustomImage(course.img) ? { position: "relative", overflow: "hidden" } : undefined}>
+          {isCustomImage(course.img) ? (
+            <img
+              src={getCourseImageUrl(course.img)}
+              alt={course.title}
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 }}
+            />
+          ) : (
+            <div className="v2-icon">{icon}</div>
+          )}
+          <span className="v2-num" style={{ zIndex: 1 }}>
             {num.slice(0, 1)}
             <span>{num.slice(1)}</span>
           </span>
-          <div className="v2-icon">{icon}</div>
         </div>
         <div className="v2-content">
           <div className="v2-body">
