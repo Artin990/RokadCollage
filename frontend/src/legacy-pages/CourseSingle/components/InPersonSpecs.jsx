@@ -1,11 +1,8 @@
 import React from "react";
 import {
   Layers,
-  Calendar,
   Clock,
   CalendarDays,
-  CreditCard,
-  UserCheck,
   CalendarRange,
   BookOpen,
 } from "lucide-react";
@@ -43,19 +40,6 @@ export default function InPersonSpecs({
       title: "روزهای برگزاری",
       value: course.scheduleDays || course.days || schedule?.days || "شنبه و چهارشنبه",
       icon: CalendarDays,
-    },
-    {
-      id: "tuition",
-      title: "شهریه مصوب هر نفر (تومان)",
-      value: `${displayPrice} تومان`,
-      icon: CreditCard,
-      badge: "مصوب شورای آموزشی",
-    },
-    {
-      id: "teacher",
-      title: "نام مدرس پیشنهادی",
-      value: course.proposedTeacher || teacherName || "اساتید هیئت علمی کالج رکاد",
-      icon: UserCheck,
     },
     {
       id: "dates",

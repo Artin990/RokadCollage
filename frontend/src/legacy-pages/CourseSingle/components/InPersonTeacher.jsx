@@ -1,5 +1,5 @@
 import React from "react";
-import { FileText, UserCheck } from "lucide-react";
+import { FileText, UserCheck, Trophy } from "lucide-react";
 
 export function InPersonAbout({ course }) {
   const isWorkshop =
@@ -43,6 +43,24 @@ export function InPersonAbout({ course }) {
               <p>{course.description}</p>
             </div>
           ) : null}
+
+          {/* توضیح کوتاه رویداد پایانی و ژوژمان برای دوره‌های حضوری */}
+          {!isWorkshop && (
+            <div className="cs-desc-joujman-box">
+              <div className="flex items-start gap-3 bg-amber-50/90 border-2 border-stone-900 rounded-[14px_0_14px_0] p-4 mt-3 shadow-[2.5px_2.5px_0_#292827] text-stone-800 text-sm leading-relaxed">
+                <Trophy size={18} className="text-amber-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <strong className="text-stone-900 font-extrabold block mb-1">
+                    رویداد پایانی و ژوژمان:
+                  </strong>
+                  <span>
+                    {course.joujmanEvent?.description ||
+                      "در انتهای هر دوره، یک جلسه رسمی ارائه پروژه‌های هنرجویان با دعوت از والدین و داوری اساتید متخصص جهت ارزیابی، جذب در استودیو رکاد و تقویت اعتمادبه‌نفس برگزار می‌شود."}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>

@@ -11,7 +11,6 @@ import InPersonSpecs from "./components/InPersonSpecs.jsx";
 import InPersonSprints from "./components/InPersonSprints.jsx";
 import InPersonVenue from "./components/InPersonVenue.jsx";
 import { InPersonAbout, InPersonTeacher } from "./components/InPersonTeacher.jsx";
-import InPersonJoujman from "./components/InPersonJoujman.jsx";
 import { CheckCircle2, MapPin, Calendar, Clock, X } from "lucide-react";
 
 export default function CourseSingleInPerson({ course, slug }) {
@@ -206,8 +205,6 @@ export default function CourseSingleInPerson({ course, slug }) {
             />
           )}
 
-          {/* رویداد پایانی و ژوژمان (بخش الزامی و پررنگ دوره حضوری نوجوانان) */}
-          <InPersonJoujman course={course} />
 
           {/* زمان‌بندی و موقعیت دسترسی کمپوس (فقط برای کارگاه‌ها) */}
           {isWorkshop && (
