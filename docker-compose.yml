@@ -26,7 +26,7 @@ services:
 
   backend:
     build:
-      context: ./backend/API
+      context: ./API
       dockerfile: Dockerfile
       target: production
     image: rokad-backend:latest
@@ -64,7 +64,7 @@ services:
 
   admin:
     build:
-      context: ./backend/Admin
+      context: ./Admin
       dockerfile: Dockerfile
       target: production
     image: rokad-admin:latest
