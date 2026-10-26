@@ -49,7 +49,7 @@ export default function InPersonSpecs({
             <Layers size={18} />
           </div>
           <div className="cs-ip-sec-titles">
-            <h2 className="cs-ip-sec-title">مشخصات ساختار دوره حضوری</h2>
+            <h2 className="cs-ip-sec-title">مشخصات دوره حضوری</h2>
           </div>
         </div>
         <span className="cs-ip-sec-badge highlight">شناسه رسمی دوره</span>
