@@ -43,42 +43,6 @@ export const MOCK_STATIC_COURSES = [
     ]
   },
   {
-    "_id": "c-dore-hozori",
-    "id": "dore-hozori",
-    "slug": "dore-hozori",
-    "title": "دوره حضوری برنامه‌نویسی وب و طراحی محصول نوجوانان",
-    "category": "فناوری اطلاعات",
-    "mode": "in-person",
-    "courseType": "دوره حضوری",
-    "isOnline": false,
-    "isInPerson": true,
-    "tags": ["دوره حضوری", "نوجوانان", "فرانت‌اند"],
-    "price": 8500000,
-    "tuitionPerPerson": 8500000,
-    "approximateSessions": "۱۸ جلسه تقریبی",
-    "totalHours": "۵۴ ساعت آموزش تخصصی",
-    "scheduleDays": "یکشنبه و سه‌شنبه",
-    "proposedTeacher": "مهندس آرش تهرانی",
-    "approximateStartDate": "۱۵ آبان ۱۴۰۴",
-    "approximateEndDate": "۳۰ دی ۱۴۰۴",
-    "joujmanEvent": {
-      "title": "رویداد پایانی و ژوژمان",
-      "description": "در انتهای هر دوره، یک جلسه رسمی پروژه‌های نوجوانان با دعوت رسمی از والدین و ۲ الی ۳ نفر از اساتید متخصص در این حوزه برگزار می‌شود که باعث افزایش اعتماد اولیاء، ارزیابی دقیق فنی، سنجش برای جذب در استودیو رکاد و ایجاد حس افتخار و انگیزه در نوجوانان می‌شود.",
-      "isActive": true
-    },
-    "duration": "۵۴ ساعت",
-    "sessions": 18,
-    "studentsCount": 24,
-    "rating": 5.0,
-    "teacher": {
-      "fullName": "مهندس آرش تهرانی",
-      "name": "مهندس آرش تهرانی",
-      "role": "مدرس ارشد و راهبر دوره حضوری"
-    },
-    "instructor": "مهندس آرش تهرانی",
-    "description": "دوره جامع و پروژه‌محور برنامه‌نویسی وب و خلاقیت دیجیتال ویژه رده سنی ۱۲ الی ۱۸ سال همراه با ژوژمان پایانی"
-  },
-  {
     "_id": "c-2",
     "id": 2,
     "slug": "react-nextjs",

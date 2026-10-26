@@ -43,8 +43,8 @@ export default function InPersonCourseCard({ course, onEdit, onDelete, onView })
             {course.category}
           </Badge>
 
-          <Badge variant="primary" size="sm">
-            حضوری
+          <Badge variant={course.courseType === "کارگاه حضوری" ? "amber" : "primary"} size="sm">
+            {course.courseType || "دوره حضوری"}
           </Badge>
         </div>
 

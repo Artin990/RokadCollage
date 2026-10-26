@@ -21,8 +21,7 @@ export function getCourseBySlug(slug) {
   }
 
   // تلاش برای مچ کردن دوره‌های حضوری و بوت‌کمپ‌ها
-  if (cleanSlug.includes("bootcamp") || cleanSlug.includes("حضوری") || cleanSlug.includes("inperson") || cleanSlug.includes("in-person") || cleanSlug.includes("dore") || cleanSlug.includes("دوره")) {
-    if (cleanSlug.includes("dore") || cleanSlug.includes("دوره") || cleanSlug.includes("teen") || cleanSlug.includes("نوجوان")) return ALL_COURSES["dore-hozori"];
+  if (cleanSlug.includes("bootcamp") || cleanSlug.includes("حضوری") || cleanSlug.includes("inperson") || cleanSlug.includes("in-person")) {
     if (cleanSlug.includes("react") || cleanSlug.includes("frontend") || cleanSlug.includes("کدنویسی") || cleanSlug.includes("web")) return ALL_COURSES["react-bootcamp"];
     if (cleanSlug.includes("ux") || cleanSlug.includes("ui") || cleanSlug.includes("طراحی") || cleanSlug.includes("figma")) return ALL_COURSES["ux-bootcamp"];
     if (cleanSlug.includes("graphic") || cleanSlug.includes("گرافیک") || cleanSlug.includes("فتوشاپ") || cleanSlug.includes("photoshop")) return ALL_COURSES["graphic-bootcamp"];
