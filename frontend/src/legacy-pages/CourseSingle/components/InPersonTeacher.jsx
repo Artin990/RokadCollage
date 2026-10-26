@@ -2,27 +2,35 @@ import React from "react";
 import { FileText, UserCheck } from "lucide-react";
 
 export function InPersonAbout({ course }) {
+  const isWorkshop =
+    course?.courseType === "کارگاه حضوری" ||
+    (Array.isArray(course?.tags) &&
+      course.tags.some((t) => typeof t === "string" && t.includes("کارگاه"))) ||
+    (course?.title && course.title.includes("کارگاه"));
+
+  const typeLabel = isWorkshop ? "کارگاه حضوری" : "دوره حضوری";
+
   return (
-    <section className="cs-ip-section-card" id="about-workshop">
+    <section className="cs-ip-section-card" id="about-course">
       <div className="cs-ip-sec-header">
         <div className="cs-ip-sec-header-right">
-          <span className="cs-ip-sec-num">۰۱</span>
+          <span className="cs-ip-sec-num">۰۲</span>
           <div className="cs-ip-sec-icon-box">
             <FileText size={18} />
           </div>
           <div className="cs-ip-sec-titles">
-            <h2 className="cs-ip-sec-title">درباره این کارگاه حضوری</h2>
-            <span className="cs-ip-sec-sub">مشخصات، اهداف و رویکرد اجرایی دوره</span>
+            <h2 className="cs-ip-sec-title">درباره این {typeLabel}</h2>
+            <span className="cs-ip-sec-sub">مشخصات، اهداف آموزشی و رویکرد اجرایی دوره</span>
           </div>
         </div>
-        <span className="cs-ip-sec-badge">معرفی کارگاه</span>
+        <span className="cs-ip-sec-badge">معرفی {typeLabel}</span>
       </div>
 
       <div className="cs-ip-sec-body">
         <div className="cs-inperson-desc-panel">
           <div className="cs-desc-intro-card">
             <p className="cs-desc-lede-text">
-              {course.lede || (typeof course.description === "string" ? course.description : "کارگاه تخصصی و پروژه‌محور کالج رکاد")}
+              {course.lede || (typeof course.description === "string" ? course.description : `آموزش تخصصی و پروژه‌محور در ${typeLabel} کالج رکاد`)}
             </p>
           </div>
           {Array.isArray(course.description) && course.description.length > 0 ? (
@@ -42,21 +50,23 @@ export function InPersonAbout({ course }) {
   );
 }
 
-export function InPersonTeacher({ teacher }) {
+export function InPersonTeacher({ teacher, isWorkshop = false }) {
+  const typeLabel = isWorkshop ? "کارگاه" : "دوره حضوری";
+
   return (
-    <section className="cs-ip-section-card" id="workshop-instructor">
+    <section className="cs-ip-section-card" id="course-instructor">
       <div className="cs-ip-sec-header">
         <div className="cs-ip-sec-header-right">
-          <span className="cs-ip-sec-num">۰۴</span>
+          <span className="cs-ip-sec-num">۰۵</span>
           <div className="cs-ip-sec-icon-box">
             <UserCheck size={18} />
           </div>
           <div className="cs-ip-sec-titles">
-            <h2 className="cs-ip-sec-title">مدرس و سرپرست کارگاه</h2>
+            <h2 className="cs-ip-sec-title">مدرس و راهبر {typeLabel}</h2>
             <span className="cs-ip-sec-sub">راهبری مستقیم پروژه، حل تمرین و انتقال تجربه</span>
           </div>
         </div>
-        <span className="cs-ip-sec-badge">راهبر کارگاه</span>
+        <span className="cs-ip-sec-badge">راهبر {typeLabel}</span>
       </div>
 
       <div className="cs-ip-sec-body">

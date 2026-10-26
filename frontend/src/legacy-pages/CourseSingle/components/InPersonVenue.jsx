@@ -1,21 +1,23 @@
 import React from "react";
 import { MapPin, Train, Car, Calendar, ExternalLink } from "lucide-react";
 
-export default function InPersonVenue({ venue, cleanDays, cleanHours, cleanRoom }) {
+export default function InPersonVenue({ venue, cleanDays, cleanHours, cleanRoom, isWorkshop = false }) {
+  const typeLabel = isWorkshop ? "کارگاه" : "دوره حضوری";
+
   return (
     <section className="cs-ip-section-card" id="campus-location">
       <div className="cs-ip-sec-header">
         <div className="cs-ip-sec-header-right">
-          <span className="cs-ip-sec-num">۰۳</span>
+          <span className="cs-ip-sec-num">۰۴</span>
           <div className="cs-ip-sec-icon-box">
             <MapPin size={18} />
           </div>
           <div className="cs-ip-sec-titles">
             <h2 className="cs-ip-sec-title">زمان‌بندی، موقعیت و دسترسی کمپوس</h2>
-            <span className="cs-ip-sec-sub">روزهای برگزاری کارگاه، آدرس دقیق و راه‌های دسترسی</span>
+            <span className="cs-ip-sec-sub">روزهای برگزاری {typeLabel}، آدرس دقیق و راه‌های دسترسی</span>
           </div>
         </div>
-        <span className="cs-ip-sec-badge">محل و زمان کارگاه</span>
+        <span className="cs-ip-sec-badge">محل و زمان {typeLabel}</span>
       </div>
 
       <div className="cs-ip-sec-body">

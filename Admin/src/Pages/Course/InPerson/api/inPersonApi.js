@@ -47,6 +47,19 @@ export async function prepareInPersonPayload(values, isUpdate = false) {
 
   const payload = {
     ...sharedPayload,
+    courseType: values.courseType || "دوره حضوری",
+    approximateSessions: values.approximateSessions || "",
+    totalHours: values.totalHours || "",
+    scheduleDays: values.scheduleDays || "",
+    tuitionPerPerson: values.tuitionPerPerson ? Number(values.tuitionPerPerson) : (values.price ? Number(values.price) : 0),
+    proposedTeacher: values.proposedTeacher || "",
+    approximateStartDate: values.approximateStartDate || "",
+    approximateEndDate: values.approximateEndDate || "",
+    joujmanEvent: values.joujmanEvent || {
+      title: "رویداد پایانی و ژوژمان",
+      description: "در انتهای هر دوره، یک جلسه رسمی پروژه‌های نوجوانان با دعوت رسمی از والدین و ۲ الی ۳ نفر از اساتید متخصص در این حوزه برگزار می‌شود که باعث افزایش اعتماد اولیاء، ارزیابی دقیق فنی، سنجش برای جذب در استودیو رکاد و ایجاد حس افتخار و انگیزه در نوجوانان می‌شود.",
+      isActive: true,
+    },
     location: {
       address: values.location?.address || "",
       googleMapEmbedUrl: values.location?.googleMapEmbedUrl || "",

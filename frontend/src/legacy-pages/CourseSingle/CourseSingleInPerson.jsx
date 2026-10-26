@@ -7,9 +7,11 @@ import { isEnrolledIn, isWishlisted as checkWishlisted } from "../../data/select
 import { getCourseLicense } from "@/services/enrollmentService.js";
 import CheckoutModal from "../Checkout/CheckoutModal.jsx";
 import InPersonHero from "./components/InPersonHero.jsx";
+import InPersonSpecs from "./components/InPersonSpecs.jsx";
 import InPersonSprints from "./components/InPersonSprints.jsx";
 import InPersonVenue from "./components/InPersonVenue.jsx";
 import { InPersonAbout, InPersonTeacher } from "./components/InPersonTeacher.jsx";
+import InPersonJoujman from "./components/InPersonJoujman.jsx";
 import { CheckCircle2, MapPin, Calendar, Clock, X } from "lucide-react";
 
 export default function CourseSingleInPerson({ course, slug }) {
@@ -45,12 +47,12 @@ export default function CourseSingleInPerson({ course, slug }) {
             _id: course?._id || course?.id,
             slug: courseSlug,
             title: course?.title,
-            teacher: course?.teacher?.name || course?.teachers?.[0]?.name,
+            teacher: course?.proposedTeacher || course?.teacher?.name || course?.teachers?.[0]?.name,
           });
         }
       })
       .catch(() => {});
-  }, [isLoggedIn, course?._id, course?.id, slug, courseSlug]);
+  }, [isLoggedIn, course?._id, course?.id, slug, courseSlug, course?.proposedTeacher]);
 
   const isEnrolled =
     serverEnrolled ||
@@ -59,23 +61,43 @@ export default function CourseSingleInPerson({ course, slug }) {
     (slug && isEnrolledIn(slug, store));
   const isWished = isLoggedIn && checkWishlisted(courseSlug, store);
 
+  const isWorkshop =
+    course.courseType === "کارگاه حضوری" ||
+    (Array.isArray(course.tags) &&
+      course.tags.some((t) => typeof t === "string" && t.includes("کارگاه"))) ||
+    (course.title && course.title.includes("کارگاه"));
+
+  const typeLabel = isWorkshop ? "کارگاه حضوری" : "دوره حضوری";
+
+  const numPrice =
+    course.tuitionPerPerson !== undefined && course.tuitionPerPerson !== 0
+      ? course.tuitionPerPerson
+      : (course.finalPrice !== undefined ? course.finalPrice : course.price);
+
+  const displayPrice =
+    !numPrice || numPrice === 0 || numPrice === "رایگان"
+      ? "رایگان"
+      : typeof numPrice === "number"
+      ? Number(numPrice).toLocaleString("fa-IR")
+      : String(numPrice).replace(/تومان/g, "").trim();
+
   const venue = {
     name: course.location?.name || "کمپوس مرکزی کالج رکاد",
     address: course.location?.address || "تهران، میدان آزادی، بلوار اکبری، کالج رکاد",
     metro: "۲ دقیقه پیاده‌روی از ایستگاه مترو میدان آزادی",
     parking: "دارای پارکینگ اختصاصی برای هنرجویان",
-    room: course.location?.room || "سالن کارگاهی تخصصی",
+    room: course.location?.room || "سالن کارگاهی و کدهای حضوری",
     neshanUrl: course.location?.neshanEmbedUrl || "https://nshn.ir",
     baladUrl: course.location?.baladEmbedUrl || "https://balad.ir",
     googleMapUrl: course.location?.googleMapEmbedUrl || "https://maps.google.com",
   };
 
   const schedule = {
-    days: course.days || "شنبه و چهارشنبه",
+    days: course.scheduleDays || course.days || "شنبه و چهارشنبه",
     hours: course.hours || "۱۶:۰۰ الی ۲۰:۰۰",
     totalWeeks: course.duration || "۱۰ هفته",
-    totalHours: course.duration ? `${course.duration} آموزش و کارگاه عملی` : "۸۰ ساعت کارگاهی + ۴۰ ساعت منتورینگ",
-    startDate: course.startDate || "به‌زودی",
+    totalHours: course.totalHours || (course.duration ? `${course.duration} آموزش و کارگاه عملی` : "۴۸ ساعت آموزش تخصصی"),
+    startDate: course.approximateStartDate || course.startDate || "به‌زودی",
   };
 
   const capacity = {
@@ -97,17 +119,17 @@ export default function CourseSingleInPerson({ course, slug }) {
 
   const firstTeacher = Array.isArray(course.teachers) && course.teachers.length > 0 ? course.teachers[0] : course.teacher;
   const teacher = {
-    name: firstTeacher?.name || firstTeacher?.fullName || "استاد کالج رکاد",
-    role: firstTeacher?.role || "مدرس ارشد و سرپرست کارگاه حضوری",
+    name: course.proposedTeacher || firstTeacher?.name || firstTeacher?.fullName || "استاد کالج رکاد",
+    role: firstTeacher?.role || (isWorkshop ? "مدرس ارشد و سرپرست کارگاه حضوری" : "مدرس ارشد و راهبر دوره حضوری"),
     bio: firstTeacher?.bio || firstTeacher?.description || "مدرس باسابقه و راهبر دوره‌های تخصصی کالج رکاد.",
-    initial: (firstTeacher?.name || firstTeacher?.fullName || "رکاد").slice(0, 2),
+    initial: (course.proposedTeacher || firstTeacher?.name || firstTeacher?.fullName || "رکاد").slice(0, 2),
   };
 
   const handleBookmarkClick = () => {
     if (!isLoggedIn) {
       try {
         sessionStorage.setItem("rokad_auth_redirect", `course/${courseSlug}`);
-        sessionStorage.setItem("rokad_auth_msg", `برای نشان کردن کارگاه «${course.title}»، لطفاً ابتدا حساب کاربری بسازید.`);
+        sessionStorage.setItem("rokad_auth_msg", `برای نشان کردن «${course.title}»، لطفاً ابتدا حساب کاربری بسازید.`);
       } catch (_) {}
       window.dispatchEvent(
         new CustomEvent("rokad_auth_required", {
@@ -126,7 +148,7 @@ export default function CourseSingleInPerson({ course, slug }) {
     if (!isLoggedIn) {
       try {
         sessionStorage.setItem("rokad_auth_redirect", `course/${courseSlug}`);
-        sessionStorage.setItem("rokad_auth_msg", `برای ثبت‌نام در کارگاه «${course.title}»، لطفاً ابتدا حساب کاربری بسازید.`);
+        sessionStorage.setItem("rokad_auth_msg", `برای ثبت‌نام در «${course.title}»، لطفاً ابتدا حساب کاربری بسازید.`);
       } catch (_) {}
       window.dispatchEvent(
         new CustomEvent("rokad_auth_required", {
@@ -159,7 +181,18 @@ export default function CourseSingleInPerson({ course, slug }) {
 
       <div className="container">
         <div className="cs-ip-sections-stack">
+          {/* مشخصات ساختار دوره حضوری (شامل عنوان، جلسات، ساعات، روزها، شهریه، مدرس پیشنهادی، تاریخ‌ها) */}
+          <InPersonSpecs
+            course={course}
+            schedule={schedule}
+            displayPrice={displayPrice}
+            teacherName={teacher.name}
+          />
+
+          {/* درباره این دوره/کارگاه حضوری */}
           <InPersonAbout course={course} />
+
+          {/* سرفصل‌ها و اسپرینت‌های دوره */}
           {liveSprints.length > 0 && (
             <InPersonSprints
               sprints={liveSprints}
@@ -168,13 +201,21 @@ export default function CourseSingleInPerson({ course, slug }) {
               setOpenSprint={setOpenSprint}
             />
           )}
+
+          {/* رویداد پایانی و ژوژمان (بخش الزامی و پررنگ دوره حضوری نوجوانان) */}
+          <InPersonJoujman course={course} />
+
+          {/* زمان‌بندی و موقعیت دسترسی کمپوس */}
           <InPersonVenue
             venue={venue}
             cleanDays={schedule.days}
             cleanHours={schedule.hours}
             cleanRoom={venue.room}
+            isWorkshop={isWorkshop}
           />
-          <InPersonTeacher teacher={teacher} />
+
+          {/* مدرس و راهبر دوره */}
+          <InPersonTeacher teacher={teacher} isWorkshop={isWorkshop} />
         </div>
       </div>
 
@@ -214,7 +255,7 @@ export default function CourseSingleInPerson({ course, slug }) {
 
             <h3 className="font-black text-lg text-stone-900 mb-2">{course.title}</h3>
             <p className="text-sm font-semibold text-stone-600 mb-4 leading-relaxed">
-              ثبت‌نام شما در این کارگاه حضوری تکمیل گردیده است. مشخصات حضور در کارگاه به شرح زیر است:
+              ثبت‌نام شما در این {typeLabel} تکمیل گردیده است. مشخصات حضور به شرح زیر است:
             </p>
 
             <div className="space-y-3 bg-stone-50 border border-stone-200 rounded-xl p-4 text-sm font-bold text-stone-800">

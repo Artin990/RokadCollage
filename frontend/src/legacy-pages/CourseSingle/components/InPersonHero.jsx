@@ -1,6 +1,17 @@
 import React from "react";
 import Link from "next/link";
-import { ArrowLeft, MapPin, Bookmark, Calendar, Clock, CheckCircle2, Phone, ShieldCheck } from "lucide-react";
+import {
+  ArrowLeft,
+  MapPin,
+  Bookmark,
+  Calendar,
+  Clock,
+  CheckCircle2,
+  Phone,
+  ShieldCheck,
+  Layers,
+  CalendarDays,
+} from "lucide-react";
 
 const FA = "۰۱۲۳۴۵۶۷۸۹";
 export const toFa = (n) => String(n ?? "").replace(/\d/g, (d) => FA[d]);
@@ -16,7 +27,19 @@ export default function InPersonHero({
   onCheckoutOpen,
   onOpenEnrollmentInfo,
 }) {
-  const numPrice = course.finalPrice !== undefined ? course.finalPrice : course.price;
+  const isWorkshop =
+    course.courseType === "کارگاه حضوری" ||
+    (Array.isArray(course.tags) &&
+      course.tags.some((t) => typeof t === "string" && t.includes("کارگاه"))) ||
+    (course.title && course.title.includes("کارگاه"));
+
+  const typeLabel = isWorkshop ? "کارگاه حضوری" : "دوره حضوری";
+
+  const numPrice =
+    course.tuitionPerPerson !== undefined && course.tuitionPerPerson !== 0
+      ? course.tuitionPerPerson
+      : (course.finalPrice !== undefined ? course.finalPrice : course.price);
+
   const isFree = !numPrice || numPrice === 0 || numPrice === "رایگان";
   const displayPrice = isFree
     ? "رایگان"
@@ -51,7 +74,7 @@ export default function InPersonHero({
         <div className="cs-inperson-top-actions">
           <div className="cs-inperson-top-badge">
             <MapPin size={12} strokeWidth={2.5} />
-            <span>کارگاه حضوری</span>
+            <span>{typeLabel}</span>
           </div>
 
           <button
@@ -71,20 +94,20 @@ export default function InPersonHero({
           <div className="cs-ip-hero-grid">
             <div className="cs-ip-hero-media">
               <img
-                src={course.pattern || "/assets/StatCard/blue.png"}
+                src={course.pattern || course.img || "/assets/StatCard/blue.png"}
                 alt={course.title}
                 className="cs-ip-hero-img"
               />
               <span className="cs-ip-hero-tag">
                 <MapPin size={12} strokeWidth={2.5} />
-                <span>کمپوس آزادی</span>
+                <span>{course.location?.room || "کمپوس آزادی"}</span>
               </span>
             </div>
 
             <div className="cs-ip-hero-content">
               <div className="cs-ip-hero-header-info">
                 <div className="cs-ip-hero-topline">
-                  <span className="cs-ip-dept-tag">{course.departmentFa || "دوره حضوری"}</span>
+                  <span className="cs-ip-dept-tag">{course.departmentFa || typeLabel}</span>
                 </div>
 
                 <h1 className="cs-ip-hero-title">{course.title}</h1>
@@ -92,17 +115,35 @@ export default function InPersonHero({
                 <div className="cs-ip-hero-pills">
                   <span className="ip-pill">
                     <Calendar size={13} strokeWidth={2.2} />
-                    <span>شروع: {schedule.startDate}</span>
+                    <span>
+                      شروع: {course.approximateStartDate || schedule.startDate}
+                      {course.approximateEndDate ? ` تا ${course.approximateEndDate}` : ""}
+                    </span>
                   </span>
                   <span className="ip-pill">
                     <Clock size={13} strokeWidth={2.2} />
-                    <span>طول دوره: {schedule.totalWeeks}</span>
+                    <span>طول دوره: {course.totalHours || schedule.totalHours || schedule.totalWeeks}</span>
                   </span>
+                  {(course.approximateSessions || course.sessionsCount) && (
+                    <span className="ip-pill">
+                      <Layers size={13} strokeWidth={2.2} />
+                      <span>{course.approximateSessions || `${course.sessionsCount} جلسه`}</span>
+                    </span>
+                  )}
+                  {(course.scheduleDays || schedule.days) && (
+                    <span className="ip-pill">
+                      <CalendarDays size={13} strokeWidth={2.2} />
+                      <span>{course.scheduleDays || schedule.days}</span>
+                    </span>
+                  )}
                 </div>
               </div>
 
               <div className="cs-ip-hero-actions-bar">
                 <div className="cs-ip-price-col">
+                  <span className="text-xs font-bold text-stone-500 mb-0.5 block">
+                    شهریه مصوب هر نفر:
+                  </span>
                   <div className="cs-ip-price-row">
                     {oldPriceDisplay && <span className="old-price">{oldPriceDisplay}</span>}
                     <b className="main-price">{displayPrice}</b>
@@ -132,7 +173,7 @@ export default function InPersonHero({
                       className="cs-ip-btn-main"
                       onClick={onCheckoutOpen}
                     >
-                      <span>ثبت‌نام دوره</span>
+                      <span>ثبت‌نام {typeLabel}</span>
                       <ArrowLeft size={16} />
                     </button>
                   )}

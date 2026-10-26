@@ -33,8 +33,25 @@ const sessionItemSchema = Joi.object({
   }),
 });
 
+const inPersonSpecificValidation = {
+  courseType: Joi.string().valid("دوره حضوری", "کارگاه حضوری").optional(),
+  approximateSessions: Joi.string().trim().allow("").optional(),
+  totalHours: Joi.string().trim().allow("").optional(),
+  scheduleDays: Joi.string().trim().allow("").optional(),
+  tuitionPerPerson: Joi.number().min(0).optional(),
+  proposedTeacher: Joi.string().trim().allow("").optional(),
+  approximateStartDate: Joi.string().trim().allow("").optional(),
+  approximateEndDate: Joi.string().trim().allow("").optional(),
+  joujmanEvent: Joi.object({
+    title: Joi.string().trim().allow("").optional(),
+    description: Joi.string().trim().allow("").optional(),
+    isActive: Joi.boolean().optional(),
+  }).optional(),
+};
+
 export const createInPersonCourseValidator = Joi.object({
   ...baseCourseCreateFields,
+  ...inPersonSpecificValidation,
   location: locationSchema.optional(),
   sessions: Joi.array()
     .items(sessionItemSchema)
@@ -48,6 +65,7 @@ export const createInPersonCourseValidator = Joi.object({
 
 export const updateInPersonCourseValidator = Joi.object({
   ...baseCourseUpdateFields,
+  ...inPersonSpecificValidation,
   location: locationSchema.optional(),
   sessions: Joi.array().items(sessionItemSchema).optional(),
 });

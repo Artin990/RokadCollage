@@ -16,25 +16,38 @@ async function seedData() {
     // 1. دوره‌های حضوری
     const inPersonCount = await InPersonCourse.countDocuments();
     if (inPersonCount === 0) {
-      await InPersonCourse.create([
         {
-          title: "بوت‌کمپ جامع فرانت‌اند و React",
+          title: "دوره حضوری برنامه‌نویسی وب و فرانت‌اند نوجوانان",
           category: "فناوری اطلاعات",
-          tags: ["فرانت‌اند", "React", "Next.js"],
-          description: "مسیر کامل صفر تا صد ورود به بازار کار طراحی وب با پروژه‌های واقعی و منتورینگ حضوری",
-          duration: "۱۶ هفته",
-          price: 12500000,
+          tags: ["دوره حضوری", "نوجوانان", "فرانت‌اند", "React"],
+          description: "مسیر کامل آموزش پروژه‌محور برنامه‌نویسی وب ویژه نوجوانان همراه با ارائه در رویداد پایانی و جذب در استودیو رکاد",
+          duration: "۴۸ ساعت",
+          price: 8500000,
           img: "/assets/StatCard/teal.png",
+          courseType: "دوره حضوری",
+          approximateSessions: "۱۶ جلسه تقریبی",
+          totalHours: "۴۸ ساعت",
+          scheduleDays: "شنبه و سه‌شنبه",
+          tuitionPerPerson: 8500000,
+          proposedTeacher: "مهندس آرش تهرانی",
+          approximateStartDate: "۱۵ آبان ۱۴۰۴",
+          approximateEndDate: "۳۰ دی ۱۴۰۴",
+          joujmanEvent: {
+            title: "رویداد پایانی و ژوژمان",
+            description: "در انتهای هر دوره، یک جلسه رسمی پروژه‌های نوجوانان با دعوت رسمی از والدین و ۲ الی ۳ نفر از اساتید متخصص در این حوزه برگزار می‌شود که باعث افزایش اعتماد اولیاء، ارزیابی دقیق فنی، سنجش برای جذب در استودیو رکاد و ایجاد حس افتخار و انگیزه در نوجوانان می‌شود.",
+            isActive: true,
+          },
           location: { address: "تهران، میدان آزادی، بلوار اکبری، کالج رکاد" },
         },
         {
           title: "کارگاه تخصصی طراحی UI/UX با فیگما",
           category: "فناوری اطلاعات",
-          tags: ["UI/UX", "فیگما", "دیزاین سیستم"],
+          tags: ["کارگاه حضوری", "UI/UX", "فیگما", "دیزاین سیستم"],
           description: "آموزش اصول تجربه کاربری، رابط کاربری و آماده‌سازی فایل برای برنامه‌نویسان",
           duration: "۱۰ هفته",
           price: 9800000,
           img: "/assets/StatCard/blue.png",
+          courseType: "کارگاه حضوری",
           location: { address: "تهران، میدان آزادی، بلوار اکبری، کالج رکاد" },
         },
       ]);
