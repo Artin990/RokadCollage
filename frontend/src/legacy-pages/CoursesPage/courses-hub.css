@@ -15,19 +15,19 @@
 /* ============ هدر و هیرو ============ */
 .ch-hero {
   position: relative;
-  background: linear-gradient(to bottom, var(--college-light, #fff7eb), var(--white, #ffffff));
+  background: linear-gradient(to bottom, #ffeed1 0%, var(--college-light, #fff4e5) 55%, #fffaf2 82%, var(--white, #ffffff) 100%);
   border-bottom: none;
-  padding: 44px 0 52px;
+  padding: 56px 0 88px;
   overflow: hidden;
 }
 
 .ch-hero .pattern-layer {
-  -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
-  mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
 }
 
 .ch-hero .pattern-layer-img {
-  opacity: 0.28;
+  opacity: 0.35;
   mix-blend-mode: multiply;
 }
 
@@ -183,7 +183,7 @@
 }
 
 .ch-sec:first-child {
-  margin-top: 56px;
+  margin-top: 36px;
 }
 
 .ch-sec:last-child {
