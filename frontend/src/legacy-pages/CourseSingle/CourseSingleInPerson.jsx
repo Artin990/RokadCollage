@@ -86,7 +86,7 @@ export default function CourseSingleInPerson({ course, slug }) {
 
   const venue = {
     name: course.location?.name || "مدرسه رکاد",
-    address: course.location?.address || "مشهد - فرامرز عباسی 33 - نبش رسالت 32 - مدرسه رکاد",
+    address: course.location?.address || "مشهد - فرامرز عباسی ۳۳",
     metro: "دسترسی آسان از بلوار فرامرز عباسی",
     parking: "دارای پارکینگ اختصاصی برای هنرجویان",
     room: course.location?.room || "سالن کارگاهی و کدهای حضوری",

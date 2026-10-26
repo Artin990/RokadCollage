@@ -42,7 +42,7 @@ export default function CreateInPersonCourse() {
       discountCodes: [],
       sprints: [],
       location: {
-        address: "مشهد - فرامرز عباسی 33 - نبش رسالت 32 - مدرسه رکاد",
+        address: "مشهد - فرامرز عباسی ۳۳",
         googleMapEmbedUrl: "",
         neshanEmbedUrl: "",
         baladEmbedUrl: "",

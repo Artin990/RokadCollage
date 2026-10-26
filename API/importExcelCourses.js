@@ -205,7 +205,7 @@ const joujmanDescription =
   "در انتهای هر دوره، یک جلسه رسمی پروژه‌های نوجوانان با دعوت رسمی از والدین و ۲ الی ۳ نفر از اساتید متخصص در این حوزه برگزار می‌شود که باعث افزایش اعتماد اولیاء، ارزیابی دقیق فنی، سنجش برای جذب در استودیو رکاد و ایجاد حس افتخار و انگیزه در نوجوانان می‌شود.";
 
 const defaultLocation = {
-  address: "مشهد - فرامرز عباسی 33 - نبش رسالت 32 - مدرسه رکاد",
+  address: "مشهد - فرامرز عباسی ۳۳",
   googleMapEmbedUrl: "https://maps.google.com",
   neshanEmbedUrl: "https://nshn.ir",
   baladEmbedUrl: "https://balad.ir",

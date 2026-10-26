@@ -25,7 +25,7 @@ async function seedData() {
           duration: "۱۶ هفته",
           price: 12500000,
           img: "/assets/StatCard/teal.png",
-          location: { address: "مشهد - فرامرز عباسی 33 - نبش رسالت 32 - مدرسه رکاد" },
+          location: { address: "مشهد - فرامرز عباسی ۳۳" },
         },
         {
           title: "کارگاه تخصصی طراحی UI/UX با فیگما",
@@ -35,7 +35,7 @@ async function seedData() {
           duration: "۱۰ هفته",
           price: 9800000,
           img: "/assets/StatCard/blue.png",
-          location: { address: "مشهد - فرامرز عباسی 33 - نبش رسالت 32 - مدرسه رکاد" },
+          location: { address: "مشهد - فرامرز عباسی ۳۳" },
         },
       ]);
       console.log("✅ Sample InPerson courses seeded.");

@@ -216,7 +216,7 @@ export default function SkeletonCourseInPerson({ hasSprints: propHasSprints }) {
                   <div className="cs-inperson-address-card">
                     <div className="address-meta">
                       <strong>مدرسه رکاد</strong>
-                      <p>مشهد - فرامرز عباسی 33 - نبش رسالت 32 - مدرسه رکاد</p>
+                      <p>مشهد - فرامرز عباسی ۳۳</p>
                     </div>
                     <div className="transit-items">
                       <div className="transit-it">

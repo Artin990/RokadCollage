@@ -33,7 +33,7 @@ export default function InPersonLocationSection() {
 
       <Input
         label="آدرس محل برگزاری"
-        placeholder="مثال: مشهد - فرامرز عباسی 33 - نبش رسالت 32 - مدرسه رکاد"
+        placeholder="مثال: مشهد - فرامرز عباسی ۳۳"
         name="location.address"
         value={values.location?.address || ""}
         onChange={handleChange}

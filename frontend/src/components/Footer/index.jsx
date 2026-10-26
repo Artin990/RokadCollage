@@ -22,7 +22,7 @@ const contacts = [
   { label: "۰۵۱-۳۶۰۱۶۳۷۳", href: "tel:05136016373" },
   { label: "۰۹۰۲۱۶۰۰۹۳۳", href: "tel:09021600933" },
   { label: "info@rokad.college", href: "mailto:info@rokad.college" },
-  { label: "مشهد - فرامرز عباسی 33 - نبش رسالت 32 - مدرسه رکاد", href: "#" },
+  { label: "مشهد - فرامرز عباسی ۳۳", href: "#" },
 ];
 
 /* ---------- Social icons (inline SVG, from design) ---------- */

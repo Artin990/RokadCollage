@@ -128,7 +128,7 @@ export default inPersonCourseRouter;
  *       properties:
  *         address:
  *           type: string
- *           example: "مشهد - فرامرز عباسی 33 - نبش رسالت 32 - مدرسه رکاد"
+ *           example: "مشهد - فرامرز عباسی ۳۳"
  *         googleMapEmbedUrl:
  *           type: string
  *         neshanEmbedUrl:

@@ -62,7 +62,7 @@ const inPersonSpecificFields = {
         address: {
             type: String,
             trim: true,
-            default: "مشهد - فرامرز عباسی 33 - نبش رسالت 32 - مدرسه رکاد",
+            default: "مشهد - فرامرز عباسی ۳۳",
         },
         googleMapEmbedUrl: {
             type: String,
