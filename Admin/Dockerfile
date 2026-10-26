@@ -29,10 +29,9 @@ CMD ["npm", "run", "dev", "--", "--host"]
 # Builder Target (Build Production Static Bundle)
 # ==========================================
 FROM base AS builder
-ENV NODE_ENV=production
 
 # Install dependencies needed to build the app (vite, tailwind, etc.)
-RUN npm install
+RUN npm install --include=dev
 
 # Copy source code
 COPY . .

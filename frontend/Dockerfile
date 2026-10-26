@@ -31,11 +31,10 @@ CMD ["npm", "run", "dev", "--", "--hostname", "0.0.0.0", "--port", "3000"]
 # Builder Target (Build Standalone Next.js)
 # ==========================================
 FROM base AS builder
-ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Install dependencies required for building the app
-RUN npm install
+RUN npm install --include=dev
 
 # Copy source code
 COPY . .
@@ -67,7 +66,7 @@ COPY nginx.conf /etc/nginx/http.d/default.conf
 
 # Copy container entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+RUN sed -i 's/\r$//' /usr/local/bin/docker-entrypoint.sh && chmod +x /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 3000
 
