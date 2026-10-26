@@ -226,12 +226,12 @@ export default function CourseSingle({ slug, initialCourse }) {
     if (!Boolean(store?.auth?.isLoggedIn)) {
       try {
         sessionStorage.setItem("rokad_auth_redirect", `course/${courseSlug}`);
-        sessionStorage.setItem("rokad_auth_msg", `برای ثبت‌نام در «${course.title}»، لطفاً ابتدا وارد شوید یا ثبت‌نام کنید.`);
+        sessionStorage.setItem("rokad_auth_msg", "برای ثبت‌نام در دوره، لطفاً وارد شوید.");
       } catch (_) {}
       window.dispatchEvent(
         new CustomEvent("rokad_auth_required", {
           detail: {
-            message: `برای ثبت‌نام در «${course.title}»، لطفاً ابتدا در کالج ثبت‌نام کنید.`,
+            message: "برای ثبت‌نام در دوره، لطفاً وارد شوید.",
             action: "register",
           },
         })
@@ -257,12 +257,12 @@ export default function CourseSingle({ slug, initialCourse }) {
     if (!Boolean(store?.auth?.isLoggedIn)) {
       try {
         sessionStorage.setItem("rokad_auth_redirect", `course/${courseSlug}`);
-        sessionStorage.setItem("rokad_auth_msg", `برای افزودن «${course.title}» به نشان‌شده‌ها، لطفاً ابتدا حساب کاربری بسازید.`);
+        sessionStorage.setItem("rokad_auth_msg", "برای نشان کردن دوره، لطفاً وارد شوید.");
       } catch (_) {}
       window.dispatchEvent(
         new CustomEvent("rokad_auth_required", {
           detail: {
-            message: `برای ذخیره «${course.title}»، لطفاً ابتدا در کالج ثبت‌نام کنید.`,
+            message: "برای نشان کردن دوره، لطفاً وارد شوید.",
             action: "register",
           },
         })

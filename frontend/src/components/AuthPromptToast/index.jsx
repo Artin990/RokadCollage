@@ -1,21 +1,21 @@
 import { useState, useEffect } from "react";
-import { Bookmark, UserPlus, X, ArrowLeft } from "lucide-react";
+import { Bookmark, UserPlus, X } from "lucide-react";
 
 export default function AuthPromptToast() {
   const [visible, setVisible] = useState(false);
-  const [message, setMessage] = useState("برای ذخیره دوره‌ها، لطفاً ابتدا در کالج ثبت‌نام کنید.");
+  const [message, setMessage] = useState("لطفاً ابتدا وارد حساب کاربری شوید.");
 
   useEffect(() => {
     let timer = null;
     const handler = (e) => {
-      const msg = e.detail?.message || "برای ذخیره دوره‌ها، لطفاً ابتدا در کالج ثبت‌نام کنید.";
+      const msg = e.detail?.message || "لطفاً ابتدا وارد حساب کاربری شوید.";
       setMessage(msg);
       setVisible(true);
 
       if (timer) clearTimeout(timer);
       timer = setTimeout(() => {
         setVisible(false);
-      }, 7000);
+      }, 5000);
     };
 
     window.addEventListener("rokad_auth_required", handler);
@@ -47,29 +47,29 @@ export default function AuthPromptToast() {
         transform: "translateX(50%)",
         zIndex: 99999,
         maxWidth: "92vw",
-        width: 520,
+        width: 440,
         background: "#FFFDF7",
-        border: "2.5px solid var(--ink, #18181B)",
+        border: "2px solid var(--ink, #18181B)",
         borderRadius: 14,
-        padding: "14px 18px",
-        boxShadow: "5px 5px 0 var(--ink, #18181B)",
+        padding: "12px 16px",
+        boxShadow: "4px 4px 0 var(--ink, #18181B)",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        gap: 14,
+        gap: 12,
         animation: "authToastSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         fontFamily: "inherit",
         direction: "rtl",
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: 12, flex: 1, minWidth: 0 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, flex: 1, minWidth: 0 }}>
         <div
           style={{
-            width: 40,
-            height: 40,
-            borderRadius: 10,
+            width: 36,
+            height: 36,
+            borderRadius: 9,
             background: "#FFF0D4",
-            border: "1.8px solid var(--ink, #18181B)",
+            border: "1.5px solid var(--ink, #18181B)",
             boxShadow: "2px 2px 0 var(--ink, #18181B)",
             display: "grid",
             placeItems: "center",
@@ -77,14 +77,11 @@ export default function AuthPromptToast() {
             color: "#B45309",
           }}
         >
-          <Bookmark size={20} strokeWidth={2.4} fill="#FDE68A" />
+          <Bookmark size={18} strokeWidth={2.4} fill="#FDE68A" />
         </div>
         <div style={{ minWidth: 0 }}>
-          <div style={{ fontSize: "14px", fontWeight: 800, color: "var(--ink, #18181B)", lineHeight: 1.45 }}>
+          <div style={{ fontSize: "13.5px", fontWeight: 800, color: "var(--ink, #18181B)", lineHeight: 1.4 }}>
             {message}
-          </div>
-          <div style={{ fontSize: "12px", color: "var(--ink-subtle, #71717A)", marginTop: 2, fontWeight: 500 }}>
-            با ساخت حساب رایگان، دوره‌ها را نشان کرده و در پنل مدیریت کنید.
           </div>
         </div>
       </div>
@@ -99,10 +96,10 @@ export default function AuthPromptToast() {
             gap: 6,
             background: "var(--accent, #F8A41D)",
             color: "var(--ink, #18181B)",
-            border: "2px solid var(--ink, #18181B)",
-            borderRadius: 9,
-            padding: "8px 14px",
-            fontSize: "13px",
+            border: "1.8px solid var(--ink, #18181B)",
+            borderRadius: 8,
+            padding: "7px 12px",
+            fontSize: "12.5px",
             fontWeight: 800,
             cursor: "pointer",
             boxShadow: "2px 2px 0 var(--ink, #18181B)",
@@ -118,7 +115,7 @@ export default function AuthPromptToast() {
             e.currentTarget.style.boxShadow = "2px 2px 0 var(--ink, #18181B)";
           }}
         >
-          <UserPlus size={15} strokeWidth={2.4} />
+          <UserPlus size={14} strokeWidth={2.4} />
           <span>ثبت‌نام</span>
         </button>
 
@@ -139,7 +136,7 @@ export default function AuthPromptToast() {
           onMouseEnter={(e) => { e.currentTarget.style.color = "var(--ink, #18181B)"; }}
           onMouseLeave={(e) => { e.currentTarget.style.color = "var(--ink-subtle, #71717A)"; }}
         >
-          <X size={18} strokeWidth={2.2} />
+          <X size={17} strokeWidth={2.2} />
         </button>
       </div>
     </div>
