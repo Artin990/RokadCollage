@@ -47,9 +47,6 @@ export default function InPersonJoujman({ course }) {
           </div>
           <div className="cs-ip-sec-titles">
             <h2 className="cs-ip-sec-title">رویداد پایانی و ژوژمان</h2>
-            <span className="cs-ip-sec-sub">
-              جلسه رسمی ارائه پروژه‌های نوجوانان، ارزیابی اساتید و جذب در استودیو رکاد
-            </span>
           </div>
         </div>
         <span className="cs-ip-sec-badge joujman-badge">ویژه نوجوانان و والدین</span>

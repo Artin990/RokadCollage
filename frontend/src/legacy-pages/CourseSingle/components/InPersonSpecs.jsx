@@ -75,9 +75,6 @@ export default function InPersonSpecs({
           </div>
           <div className="cs-ip-sec-titles">
             <h2 className="cs-ip-sec-title">مشخصات ساختار دوره حضوری</h2>
-            <span className="cs-ip-sec-sub">
-              اطلاعات رسمی، زمان‌بندی هفتگی، شهریه مصوب و تاریخ‌های برگزاری
-            </span>
           </div>
         </div>
         <span className="cs-ip-sec-badge highlight">شناسه رسمی دوره</span>

@@ -876,11 +876,7 @@
     letter-spacing: 0;
   }
   .cs-title-sub {
-    display: block;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--ink-subtle);
-    margin-bottom: 6px;
+    display: none !important;
   }
   .cs-lead-clamp { font-size: 13px; line-height: 1.9; color: var(--ink-faq); font-weight: 500; }
   .cs-lead-clamp p { margin: 0; }

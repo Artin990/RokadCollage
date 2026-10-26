@@ -480,9 +480,7 @@
 }
 
 .cs-ip-sec-sub {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--ink-subtle, #71717A);
+  display: none !important;
 }
 
 .cs-ip-sec-badge {

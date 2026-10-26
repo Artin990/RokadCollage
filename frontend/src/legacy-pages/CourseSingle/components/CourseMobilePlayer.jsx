@@ -30,14 +30,6 @@ export default function CourseMobilePlayer({ course, headRef, onOpenVideo }) {
 
       <div className="cs-title-row">
         <h1>{course.title}</h1>
-        <small className="cs-title-sub" style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <span>{(Array.isArray(course.teachers) && course.teachers[0]?.name) || course.teacher?.name || course.instructor?.name || "استاد کالج"}</span>
-          <span>·</span>
-          <LucideStar size={13} fill="#F8A41D" stroke="#F8A41D" />
-          <span>۴.۹</span>
-          <span>·</span>
-          <span>{course.students || "۹۵"} دانشجو</span>
-        </small>
       </div>
     </div>
   );
