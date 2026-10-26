@@ -99,6 +99,7 @@ export default function DepartmentPage({ deptId, initialCourses = [] }) {
         id: c.id || c._id || `dept-c-${i}`,
         _id: c._id || c.id,
         title: c.title,
+        img: c.img || c.image || c.cover || null,
         cat: c.category || targetCategory,
         department: currentId,
         mode: isHp ? "حضوری" : "غیر حضوری",

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Award, Sparkles, Star, Clock, Users, CheckCircle2, ArrowLeft } from "lucide-react";
 import { CourseModeBadge, CourseSaveButton } from "./CourseCardComponents.jsx";
+import { getCourseImageUrl, isCustomImage } from "@/utils/getImageUrl.js";
 
 export default function FlagshipSection({ flagshipCourses, store }) {
   const [idx, setIdx] = useState(0);
@@ -122,7 +123,16 @@ export default function FlagshipSection({ flagshipCourses, store }) {
             return (
               <article key={f.id || f.slug} className={`ch-flag-card ${f.themeClass}`}>
                 <div className="ch-flag-visual">
-                  <img src={f.pattern} alt="" className="ch-flag-pattern" aria-hidden="true" />
+                  {isCustomImage(f.img) ? (
+                    <img
+                      src={getCourseImageUrl(f.img)}
+                      alt={f.title}
+                      className="ch-flag-pattern"
+                      style={{ objectFit: "cover", opacity: 1, zIndex: 0 }}
+                    />
+                  ) : (
+                    <img src={f.pattern} alt="" className="ch-flag-pattern" aria-hidden="true" />
+                  )}
                   <CourseSaveButton slug={f.slug} store={store} className="ch-flag-save-btn" />
                   <span className="ch-flag-dept-chip">{f.deptName}</span>
                   <div className="ch-flag-icon-wrap">

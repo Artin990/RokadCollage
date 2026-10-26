@@ -30,15 +30,24 @@ export function getCourseImageUrl(imagePath, fallback = "/assets/StatCard/blue.p
   }
 
   // 3. Backend uploads
-  const clean = trimmed.replace(/^\//, "");
-  const baseUrl =
-    process.env.NEXT_PUBLIC_FILE_URL ||
-    (process.env.NEXT_PUBLIC_API_URL
-      ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "")
-      : "http://localhost:5000");
+  const clean = trimmed.replace(/^\/+/, "").replace(/^(Public|uploads)\/+/i, "");
 
-  const cleanUrl = `${baseUrl}/${clean}`.replace(/([^:]\/)\/+/g, "$1");
-  return cleanUrl;
+  if (process.env.NEXT_PUBLIC_FILE_URL) {
+    return `${process.env.NEXT_PUBLIC_FILE_URL}/${clean}`.replace(/([^:]\/)\/+/g, "$1");
+  }
+
+  if (typeof window !== "undefined") {
+    if (window.location.port === "3000" || (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1")) {
+      return `/${clean}`;
+    }
+  }
+
+  const baseUrl =
+    process.env.NEXT_PUBLIC_API_URL
+      ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "")
+      : "http://localhost:5000";
+
+  return `${baseUrl}/${clean}`.replace(/([^:]\/)\/+/g, "$1");
 }
 
 export function isCustomImage(imagePath) {

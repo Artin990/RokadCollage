@@ -43,13 +43,21 @@ export default function DepartmentCourseCard({ c, rot, persona: cardPersona, sto
     >
       <div className="dp-card-cover">
         {customCover ? (
-          <img className="dp-cover-custom-img" src={coverUrl} alt={c.title || ""} />
-        ) : (
-          <>
-            <img className="dp-cover-pattern" src={cardTheme.pattern} alt="" aria-hidden="true" />
-            <CourseIcon id={c.ic} size={34} />
-          </>
-        )}
+          <img
+            className="dp-cover-custom-img"
+            src={coverUrl}
+            alt={c.title || ""}
+            onError={(e) => {
+              e.currentTarget.style.display = "none";
+              const fb = e.currentTarget.nextElementSibling;
+              if (fb) fb.style.display = "contents";
+            }}
+          />
+        ) : null}
+        <div style={{ display: customCover ? "none" : "contents" }}>
+          <img className="dp-cover-pattern" src={cardTheme.pattern} alt="" aria-hidden="true" />
+          <CourseIcon id={c.ic} size={34} />
+        </div>
         {c.tag && <span className="dp-card-tag">{c.tag}</span>}
         <button
           type="button"

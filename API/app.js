@@ -68,6 +68,16 @@ app.use(
     },
   })
 );
+app.use(
+  "/uploads",
+  express.static(`${__dirname}/Public`, {
+    dotfiles: "ignore",
+    setHeaders: (res) => {
+      res.setHeader("X-Content-Type-Options", "nosniff");
+      res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+    },
+  })
+);
 app.use(exportValidation);
 
 // Global API rate limiter (300 requests per 15 minutes per IP window)

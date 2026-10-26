@@ -107,6 +107,7 @@ export default function CoursesPage() {
       pattern: deptInfo.pattern,
       badge: isCourseInPerson(c) ? "دوره حضوری و کارگاهی" : "دوره آنلاین و پروژه محور",
       title: c.title,
+      img: c.img || c.image || c.cover || null,
       inst: c.instructor?.fullName || c.instructor?.name || "استاد کالج رکاد",
       desc: c.description || c.headline || "آموزش جامع و پروژه محور متناسب با نیازهای بازار کار ایران و بین‌الملل.",
       hours: c.duration || `${c.hours || 40} ساعت آموزش`,
@@ -139,6 +140,7 @@ export default function CoursesPage() {
     groupedCategories[cat].courses.push({
       id: c.id || c._id,
       title: c.title,
+      img: c.img || c.image || c.cover || null,
       cat: cat,
       inst: c.instructor?.fullName || c.instructor?.name || "استاد کالج",
       hours: c.duration || `${c.hours || 30} ساعت`,
