@@ -79,17 +79,6 @@ export default function SkeletonCourseInPerson({ hasSprints: propHasSprints }) {
                   <div className="rk-skeleton-line" style={{ width: "85%", height: 26, marginBottom: 8 }} />
                   <div className="rk-skeleton-line" style={{ width: "55%", height: 26 }} />
                 </div>
-
-                <div className="cs-ip-hero-pills">
-                  <span className="ip-pill">
-                    <Calendar size={13} strokeWidth={2.2} />
-                    <div className="rk-skeleton-line" style={{ width: 75, height: 13 }} />
-                  </span>
-                  <span className="ip-pill">
-                    <Clock size={13} strokeWidth={2.2} />
-                    <div className="rk-skeleton-line" style={{ width: 70, height: 13 }} />
-                  </span>
-                </div>
               </div>
 
               <div className="cs-ip-hero-actions-bar">

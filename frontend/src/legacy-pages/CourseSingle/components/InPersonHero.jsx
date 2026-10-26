@@ -4,13 +4,9 @@ import {
   ArrowLeft,
   MapPin,
   Bookmark,
-  Calendar,
-  Clock,
   CheckCircle2,
   Phone,
   ShieldCheck,
-  Layers,
-  CalendarDays,
 } from "lucide-react";
 
 const FA = "۰۱۲۳۴۵۶۷۸۹";
@@ -124,32 +120,6 @@ export default function InPersonHero({
                 </div>
 
                 <h1 className="cs-ip-hero-title">{course.title}</h1>
-
-                <div className="cs-ip-hero-pills">
-                  <span className="ip-pill">
-                    <Calendar size={13} strokeWidth={2.2} />
-                    <span>
-                      شروع: {course.approximateStartDate || schedule.startDate}
-                      {course.approximateEndDate ? ` تا ${course.approximateEndDate}` : ""}
-                    </span>
-                  </span>
-                  <span className="ip-pill">
-                    <Clock size={13} strokeWidth={2.2} />
-                    <span>طول دوره: {course.totalHours || schedule.totalHours || schedule.totalWeeks}</span>
-                  </span>
-                  {(course.approximateSessions || course.sessionsCount) && (
-                    <span className="ip-pill">
-                      <Layers size={13} strokeWidth={2.2} />
-                      <span>{course.approximateSessions || `${course.sessionsCount} جلسه`}</span>
-                    </span>
-                  )}
-                  {(course.scheduleDays || schedule.days) && (
-                    <span className="ip-pill">
-                      <CalendarDays size={13} strokeWidth={2.2} />
-                      <span>{course.scheduleDays || schedule.days}</span>
-                    </span>
-                  )}
-                </div>
               </div>
 
               <div className="cs-ip-hero-actions-bar">
