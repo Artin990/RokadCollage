@@ -14,7 +14,7 @@ export default function DepartmentSuggestedRow({
 
   return (
     <section className="dp-block" id="dp-suggest">
-      <SectionHead pre="دوره‌های پیشنهادی برای شروع" accent={dept.name} />
+      <SectionHead pre="دوره‌های" accent="پیشنهادی" />
       <div className="dp-suggest-ctrl">
         <div className="dp-tabs" role="tablist">
           <button

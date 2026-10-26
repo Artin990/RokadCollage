@@ -15,7 +15,7 @@ export default function DepartmentCtaSection({ dept, currentId, persona, onScrol
               <ArrowIcon />
             </a>
             <a href="#dp-all" onClick={(e) => onScrollTo(e, "dp-all")} className="dp-btn dp-btn-ghost">
-              مشاهدهٔ همهٔ دوره‌ها
+              مشاهده همه دوره‌ها
             </a>
           </div>
         </div>

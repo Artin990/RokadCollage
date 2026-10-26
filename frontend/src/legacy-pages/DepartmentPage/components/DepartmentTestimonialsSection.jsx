@@ -7,7 +7,7 @@ export default function DepartmentTestimonialsSection({ dept }) {
 
   return (
     <section className="dp-block" id="dp-testimonials">
-      <SectionHead pre="تجربهٔ" accent="هنرجویان" />
+      <SectionHead pre="تجربه" accent="هنرجویان" />
       <div className="dp-tests">
         {dept.testimonials.map((t, idx) => (
           <article

@@ -14,6 +14,15 @@
   /* رنگ متن روی زمینهٔ رنگی دپارتمان: پیش‌فرض جوهر؛ فقط سرمه‌ای IT سفید */
   background: var(--white);
   color: var(--ink);
+  overflow-x: clip;
+}
+.dp-page .container {
+  padding-inline: 16px;
+}
+@media (min-width: 768px) {
+  .dp-page .container {
+    padding-inline: 24px;
+  }
 }
 .dp-card[data-dept="it"] { --dp-text: var(--white); }
 
@@ -38,7 +47,7 @@
 }
 .dp-hero-inner {
   position: relative; z-index: 2;
-  padding: 44px 0 52px;
+  padding-block: 44px 52px;
 }
 .dp-crumb {
   display: flex; gap: 8px; align-items: center;
@@ -1643,7 +1652,7 @@
 
 /* ============ موبایل ============ */
 @media (max-width: 700px) {
-  .dp-hero-inner { padding: 28px 0 38px; }
+  .dp-hero-inner { padding-block: 28px 38px; }
   .dp-hero-title { font-size: clamp(24px, 7vw, 32px); margin: 16px 0 12px; }
   .dp-badge { font-size: 12px; padding: 6px 13px; }
   .dp-hero-lead { font-size: 14px; line-height: 1.8; margin-bottom: 20px; }

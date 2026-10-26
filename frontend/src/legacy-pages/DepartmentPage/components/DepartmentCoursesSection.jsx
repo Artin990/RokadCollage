@@ -26,7 +26,7 @@ export default function DepartmentCoursesSection({
 }) {
   return (
     <section className="dp-block" id="dp-all">
-      <SectionHead pre="همهٔ" accent="دوره‌ها" />
+      <SectionHead pre="همه" accent="دوره‌ها" />
 
       <div className="dp-toolbar">
         <div className="dp-toolbar-start">
