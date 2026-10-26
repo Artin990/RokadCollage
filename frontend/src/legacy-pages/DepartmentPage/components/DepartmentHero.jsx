@@ -27,7 +27,7 @@ export default function DepartmentHero({ dept, persona, onScrollTo }) {
 
         <div className="dp-hero-actions">
           <a className="dp-btn dp-btn-primary" href="#dp-all" onClick={(e) => onScrollTo(e, "dp-all")}>
-            مشاهدهٔ دوره‌ها
+            مشاهده دوره‌ها
             <ArrowIcon />
           </a>
           {dept.paths && dept.paths.length > 0 && (
