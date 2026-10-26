@@ -1,10 +1,16 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+function getApiBaseUrl() {
+  if (typeof window === "undefined") {
+    return process.env.INTERNAL_API_URL || process.env.API_URL || "http://backend:5000/api";
+  }
+  return process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+}
 
 /**
  * Universal API fetch wrapper with cookie credentials and unified JSON handling
  */
 export async function apiRequest(endpoint, options = {}) {
-  const url = `${API_BASE_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
+  const baseUrl = getApiBaseUrl();
+  const url = `${baseUrl}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
 
   const defaultHeaders = {
     "Content-Type": "application/json",

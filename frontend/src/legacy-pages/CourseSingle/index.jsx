@@ -1,4 +1,3 @@
-import { MOCK_STATIC_COURSES } from "@/services/courseService.js";
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import "./course.css";
 import PatternLayer from "../../components/PatternLayer";
