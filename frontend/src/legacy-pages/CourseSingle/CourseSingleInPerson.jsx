@@ -209,14 +209,16 @@ export default function CourseSingleInPerson({ course, slug }) {
           {/* رویداد پایانی و ژوژمان (بخش الزامی و پررنگ دوره حضوری نوجوانان) */}
           <InPersonJoujman course={course} />
 
-          {/* زمان‌بندی و موقعیت دسترسی کمپوس */}
-          <InPersonVenue
-            venue={venue}
-            cleanDays={schedule.days}
-            cleanHours={schedule.hours}
-            cleanRoom={venue.room}
-            isWorkshop={isWorkshop}
-          />
+          {/* زمان‌بندی و موقعیت دسترسی کمپوس (فقط برای کارگاه‌ها) */}
+          {isWorkshop && (
+            <InPersonVenue
+              venue={venue}
+              cleanDays={schedule.days}
+              cleanHours={schedule.hours}
+              cleanRoom={venue.room}
+              isWorkshop={isWorkshop}
+            />
+          )}
 
           {/* مدرس و راهبر دوره */}
           <InPersonTeacher teacher={teacher} isWorkshop={isWorkshop} />
