@@ -85,9 +85,9 @@ export default function CourseSingleInPerson({ course, slug }) {
       : String(numPrice).replace(/تومان/g, "").trim();
 
   const venue = {
-    name: course.location?.name || "کمپوس مرکزی کالج رکاد",
-    address: course.location?.address || "تهران، میدان آزادی، بلوار اکبری، کالج رکاد",
-    metro: "۲ دقیقه پیاده‌روی از ایستگاه مترو میدان آزادی",
+    name: course.location?.name || "مدرسه رکاد",
+    address: course.location?.address || "مشهد - فرامرز عباسی 33 - نبش رسالت 32 - مدرسه رکاد",
+    metro: "دسترسی آسان از بلوار فرامرز عباسی",
     parking: "دارای پارکینگ اختصاصی برای هنرجویان",
     room: course.location?.room || "سالن کارگاهی و کدهای حضوری",
     neshanUrl: course.location?.neshanEmbedUrl || "https://nshn.ir",

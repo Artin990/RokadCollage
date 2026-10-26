@@ -215,13 +215,13 @@ export default function SkeletonCourseInPerson({ hasSprints: propHasSprints }) {
                 <div className="cs-inperson-location-grid">
                   <div className="cs-inperson-address-card">
                     <div className="address-meta">
-                      <strong>کمپوس مرکزی کالج رکاد</strong>
-                      <p>تهران، میدان آزادی، بلوار اکبری، کالج رکاد</p>
+                      <strong>مدرسه رکاد</strong>
+                      <p>مشهد - فرامرز عباسی 33 - نبش رسالت 32 - مدرسه رکاد</p>
                     </div>
                     <div className="transit-items">
                       <div className="transit-it">
                         <Train size={16} />
-                        <span>۲ دقیقه پیاده‌روی از ایستگاه مترو میدان آزادی</span>
+                        <span>دسترسی آسان از بلوار فرامرز عباسی</span>
                       </div>
                       <div className="transit-it">
                         <Car size={16} />

@@ -21,7 +21,7 @@ const quickLinks = [
 const contacts = [
   { label: "۰۲۱-۹۱۰۰۰۰۰۰", href: "tel:02191000000" },
   { label: "info@rokad.college", href: "mailto:info@rokad.college" },
-  { label: "تهران، ولیعصر", href: "#" },
+  { label: "مشهد - فرامرز عباسی 33 - نبش رسالت 32 - مدرسه رکاد", href: "#" },
 ];
 
 /* ---------- Social icons (inline SVG, from design) ---------- */

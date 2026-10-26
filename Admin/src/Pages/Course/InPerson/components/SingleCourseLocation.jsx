@@ -91,7 +91,7 @@ export default function SingleCourseLocation({ location }) {
         <div className="bg-bg-light/50 rounded-xl p-4 border border-border/80 flex flex-col gap-1.5">
           <span className="text-xs font-semibold text-text-muted">آدرس محل برگزاری</span>
           <p className="text-sm md:text-base font-semibold text-secondary leading-relaxed">
-            {location?.address || "آدرس کارگاه به زودی درج خواهد شد."}
+            {location?.address || "مشهد - فرامرز عباسی 33 - نبش رسالت 32 - مدرسه رکاد"}
           </p>
         </div>
 

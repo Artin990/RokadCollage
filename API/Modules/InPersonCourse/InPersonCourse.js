@@ -128,7 +128,7 @@ export default inPersonCourseRouter;
  *       properties:
  *         address:
  *           type: string
- *           example: "مشهد، بلوار سجاد، خیابان بهارستان، پلاک ۱۲"
+ *           example: "مشهد - فرامرز عباسی 33 - نبش رسالت 32 - مدرسه رکاد"
  *         googleMapEmbedUrl:
  *           type: string
  *         neshanEmbedUrl:
