@@ -149,11 +149,15 @@ export default function FlagshipSection({ flagshipCourses, store }) {
                     <div className="ch-flag-meta-row">
                       <div className="ch-flag-meta-info">
                         <span>مدرس دوره: <strong>{f.inst}</strong></span>
-                        <span>•</span>
-                        <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
-                          <Star size={14} fill="#f5a623" color="#f5a623" />
-                          <strong>{f.rating}</strong>
-                        </span>
+                        {f.rating && (
+                          <>
+                            <span>•</span>
+                            <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+                              <Star size={14} fill="#f5a623" color="#f5a623" />
+                              <strong>{f.rating}</strong>
+                            </span>
+                          </>
+                        )}
                       </div>
                       <CourseModeBadge mode={f.mode} />
                     </div>
@@ -162,20 +166,23 @@ export default function FlagshipSection({ flagshipCourses, store }) {
                     <p className="ch-flag-desc">{f.desc}</p>
 
                     <div className="ch-flag-stats-row">
-                      <span className="ch-flag-pill ch-pill-hours">
-                        <Clock size={13} />
-                        <span className="pill-text-full">{f.hours}</span>
-                        <span className="pill-text-short">{f.hours.replace(" آموزش پروژه‌محور", "").replace(" کارگاه عملی", "").replace(" آموزش فشرده", "")}</span>
-                      </span>
-                      <span className="ch-flag-pill ch-pill-students">
-                        <Users size={13} />
-                        <span className="pill-text-full">{f.students}</span>
-                        <span className="pill-text-short">{f.students.replace(" هنرجوی موفق", "").replace(" هنرجوی فعال", "").replace(" متقاضی پذیرفته‌شده", "")} هنرجو</span>
-                      </span>
+                      {f.hours && (
+                        <span className="ch-flag-pill ch-pill-hours">
+                          <Clock size={13} />
+                          <span className="pill-text-full">{f.hours}</span>
+                          <span className="pill-text-short">{String(f.hours).replace(" آموزش پروژه‌محور", "").replace(" کارگاه عملی", "").replace(" آموزش فشرده", "")}</span>
+                        </span>
+                      )}
+                      {f.students && (
+                        <span className="ch-flag-pill ch-pill-students">
+                          <Users size={13} />
+                          <span className="pill-text-full">{f.students}</span>
+                          <span className="pill-text-short">{String(f.students).replace(" هنرجوی موفق", "").replace(" هنرجوی فعال", "").replace(" متقاضی پذیرفته‌شده", "")} هنرجو</span>
+                        </span>
+                      )}
                       <span className="ch-flag-pill ch-pill-cert">
                         <CheckCircle2 size={13} />
-                        <span className="pill-text-full">پروژه‌محور با گواهی معتبر</span>
-                        <span className="pill-text-short">گواهی معتبر</span>
+                        <span>گواهی معتبر</span>
                       </span>
                     </div>
                   </div>

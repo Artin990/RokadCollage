@@ -12,7 +12,7 @@ function SuggestedDeptGroup({ group, store, isMobile }) {
   const trackRef = useRef(null);
   const dragRef = useRef(null);
 
-  const courses = group.courses || [];
+  const courses = (group.courses || []).slice(0, 3);
   const total = courses.length;
   const maxIndex = isMobile ? Math.max(0, total - 1) : 0;
   const dragging = dragDx !== null;
@@ -169,23 +169,29 @@ function SuggestedDeptGroup({ group, store, isMobile }) {
                 <h3 className="ch-card-title">{c.title}</h3>
 
                 <div className="ch-card-inst">
-                  <span className="ch-card-av">{c.inst.charAt(0)}</span>
-                  <span>مدرس: {c.inst}</span>
+                  <span className="ch-card-av">{(c.inst || "ا").charAt(0)}</span>
+                  <span>مدرس: {c.inst || "اساتید کالج"}</span>
                 </div>
 
                 <div className="ch-card-meta">
-                  <span className="ch-card-meta-item ch-rate">
-                    <Star size={13} fill="#f5a623" color="#f5a623" />
-                    {c.rating}
-                  </span>
-                  <span className="ch-card-meta-item">
-                    <Clock size={13} />
-                    {c.hours}
-                  </span>
-                  <span className="ch-card-meta-item">
-                    <Users size={13} />
-                    {c.students}
-                  </span>
+                  {c.rating ? (
+                    <span className="ch-card-meta-item ch-rate">
+                      <Star size={13} fill="#f5a623" color="#f5a623" />
+                      {c.rating}
+                    </span>
+                  ) : null}
+                  {c.hours ? (
+                    <span className="ch-card-meta-item">
+                      <Clock size={13} />
+                      {c.hours}
+                    </span>
+                  ) : null}
+                  {c.students ? (
+                    <span className="ch-card-meta-item">
+                      <Users size={13} />
+                      {c.students}
+                    </span>
+                  ) : null}
                 </div>
 
                 <div className="ch-card-foot">
