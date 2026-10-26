@@ -4,7 +4,6 @@ import {
   Clock,
   CalendarDays,
   CalendarRange,
-  BookOpen,
 } from "lucide-react";
 import { toFa } from "./InPersonHero.jsx";
 
@@ -15,14 +14,6 @@ export default function InPersonSpecs({
   teacherName,
 }) {
   const specs = [
-    {
-      id: "title",
-      title: "عنوان دوره",
-      value: course.title,
-      icon: BookOpen,
-      highlight: true,
-      colSpan: "full",
-    },
     {
       id: "sessions",
       title: "تعداد جلسات تقریبی",
