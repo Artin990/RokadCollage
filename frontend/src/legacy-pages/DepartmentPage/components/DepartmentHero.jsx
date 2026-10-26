@@ -21,8 +21,7 @@ export default function DepartmentHero({ dept, persona, onScrollTo }) {
         </div>
 
         <h1 className="dp-hero-title">
-          دوره‌های {dept.name} |{" "}
-          <span className="dp-hero-accent">{dept.headline[1]}</span>
+          دوره‌های <span className="dp-hero-accent">{dept.name}</span>
         </h1>
         <p className="dp-hero-lead">{dept.lead}</p>
 
