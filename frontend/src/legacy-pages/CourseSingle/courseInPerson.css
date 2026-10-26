@@ -1370,7 +1370,7 @@
   width: 40px;
   height: 40px;
   border-radius: 10px;
-  background: #F4F4F5;
+  background: var(--college, #F8A41D);
   border: 1.5px solid var(--ink, #18181B);
   box-shadow: 1.5px 1.5px 0 var(--ink, #18181B);
   display: flex;
