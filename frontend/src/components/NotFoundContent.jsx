@@ -74,29 +74,29 @@ export default function NotFoundContent() {
             این نشانی وجود ندارد یا به آدرس دیگری منتقل شده است.
           </p>
 
-          {/* دکمه‌های ناوبری با تناسب دقیق */}
-          <div className="flex flex-wrap items-center justify-center gap-2.5">
+          {/* دکمه‌های ناوبری با فاصله‌گذاری و پدینگ باز و راحت */}
+          <div className="flex flex-wrap items-center justify-center gap-3.5 sm:gap-4 mt-2">
             <Link
               href="/"
-              className="inline-flex items-center justify-center gap-1.5 px-4 sm:px-5 py-2.5 bg-[#f8a41d] hover:bg-[#e69315] text-[#1f1e1d] font-black text-xs sm:text-sm border-2 border-[#1f1e1d] rounded-[10px_0_10px_0] shadow-[2.5px_2.5px_0_#1f1e1d] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3.5px_3.5px_0_#1f1e1d] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1.5px_1.5px_0_#1f1e1d] transition-all"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#f8a41d] hover:bg-[#e69315] text-[#1f1e1d] font-black text-sm border-2 border-[#1f1e1d] rounded-[12px_0_12px_0] shadow-[3px_3px_0_#1f1e1d] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[4px_4px_0_#1f1e1d] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1.5px_1.5px_0_#1f1e1d] transition-all"
             >
-              <Home size={15} strokeWidth={2.5} />
+              <Home size={16} strokeWidth={2.5} />
               <span>صفحه اصلی</span>
             </Link>
 
             <Link
               href="/courses"
-              className="inline-flex items-center justify-center gap-1.5 px-4 sm:px-5 py-2.5 bg-white hover:bg-stone-50 text-[#1f1e1d] font-black text-xs sm:text-sm border-2 border-[#1f1e1d] rounded-[10px_0_10px_0] shadow-[2.5px_2.5px_0_#1f1e1d] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3.5px_3.5px_0_#1f1e1d] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1.5px_1.5px_0_#1f1e1d] transition-all"
+              className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-white hover:bg-stone-50 text-[#1f1e1d] font-black text-sm border-2 border-[#1f1e1d] rounded-[12px_0_12px_0] shadow-[3px_3px_0_#1f1e1d] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[4px_4px_0_#1f1e1d] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1.5px_1.5px_0_#1f1e1d] transition-all"
             >
-              <BookOpen size={15} strokeWidth={2.5} />
+              <BookOpen size={16} strokeWidth={2.5} />
               <span>دوره‌ها</span>
             </Link>
 
             <Link
               href="/blog"
-              className="inline-flex items-center justify-center gap-1.5 px-4 sm:px-5 py-2.5 bg-white hover:bg-stone-50 text-[#1f1e1d] font-black text-xs sm:text-sm border-2 border-[#1f1e1d] rounded-[10px_0_10px_0] shadow-[2.5px_2.5px_0_#1f1e1d] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3.5px_3.5px_0_#1f1e1d] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1.5px_1.5px_0_#1f1e1d] transition-all"
+              className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-white hover:bg-stone-50 text-[#1f1e1d] font-black text-sm border-2 border-[#1f1e1d] rounded-[12px_0_12px_0] shadow-[3px_3px_0_#1f1e1d] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[4px_4px_0_#1f1e1d] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1.5px_1.5px_0_#1f1e1d] transition-all"
             >
-              <Compass size={15} strokeWidth={2.5} />
+              <Compass size={16} strokeWidth={2.5} />
               <span>مجله</span>
             </Link>
           </div>
