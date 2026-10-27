@@ -138,7 +138,7 @@ export default function BlogGrid({ activeCategory, setActiveCategory, searchQuer
           <div className="flex items-center gap-3">
             <h2 className="bi-h2 m-0">
               <span style={{ display: "inline-block", transform: "rotate(-1deg)" }}>همه‌ی</span>{" "}
-              <span className="bi-marker" style={{ transform: "rotate(1deg)" }}>مقاله‌ها</span>
+              <span className="mk">مقاله‌ها</span>
             </h2>
             {activeCategory !== "all" && (
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-stone-100 border border-[#1f1e1d] text-xs font-bold rounded-lg shadow-xs">

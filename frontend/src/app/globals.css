@@ -3774,8 +3774,8 @@ a:focus-visible, button:focus-visible {
 }
 
 /* ماژیک زرد : نوار هایلایتر کج زیر متن */
-.mk { position: relative; z-index: 0; display: inline-block; }
-.mk::after {
+.mk, .bi-marker { position: relative; z-index: 0; display: inline-block; }
+.mk::after, .bi-marker::after {
   content: ""; position: absolute; right: -0.12em; left: -0.12em;
   top: 50%; height: 0.42em; margin-top: -0.21em; z-index: -1; pointer-events: none;
   background: #F8A41D;
@@ -4907,27 +4907,6 @@ a:focus-visible, button:focus-visible {
   flex-wrap: wrap; gap: 12px; margin-bottom: 2.25rem;
 }
 .bi-h2 { font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 950; color: var(--ink); margin: 0; }
-.bi-marker {
-  position: relative;
-  z-index: 0;
-  display: inline-block;
-  color: var(--ink);
-  padding: 0 4px;
-}
-.bi-marker::after {
-  content: "";
-  position: absolute;
-  right: -0.12em;
-  left: -0.12em;
-  top: 52%;
-  height: 0.44em;
-  margin-top: -0.22em;
-  z-index: -1;
-  pointer-events: none;
-  background: var(--college, #f8a41d);
-  border-radius: 3px 8px 4px 9px;
-  transform: rotate(-2.5deg);
-}
 .bi-more-link {
   display: inline-flex; align-items: center; gap: 6px;
   color: var(--navy); font-weight: 800; font-size: 14.5px;
