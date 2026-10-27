@@ -1,0 +1,4 @@
+interface:
+  display_name: "产品设计原则与视觉取舍｜简诗 AI"
+  short_description: "Visual philosophy and art-direction for frontend. Use when creating high-concept work, campaigns, or when the user asks for a visual philosophy, manifesto, or unmistakable art-like"
+  default_prompt: "使用 $design-philosophy 完成“产品设计原则与视觉取舍”任务。"

@@ -1,0 +1,17 @@
+{
+  "schema": "jianshi-skill-origin/v1",
+  "sourceRepo": "sickn33/agentic-awesome-skills",
+  "sourcePath": "skills/design-philosophy/SKILL.md",
+  "sourceCommit": "f9073a13a65b0bd900068102843a3fd06c18834d",
+  "sourceUrl": "https://github.com/sickn33/agentic-awesome-skills/blob/f9073a13a65b0bd900068102843a3fd06c18834d/skills/design-philosophy/SKILL.md",
+  "license": "MIT",
+  "licenseFile": "LICENSE.md",
+  "sourceBodySha256": "a240fa3d39e0769520bcfb34d1bd23685a2eb24ee50e2b3c0081a4e7a29b0b1a",
+  "modifications": [
+    "使用新的语义化英文 slug 形成独立发布对象",
+    "增加中国业务场景中文展示名与摘要",
+    "增加 agents/openai.yaml",
+    "增加每次回复帮助标准块",
+    "保留原能力边界、许可证和来源记录"
+  ]
+}
