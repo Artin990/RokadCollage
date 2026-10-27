@@ -12,6 +12,7 @@ import SuggestedGroupSection from "./components/SuggestedGroupSection.jsx";
 import InstructorsSection from "./components/InstructorsSection.jsx";
 import SkeletonCoursesHub from "./components/SkeletonCoursesHub.jsx";
 import { CourseModeBadge, CourseSaveButton } from "./components/CourseCardComponents.jsx";
+import { getCourseImageUrl } from "@/utils/getImageUrl.js";
 import { Code, Briefcase, Globe, Sparkles, Bookmark, Star, Clock, Users, ArrowLeft } from "lucide-react";
 
 const DEPT_CONFIG = {
@@ -161,12 +162,8 @@ export default function CoursesPage() {
     name: t.name,
     dept: t.specialization?.includes("فرانت") || t.specialization?.includes("برنامه") || t.specialization?.includes("UI") ? "فناوری اطلاعات" : t.specialization?.includes("کسب") || t.specialization?.includes("مارکتینگ") ? "کسب و کار" : "زبان‌های خارجی",
     role: t.specialization,
-    bio: `استاد و مربی کالج رکاد در زمینه تخصصی ${t.specialization}.`,
-    courses: "دوره‌های فعال",
-    students: "هنرجوی فعال",
-    rating: "۴.۹",
     initial: t.name?.slice(0, 2) || "اس",
-    avatar: t.photo || "/assets/StatCard/blue.png",
+    avatar: getCourseImageUrl(t.photo),
     color: "var(--male-light)",
   }));
 

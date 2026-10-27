@@ -74,7 +74,6 @@ export default function InstructorsSection({ topInstructors, instScroll: externa
               <div className="ch-inst-body-centered">
                 <h3 className="ch-inst-name">{inst.name}</h3>
                 <div className="ch-inst-role">{inst.role}</div>
-                <p className="ch-inst-bio">{inst.bio}</p>
               </div>
             </div>
           ))}
