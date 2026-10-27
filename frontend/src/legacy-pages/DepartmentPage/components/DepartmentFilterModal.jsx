@@ -44,6 +44,8 @@ export default function DepartmentFilterModal({
   toggleDur,
   countByRating,
   countByDur,
+  sort = "default",
+  setSort,
 }) {
   if (!filterOpen) return null;
 
@@ -78,6 +80,25 @@ export default function DepartmentFilterModal({
           </div>
         </div>
         <div className="dp-filter-body">
+          {/* مرتب‌سازی دوره‌ها */}
+          {setSort && (
+            <div className="dp-fgroup">
+              <div className="dp-fgroup-title">مرتب‌سازی</div>
+              <div className="dp-segment">
+                {SORTS.map((s) => (
+                  <button
+                    key={s.id}
+                    type="button"
+                    className={sort === s.id ? "on" : ""}
+                    onClick={() => setSort(s.id)}
+                  >
+                    {s.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {selectedTopic && (
             <div className="dp-fgroup">
               <div className="dp-fgroup-title">
@@ -148,6 +169,15 @@ export default function DepartmentFilterModal({
               ))}
             </div>
           </div>
+        </div>
+        <div className="dp-filter-footer sm:hidden p-3 border-t-2 border-dashed border-stone-200 bg-white">
+          <button
+            type="button"
+            onClick={() => setFilterOpen(false)}
+            className="w-full py-2.5 bg-[#f8a41d] hover:bg-[#e69315] text-[#1f1e1d] font-black text-sm border-2 border-[#1f1e1d] rounded-xl shadow-[3px_3px_0_#1f1e1d] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0_#1f1e1d] transition-all"
+          >
+            اعمال فیلتر
+          </button>
         </div>
       </div>
     </div>

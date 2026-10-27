@@ -266,7 +266,8 @@ export default function DepartmentPage({ deptId, initialCourses = [] }) {
     (modeF !== "all" ? 1 : 0) +
     (ratingSet.size ? 1 : 0) +
     (durSet.size === 1 ? 1 : 0) +
-    (typeF !== "all" ? 1 : 0);
+    (typeF !== "all" ? 1 : 0) +
+    (sort !== "default" ? 1 : 0);
 
   const resetFilters = () => {
     setSelectedTopic(null);
@@ -351,6 +352,8 @@ export default function DepartmentPage({ deptId, initialCourses = [] }) {
         toggleDur={(id) => toggleSet(durSet, setDurSet, id)}
         countByRating={(minR) => countBy((c) => faToNum(c.rating) >= minR)}
         countByDur={(type) => countBy((c) => (type === "short" ? faToNum(c.hours) < 20 : faToNum(c.hours) >= 20))}
+        sort={sort}
+        setSort={setSort}
       />
 
       <DepartmentFab fabOpen={fabOpen} setFabOpen={setFabOpen} currentId={currentId} />

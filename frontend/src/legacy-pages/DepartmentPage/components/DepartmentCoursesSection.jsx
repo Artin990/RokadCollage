@@ -53,7 +53,7 @@ export default function DepartmentCoursesSection({
             <span>فیلترها</span>
             {activeFilterCount > 0 && <span className="dp-filter-count">{faNum(activeFilterCount)}</span>}
           </button>
-          <div className="dp-sort" ref={sortRef}>
+          <div className="hidden sm:flex dp-sort" ref={sortRef}>
             <span className="dp-sort-lab">ترتیب:</span>
             <button type="button" className="dp-sort-btn" onClick={() => setSortOpen((v) => !v)} aria-haspopup="listbox" aria-expanded={sortOpen}>
               {SORTS.find((s) => s.id === sort)?.label} <span className="caret">▼</span>
