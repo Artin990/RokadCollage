@@ -92,34 +92,6 @@ export default function NotFoundContent() {
               <span>مجله</span>
             </Link>
           </div>
-
-          {/* Quick links strip */}
-          <div className="mt-5 pt-3.5 border-t border-dashed border-[#1f1e1d]/20 flex flex-wrap items-center justify-center gap-1.5 text-xs font-bold text-[#62605b]">
-            <Link
-              href="/courses"
-              className="px-2.5 py-1 bg-stone-100 hover:bg-[#fff4e5] text-[#1f1e1d] border border-[#1f1e1d] rounded-[8px_0_8px_0] transition-colors"
-            >
-              برنامه‌نویسی
-            </Link>
-            <Link
-              href="/courses"
-              className="px-2.5 py-1 bg-stone-100 hover:bg-[#fff4e5] text-[#1f1e1d] border border-[#1f1e1d] rounded-[8px_0_8px_0] transition-colors"
-            >
-              طراحی UI/UX
-            </Link>
-            <Link
-              href="/courses"
-              className="px-2.5 py-1 bg-stone-100 hover:bg-[#fff4e5] text-[#1f1e1d] border border-[#1f1e1d] rounded-[8px_0_8px_0] transition-colors"
-            >
-              سئو
-            </Link>
-            <Link
-              href="/courses"
-              className="px-2.5 py-1 bg-stone-100 hover:bg-[#fff4e5] text-[#1f1e1d] border border-[#1f1e1d] rounded-[8px_0_8px_0] transition-colors"
-            >
-              دیجیتال مارکتینگ
-            </Link>
-          </div>
         </div>
       </div>
     </div>
