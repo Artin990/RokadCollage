@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Link from "next/link";
 import { I } from "./BlogIcons.jsx";
 import { POPULAR_TAGS } from "../data/blogIndexData.js";
 
@@ -37,7 +38,7 @@ export default function BlogHero({ searchQuery, setSearchQuery, setActiveCategor
 
       <div className="container" style={{ position: "relative", zIndex: 2 }}>
         <nav className="dp-crumb" aria-label="مسیر" style={{ marginBottom: "1.5rem" }}>
-          <a href="/">خانه</a>
+          <Link href="/">خانه</Link>
           <span className="sep">›</span>
           <span className="cur">مجله</span>
         </nav>

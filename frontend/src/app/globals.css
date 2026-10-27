@@ -4473,6 +4473,34 @@ a:focus-visible, button:focus-visible {
 }
 .bi-back:hover { background: var(--navy); color: #fff; transform: translateY(-2px); }
 
+/* نویگیشن مسیر (Breadcrumbs) */
+.dp-crumb {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink-subtle);
+  margin-bottom: 1.5rem;
+}
+.dp-crumb a {
+  color: var(--ink-subtle);
+  text-decoration: none;
+  transition: color .2s ease;
+}
+.dp-crumb a:hover {
+  color: var(--ink);
+}
+.dp-crumb .sep {
+  color: var(--college-dark, #e67e22);
+  font-weight: 900;
+  user-select: none;
+}
+.dp-crumb .cur {
+  color: var(--ink);
+  font-weight: 800;
+}
+
 .bi-pill {
   display: inline-flex; align-items: center; gap: 8px;
   background: #fff; color: var(--navy);
