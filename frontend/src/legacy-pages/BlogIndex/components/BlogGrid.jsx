@@ -16,11 +16,9 @@ export default function BlogGrid({ activeCategory, setActiveCategory, searchQuer
   const [allBlogsForCounts, setAllBlogsForCounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState("newest");
-  const [sortOpen, setSortOpen] = useState(false);
   const [filterModalOpen, setFilterModalOpen] = useState(false);
   const [visible, setVisible] = useState(PAGE_SIZE);
   const [animState, setAnimState] = useState({ phase: "idle", fromIndex: 0 });
-  const ref = useRef(null);
   const animTimers = useRef([]);
 
   // Fetch blogs for counts once
@@ -29,7 +27,7 @@ export default function BlogGrid({ activeCategory, setActiveCategory, searchQuer
     getBlogs({ limit: 100 })
       .then((res) => {
         if (!isMounted) return;
-        const list = Array.isArray(res) ? res : res?.data || [];
+        const list = Array.isArray(res) ? res : res.data || [];
         setAllBlogsForCounts(list);
       })
       .catch((err) => console.error("Failed to load blog list for counts:", err));
@@ -47,7 +45,7 @@ export default function BlogGrid({ activeCategory, setActiveCategory, searchQuer
           category: activeCategory !== "all" ? activeCategory : undefined,
           search: searchQuery ? searchQuery.trim() : undefined,
         });
-        const list = Array.isArray(res) ? res : res?.data || [];
+        const list = Array.isArray(res) ? res : res.data || [];
         setBlogsList(list);
       } catch (err) {
         console.error("Failed to load blogs from API:", err);
@@ -66,21 +64,10 @@ export default function BlogGrid({ activeCategory, setActiveCategory, searchQuer
   useEffect(() => clearAnimTimers, []);
 
   useEffect(() => {
-    if (!sortOpen) return;
-    const onDoc = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) setSortOpen(false);
-    };
-    document.addEventListener("mousedown", onDoc);
-    return () => document.removeEventListener("mousedown", onDoc);
-  }, [sortOpen]);
-
-  useEffect(() => {
     clearAnimTimers();
     setVisible(PAGE_SIZE);
     setAnimState({ phase: "idle", fromIndex: 0 });
   }, [activeCategory, searchQuery, sortBy]);
-
-  const sortLabel = SORTS.find((s) => s.id === sortBy)?.label || "جدیدترین";
 
   // Calculate counts for categories
   const categoryCounts = {};
@@ -142,6 +129,7 @@ export default function BlogGrid({ activeCategory, setActiveCategory, searchQuer
   };
 
   const currentCategoryLabel = DEFAULT_CATEGORIES.find((c) => c.id === activeCategory)?.label || activeCategory;
+  const currentSortLabel = SORTS.find((s) => s.id === sortBy)?.label;
 
   return (
     <section className="bi-grid-sec" id="bi-results">
@@ -153,8 +141,8 @@ export default function BlogGrid({ activeCategory, setActiveCategory, searchQuer
               <span style={{ display: "inline-block", transform: "rotate(1deg)", color: "var(--college-dark)" }}>مقاله‌ها</span>
             </h2>
             {activeCategory !== "all" && (
-              <span className="sm:hidden inline-flex items-center gap-1.5 px-2.5 py-1 bg-stone-100 border border-[#1f1e1d] text-xs font-bold rounded-lg shadow-xs">
-                <span>{currentCategoryLabel}</span>
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-stone-100 border border-[#1f1e1d] text-xs font-bold rounded-lg shadow-xs">
+                <span>دسته‌بندی: {currentCategoryLabel}</span>
                 <button
                   type="button"
                   onClick={() => setActiveCategory && setActiveCategory("all")}
@@ -165,35 +153,23 @@ export default function BlogGrid({ activeCategory, setActiveCategory, searchQuer
                 </button>
               </span>
             )}
-          </div>
-
-          {/* حالت دسکتاپ: دراپ‌داون مرتب‌سازی */}
-          <div className="hidden sm:flex bi-sort-wrap" ref={ref}>
-            <span style={{ fontSize: 13, fontWeight: 700, color: "var(--ink-subtle)" }}>مرتب‌سازی:</span>
-            <button className="bi-sort" onClick={() => setSortOpen((v) => !v)} aria-expanded={sortOpen}>
-              {sortLabel} <span style={{ fontSize: 10 }}>▼</span>
-            </button>
-            {sortOpen && (
-              <ul className="bi-sort-menu">
-                {SORTS.map((s) => (
-                  <li key={s.id}>
-                    <button
-                      className={sortBy === s.id ? "active" : ""}
-                      onClick={() => {
-                        setSortBy(s.id);
-                        setSortOpen(false);
-                      }}
-                    >
-                      {s.label}
-                    </button>
-                  </li>
-                ))}
-              </ul>
+            {sortBy !== "newest" && (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-stone-100 border border-[#1f1e1d] text-xs font-bold rounded-lg shadow-xs">
+                <span>ترتیب: {currentSortLabel}</span>
+                <button
+                  type="button"
+                  onClick={() => setSortBy("newest")}
+                  className="text-stone-500 hover:text-black font-black text-sm leading-none"
+                  aria-label="ریست مرتب‌سازی"
+                >
+                  ×
+                </button>
+              </span>
             )}
           </div>
 
-          {/* حالت موبایل: دکمه مودال فیلترها به جای فیلد مرتب‌سازی */}
-          <div className="sm:hidden flex items-center gap-2">
+          {/* دکمهٔ باز کردن مودال فیلترها (شامل مرتب‌سازی و دسته‌بندی) */}
+          <div className="flex items-center gap-2">
             <button
               type="button"
               className="dp-filter-btn"
