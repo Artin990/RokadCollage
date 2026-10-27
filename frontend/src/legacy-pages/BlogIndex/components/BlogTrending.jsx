@@ -65,7 +65,7 @@ export default function BlogTrending() {
               <span className="mk">ماه</span>
             </h2>
           </div>
-          <span className="bi-update">به‌روزرسانی خودکار</span>
+          
         </div>
 
         <div className="bi-trend-grid">

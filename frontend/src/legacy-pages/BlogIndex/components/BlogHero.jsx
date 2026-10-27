@@ -21,13 +21,11 @@ export default function BlogHero({ searchQuery, setSearchQuery, setActiveCategor
   const suggestions = [];
 
   const line1 = [
-    { text: "داستان‌ها،", rot: "-1deg" },
-    { text: "ایده‌ها", rot: "1deg" },
-    { text: "و", rot: "-1deg" },
-    { text: "تجربه‌های", rot: "1deg" },
+    { text: "داستان‌ها", rot: "-1deg" },
+    { text: "و", rot: "1deg" },
+    { text: "تجربه‌های", rot: "-1deg" },
   ];
   const line2 = [
-    { text: "یک", rot: "-1deg" },
     { text: "نسل", rot: "1deg", hl: true },
     { text: "استارتاپی", rot: "-1deg", hl: true },
   ];
@@ -38,16 +36,16 @@ export default function BlogHero({ searchQuery, setSearchQuery, setActiveCategor
       <div className="bi-hero-deco bi-hero-deco-2" style={{ background: "var(--teal)" }} />
 
       <div className="container" style={{ position: "relative", zIndex: 2 }}>
-        <a className="bi-back" href="#">
-          <I.ArrowLeft style={{ width: 14, height: 14 }} /> بازگشت به خانه
-        </a>
+        <nav className="dp-crumb" aria-label="مسیر" style={{ marginBottom: "1.5rem" }}>
+          <a href="/">خانه</a>
+          <span className="sep">›</span>
+          <span className="cur">مجله</span>
+        </nav>
 
         <div style={{ display: "flex", justifyContent: "center", marginBottom: "2rem" }}>
           <div className="bi-pill">
             <I.Sparkle style={{ width: 16, height: 16, color: "var(--college)" }} />
             <span>مجلهٔ رکاد</span>
-            <span style={{ color: "var(--ink-subtle)" }}>·</span>
-            <span style={{ color: "var(--college-dark)", fontWeight: 900 }}>شماره ۱۴۰۵</span>
           </div>
         </div>
 
@@ -65,7 +63,7 @@ export default function BlogHero({ searchQuery, setSearchQuery, setActiveCategor
         </h1>
 
         <p className="bi-sub">
-          هر هفته با مقاله‌های تازه، مصاحبه‌ها و تجربه‌های واقعی از دنیای کارآفرینی نوجوان همراه شما هستیم.
+          روایت‌ها، آموزش‌ها و تجربیات کارآفرینی نوجوانان.
         </p>
 
         <form

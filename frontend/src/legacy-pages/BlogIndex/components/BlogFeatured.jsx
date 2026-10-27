@@ -18,7 +18,7 @@ export default function BlogFeatured({ featured }) {
               <span style={{ display: "inline-block", transform: "rotate(-1deg)" }}>این هفته</span>
             </h2>
           </div>
-          <a className="bi-more-link" href="#blog-index">همه مقالات ویژه <I.Arrow style={{ width: 16, height: 16 }} /></a>
+          
         </div>
 
         <div className="bi-featured-card">
