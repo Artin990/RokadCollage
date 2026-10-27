@@ -1,3 +1,6 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Bookmark, MapPin, Monitor } from "lucide-react";
 import { DEPT_PERSONA } from "@/data/departments.js";
@@ -16,7 +19,13 @@ export const getSlugForDeptCourse = (c) => {
 export default function DepartmentCourseCard({ c, rot, persona: cardPersona, store }) {
   const cardTheme = cardPersona || DEPT_PERSONA[c.department] || DEPT_PERSONA.languages;
   const slug = getSlugForDeptCourse(c);
-  const isSaved = isWishlisted(slug, store);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isSaved = mounted && isWishlisted(slug, store);
   const isOnline = c.mode === "online" || c.mode === "غیرحضوری" || c.mode === "غیر حضوری";
   const customCover = isCustomImage(c.img);
   const coverUrl = customCover ? getCourseImageUrl(c.img) : null;
@@ -61,6 +70,7 @@ export default function DepartmentCourseCard({ c, rot, persona: cardPersona, sto
         {c.tag && <span className="dp-card-tag">{c.tag}</span>}
         <button
           type="button"
+          suppressHydrationWarning
           className={`course-card-save-btn${isSaved ? " is-saved" : ""}`}
           onClick={(e) => {
             e.preventDefault();
