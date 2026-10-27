@@ -4501,64 +4501,58 @@ a:focus-visible, button:focus-visible {
   font-weight: 800;
 }
 
-/* ============ کامپوننت فیلترها (دسکتاپ: پاپ‌آپ / موبایل: باتم‌شیت) ============ */
+/* ============ کامپوننت فیلترها (دسکتاپ: شناور راست پایین / موبایل: باتم‌شیت) ============ */
 .dp-filter-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
+  display: inline-flex; align-items: center; gap: 7px;
   padding: 7px 14px;
   background: #fff;
-  border: 2px solid var(--ink);
+  border: 2px solid var(--ink, #1f1e1d);
   border-radius: 10px 0 10px 0;
-  box-shadow: 2.5px 2.5px 0 var(--ink);
+  corner-shape: squircle; -webkit-corner-shape: squircle;
+  box-shadow: 2.5px 2.5px 0 var(--college, #f8a41d);
   font-family: inherit;
-  font-size: 12.5px;
-  font-weight: 900;
-  color: var(--ink);
+  font-size: 12.5px; font-weight: 900; color: var(--ink, #1f1e1d);
   cursor: pointer;
   transition: all .18s ease;
 }
-.dp-filter-btn:hover {
-  background: var(--bg-neutral, #fafaf9);
-}
+.dp-filter-btn:hover { background: #fff4e5; }
 .dp-filter-count {
-  display: inline-grid;
-  place-items: center;
-  min-width: 18px;
-  height: 18px;
+  display: inline-grid; place-items: center;
+  min-width: 18px; height: 18px;
   padding: 0 4px;
-  background: var(--college-dark, #e67e22);
-  color: #fff;
-  border: 1.5px solid var(--ink);
+  background: var(--college-dark, #e08a0d); color: #fff;
+  border: 1.5px solid var(--ink, #1f1e1d);
   border-radius: 99px;
-  font-size: 10.5px;
-  font-weight: 900;
+  font-size: 10.5px; font-weight: 900;
 }
 
 @media (min-width: 769px) {
   .dp-filter-scrim {
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-    background: rgba(0, 0, 0, 0.35);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: dpScrimIn .2s ease;
+    position: static;
+    inset: auto;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    pointer-events: none;
+    animation: none;
+    z-index: 90;
   }
   .dp-filter-modal {
-    width: 420px;
-    max-height: 85vh;
+    pointer-events: auto;
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    width: 360px;
+    max-height: calc(100vh - 48px);
     background: #fff;
-    border: 2.5px solid var(--ink);
+    border: 2.5px solid var(--ink, #1f1e1d);
     border-radius: 20px 0 20px 0;
-    box-shadow: 6px 6px 0 var(--ink);
+    corner-shape: squircle; -webkit-corner-shape: squircle;
+    box-shadow: 6px 6px 0 var(--college, #f8a41d);
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    z-index: 105;
+    z-index: 90;
     animation: dpFilterPop .25s cubic-bezier(.34, 1.4, .64, 1);
   }
   @keyframes dpFilterPop {
@@ -4572,8 +4566,8 @@ a:focus-visible, button:focus-visible {
   .dp-filter-scrim {
     position: fixed;
     inset: 0;
-    z-index: 100;
-    background: rgba(0, 0, 0, 0.45);
+    z-index: 85;
+    background: rgba(0, 0, 0, 0.42);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
     display: flex;
@@ -4586,14 +4580,14 @@ a:focus-visible, button:focus-visible {
     width: 100%;
     max-height: 85vh;
     background: #fff;
-    border: 2.5px solid var(--ink);
+    border: 2.5px solid var(--ink, #1f1e1d);
     border-bottom: none;
     border-radius: 24px 24px 0 0;
-    box-shadow: 0 -6px 0 var(--ink);
+    box-shadow: 0 -6px 0 var(--college, #f8a41d);
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    z-index: 105;
+    z-index: 90;
     animation: dpSlideUp .3s cubic-bezier(.22, 1, .36, 1);
   }
   @keyframes dpSlideUp {
@@ -4603,7 +4597,7 @@ a:focus-visible, button:focus-visible {
   .dp-sheet-handle {
     width: 44px;
     height: 5px;
-    background: #d6d3d1;
+    background: rgba(31, 30, 29, 0.25);
     border-radius: 99px;
     margin: 10px auto 4px;
     flex-shrink: 0;
@@ -4616,7 +4610,7 @@ a:focus-visible, button:focus-visible {
   justify-content: space-between;
   gap: 12px;
   padding: 14px 18px;
-  border-bottom: 2px dashed #d6d3d1;
+  border-bottom: 2px dashed rgba(31, 30, 29, 0.18);
   background: #fafaf9;
 }
 .dp-filter-head-title {
@@ -4625,31 +4619,36 @@ a:focus-visible, button:focus-visible {
   gap: 8px;
   font-size: 14.5px;
   font-weight: 950;
-  color: var(--ink);
+  color: var(--ink, #1f1e1d);
 }
+.dp-filter-head-title svg { color: var(--college-dark, #e08a0d); }
 .dp-filter-actions {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 .dp-filter-close {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   background: #fff;
-  color: var(--ink);
-  border: 2px solid var(--ink);
+  color: var(--ink, #1f1e1d);
+  border: 2px solid var(--ink, #1f1e1d);
   border-radius: 50%;
   cursor: pointer;
-  box-shadow: 2px 2px 0 var(--ink);
-  transition: all .18s ease;
+  box-shadow: 2px 2px 0 var(--ink, #1f1e1d);
+  transition: all .18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .dp-filter-close:hover {
   background: #f5f5f4;
   transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0 var(--ink);
+  box-shadow: 1px 1px 0 var(--ink, #1f1e1d);
+}
+.dp-filter-close:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 var(--ink, #1f1e1d);
 }
 .dp-filter-body {
   padding: 18px;
@@ -4661,7 +4660,7 @@ a:focus-visible, button:focus-visible {
 .dp-fgroup-title {
   font-size: 13.5px;
   font-weight: 900;
-  color: var(--ink);
+  color: var(--ink, #1f1e1d);
   margin-bottom: 10px;
   display: flex;
   align-items: center;
@@ -4672,7 +4671,7 @@ a:focus-visible, button:focus-visible {
   border: none;
   font-size: 12px;
   font-weight: 800;
-  color: var(--ink-subtle);
+  color: #78716c;
   cursor: pointer;
   padding: 4px 8px;
   border-radius: 6px;
@@ -4680,15 +4679,16 @@ a:focus-visible, button:focus-visible {
   font-family: inherit;
 }
 .dp-reset:hover {
-  color: var(--ink);
+  color: var(--ink, #1f1e1d);
   background: rgba(0, 0, 0, 0.05);
 }
 
 .dp-segment {
   display: flex;
-  background: var(--bg-neutral, #fafaf9);
-  border: 2px solid var(--ink);
+  background: #fafaf9;
+  border: 2px solid var(--ink, #1f1e1d);
   border-radius: 12px 0 12px 0;
+  corner-shape: squircle; -webkit-corner-shape: squircle;
   padding: 4px;
   gap: 4px;
   box-shadow: 2.5px 2.5px 0 var(--college, #f8a41d);
@@ -4701,25 +4701,25 @@ a:focus-visible, button:focus-visible {
   font-family: inherit;
   font-weight: 800;
   font-size: 13px;
-  color: var(--ink-subtle);
+  color: #78716c;
   cursor: pointer;
   border-radius: 8px 0 8px 0;
+  corner-shape: squircle; -webkit-corner-shape: squircle;
   transition: all .18s ease;
   text-align: center;
 }
 .dp-segment button:hover {
-  color: var(--ink);
+  color: var(--ink, #1f1e1d);
   background: rgba(0, 0, 0, 0.05);
 }
 .dp-segment button.on {
   background: var(--college, #f8a41d);
-  color: var(--ink);
-  border-color: var(--ink);
-  box-shadow: 1.5px 1.5px 0 var(--ink);
+  color: var(--ink, #1f1e1d);
+  border-color: var(--ink, #1f1e1d);
+  box-shadow: 1.5px 1.5px 0 var(--ink, #1f1e1d);
   font-weight: 950;
 }
 
-/* لیست چک‌باکس‌ها و رادیوها */
 .dp-check-list {
   display: flex;
   flex-direction: column;
@@ -4733,21 +4733,22 @@ a:focus-visible, button:focus-visible {
   justify-content: space-between;
   gap: 10px;
   padding: 10px 14px;
-  background: var(--bg-neutral, #fafaf9);
-  border: 1.5px solid var(--ink-light, rgba(31, 30, 29, 0.18));
+  background: #fafaf9;
+  border: 1.5px solid rgba(31, 30, 29, 0.18);
   border-radius: 12px 0 12px 0;
+  corner-shape: squircle; -webkit-corner-shape: squircle;
   cursor: pointer;
   user-select: none;
   transition: all .2s ease;
 }
 .dp-check-item:hover {
   background: #fff4e5;
-  border-color: var(--college-dark, #f8a41d);
+  border-color: var(--college, #f8a41d);
   transform: translateX(-3px);
 }
 .dp-check-item:has(input:checked) {
   background: #fff;
-  border-color: var(--ink);
+  border-color: var(--ink, #1f1e1d);
   box-shadow: 3px 3px 0 var(--college, #f8a41d);
 }
 .dp-check-item input {
@@ -4761,8 +4762,9 @@ a:focus-visible, button:focus-visible {
   width: 20px;
   height: 20px;
   background: #fff;
-  border: 2px solid var(--ink);
+  border: 2px solid var(--ink, #1f1e1d);
   border-radius: 6px 0 6px 0;
+  corner-shape: squircle; -webkit-corner-shape: squircle;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -4771,12 +4773,12 @@ a:focus-visible, button:focus-visible {
 }
 .dp-check-item input:checked + .dp-check-box {
   background: var(--college, #f8a41d);
-  border-color: var(--ink);
-  box-shadow: 1px 1px 0 var(--ink);
+  border-color: var(--ink, #1f1e1d);
+  box-shadow: 1px 1px 0 var(--ink, #1f1e1d);
 }
 .dp-check-item input:checked + .dp-check-box::after {
   content: '✓';
-  color: var(--ink);
+  color: var(--ink, #1f1e1d);
   font-weight: 950;
   font-size: 13px;
   line-height: 1;
@@ -4784,26 +4786,27 @@ a:focus-visible, button:focus-visible {
 .dp-check-label {
   font-weight: 800;
   font-size: 13.5px;
-  color: var(--ink);
+  color: var(--ink, #1f1e1d);
   flex: 1;
 }
 .dp-check-count {
   font-size: 11.5px;
   font-weight: 800;
-  color: var(--ink-subtle);
+  color: #78716c;
   background: #fff;
-  border: 1.5px solid var(--ink-light, rgba(31, 30, 29, 0.18));
+  border: 1.5px solid rgba(31, 30, 29, 0.18);
   border-radius: 999px;
   padding: 2px 8px;
   min-width: 26px;
   text-align: center;
 }
 .dp-check-item:has(input:checked) .dp-check-count {
-  border-color: var(--ink);
-  color: var(--ink);
+  border-color: var(--ink, #1f1e1d);
+  color: var(--ink, #1f1e1d);
   font-weight: 900;
   background: #fff4e5;
 }
+
 
 .bi-pill {
   display: inline-flex; align-items: center; gap: 8px;

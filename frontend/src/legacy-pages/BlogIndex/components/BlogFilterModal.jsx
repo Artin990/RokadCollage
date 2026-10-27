@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { toFa } from "./BlogIcons.jsx";
 import { DEFAULT_CATEGORIES } from "./BlogCategories.jsx";
 
@@ -20,6 +20,45 @@ export default function BlogFilterModal({
   categoryCounts = {},
   totalCount = 0,
 }) {
+  const filterRef = useRef(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const onKey = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+
+    const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
+    let prevOverflow = "";
+    if (isMobile) {
+      prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+    }
+
+    const onDoc = (e) => {
+      if (typeof window !== "undefined" && window.innerWidth > 768) {
+        if (
+          filterRef.current &&
+          !filterRef.current.contains(e.target) &&
+          !e.target.closest(".dp-filter-btn")
+        ) {
+          onClose();
+        }
+      }
+    };
+    document.addEventListener("mousedown", onDoc);
+
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.removeEventListener("mousedown", onDoc);
+      if (isMobile) {
+        document.body.style.overflow = prevOverflow;
+      }
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const activeCount = (activeCategory !== "all" ? 1 : 0) + (sortBy !== "newest" ? 1 : 0);
@@ -37,7 +76,7 @@ export default function BlogFilterModal({
       aria-modal="true"
       aria-label="فیلترها"
     >
-      <div className="dp-filter-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="dp-filter-modal" ref={filterRef} onClick={(e) => e.stopPropagation()}>
         <div className="dp-sheet-handle" aria-hidden="true" />
 
         {/* سربرگ مودال */}
@@ -68,7 +107,16 @@ export default function BlogFilterModal({
               </button>
             )}
             <button type="button" className="dp-filter-close" onClick={onClose} aria-label="بستن">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <line x1="18" y1="6" x2="6" y2="18" />
                 <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
