@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { Filter, X, Check } from "lucide-react";
 import { toFa } from "./BlogIcons.jsx";
 import { DEFAULT_CATEGORIES } from "./BlogCategories.jsx";
 
@@ -36,26 +35,43 @@ export default function BlogFilterModal({
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label="فیلترهای مقالات"
+      aria-label="فیلترها"
     >
       <div className="dp-filter-modal" onClick={(e) => e.stopPropagation()}>
         <div className="dp-sheet-handle" aria-hidden="true" />
-        
-        {/* هدر مودال */}
+
+        {/* سربرگ مودال */}
         <div className="dp-filter-head">
           <div className="dp-filter-head-title">
-            <Filter size={18} />
-            <span>فیلترها</span>
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <line x1="4" y1="7" x2="20" y2="7" />
+              <line x1="7" y1="12" x2="17" y2="12" />
+              <line x1="10" y1="17" x2="14" y2="17" />
+            </svg>
+            <span>فیلترهای مقاله‌ها</span>
             {activeCount > 0 && <span className="dp-filter-count">{toFa(activeCount)}</span>}
           </div>
           <div className="dp-filter-actions">
             {activeCount > 0 && (
-              <button type="button" className="dp-reset text-xs font-bold text-stone-500 hover:text-stone-900" onClick={resetFilters}>
-                پاک کردن
+              <button type="button" className="dp-reset" onClick={resetFilters}>
+                پاک کردن همه
               </button>
             )}
             <button type="button" className="dp-filter-close" onClick={onClose} aria-label="بستن">
-              <X size={16} />
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
             </button>
           </div>
         </div>
@@ -64,7 +80,7 @@ export default function BlogFilterModal({
         <div className="dp-filter-body">
           {/* بخش مرتب‌سازی */}
           <div className="dp-fgroup">
-            <div className="dp-fgroup-title text-xs font-extrabold text-stone-700 mb-2">مرتب‌سازی</div>
+            <div className="dp-fgroup-title">مرتب‌سازی</div>
             <div className="dp-segment">
               {SORTS.map((s) => (
                 <button
@@ -81,54 +97,41 @@ export default function BlogFilterModal({
 
           {/* بخش دسته‌بندی */}
           <div className="dp-fgroup">
-            <div className="dp-fgroup-title text-xs font-extrabold text-stone-700 mb-2">دسته‌بندی</div>
-            <div className="flex flex-col gap-1.5">
+            <div className="dp-fgroup-title">دسته‌بندی</div>
+            <div className="dp-check-list">
               {DEFAULT_CATEGORIES.map((c) => {
-                const isSelected = activeCategory === c.id;
+                const isChecked = activeCategory === c.id;
                 const count = c.id === "all" ? totalCount : categoryCounts[c.id] || 0;
                 return (
-                  <button
+                  <label
                     key={c.id}
-                    type="button"
+                    className="dp-check-item"
                     onClick={() => setActiveCategory(c.id)}
-                    className={`flex items-center justify-between p-2.5 rounded-lg border-2 text-xs font-bold transition-all ${
-                      isSelected
-                        ? "border-[#1f1e1d] bg-[#f8a41d]/15 text-[#1f1e1d] shadow-[2px_2px_0_#1f1e1d]"
-                        : "border-stone-200 bg-white text-stone-700 hover:border-stone-300"
-                    }`}
                   >
-                    <div className="flex items-center gap-2">
-                      <div
-                        className={`w-4 h-4 rounded flex items-center justify-center border ${
-                          isSelected ? "bg-[#1f1e1d] border-[#1f1e1d] text-white" : "border-stone-300 bg-white"
-                        }`}
-                      >
-                        {isSelected && <Check size={11} strokeWidth={3} />}
-                      </div>
-                      <span>{c.label}</span>
-                    </div>
-                    <span
-                      className={`text-[11px] px-2 py-0.5 rounded-full font-extrabold ${
-                        isSelected ? "bg-[#1f1e1d] text-white" : "bg-stone-100 text-stone-500"
-                      }`}
-                    >
-                      {toFa(count)}
-                    </span>
-                  </button>
+                    <input
+                      type="radio"
+                      name="blog-cat"
+                      checked={isChecked}
+                      onChange={() => setActiveCategory(c.id)}
+                    />
+                    <span className="dp-check-box" />
+                    <span className="dp-check-label">{c.label}</span>
+                    <span className="dp-check-count">{toFa(count)}</span>
+                  </label>
                 );
               })}
             </div>
           </div>
         </div>
 
-        {/* فوتر مودال با دکمه اعمال */}
-        <div className="p-3 border-t-2 border-dashed border-stone-200 bg-white">
+        {/* فوتر موبایل با دکمه اعمال فیلتر */}
+        <div className="dp-filter-footer sm:hidden p-3 border-t-2 border-dashed border-stone-200 bg-white">
           <button
             type="button"
             onClick={onClose}
             className="w-full py-2.5 bg-[#f8a41d] hover:bg-[#e69315] text-[#1f1e1d] font-black text-sm border-2 border-[#1f1e1d] rounded-xl shadow-[3px_3px_0_#1f1e1d] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0_#1f1e1d] transition-all"
           >
-            اعمال
+            اعمال فیلتر
           </button>
         </div>
       </div>
