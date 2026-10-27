@@ -1,22 +1,44 @@
+"use client";
+
 import React, { useState, useRef, useEffect } from "react";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Filter } from "lucide-react";
 import { I, toFa } from "./BlogIcons.jsx";
 import BlogCard, { SkeletonBlogIndexCard } from "./BlogCard.jsx";
 import { PAGE_SIZE } from "../data/blogIndexData.js";
 import { getBlogs } from "@/services/blogService.js";
+import BlogFilterModal, { SORTS } from "./BlogFilterModal.jsx";
+import { DEFAULT_CATEGORIES } from "./BlogCategories.jsx";
 
 const ENTER_STAGGER = 60, ENTER_MS = 550, EXIT_STAGGER = 45, EXIT_MS = 420;
 
-export default function BlogGrid({ activeCategory, searchQuery }) {
+export default function BlogGrid({ activeCategory, setActiveCategory, searchQuery }) {
   const [blogsList, setBlogsList] = useState([]);
+  const [allBlogsForCounts, setAllBlogsForCounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState("newest");
   const [sortOpen, setSortOpen] = useState(false);
+  const [filterModalOpen, setFilterModalOpen] = useState(false);
   const [visible, setVisible] = useState(PAGE_SIZE);
   const [animState, setAnimState] = useState({ phase: "idle", fromIndex: 0 });
   const ref = useRef(null);
   const animTimers = useRef([]);
 
+  // Fetch blogs for counts once
+  useEffect(() => {
+    let isMounted = true;
+    getBlogs({ limit: 100 })
+      .then((res) => {
+        if (!isMounted) return;
+        const list = Array.isArray(res) ? res : res?.data || [];
+        setAllBlogsForCounts(list);
+      })
+      .catch((err) => console.error("Failed to load blog list for counts:", err));
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Fetch blogs based on activeCategory and searchQuery
   useEffect(() => {
     async function loadData() {
       setLoading(true);
@@ -25,7 +47,7 @@ export default function BlogGrid({ activeCategory, searchQuery }) {
           category: activeCategory !== "all" ? activeCategory : undefined,
           search: searchQuery ? searchQuery.trim() : undefined,
         });
-        const list = Array.isArray(res) ? res : res.data || [];
+        const list = Array.isArray(res) ? res : res?.data || [];
         setBlogsList(list);
       } catch (err) {
         console.error("Failed to load blogs from API:", err);
@@ -58,16 +80,22 @@ export default function BlogGrid({ activeCategory, searchQuery }) {
     setAnimState({ phase: "idle", fromIndex: 0 });
   }, [activeCategory, searchQuery, sortBy]);
 
-  const SORTS = [
-    { id: "newest", label: "جدیدترین" },
-    { id: "oldest", label: "قدیمی‌ترین" },
-    { id: "popular", label: "پرخواننده‌ترین" },
-  ];
-  const sortLabel = SORTS.find((s) => s.id === sortBy)?.label;
+  const sortLabel = SORTS.find((s) => s.id === sortBy)?.label || "جدیدترین";
+
+  // Calculate counts for categories
+  const categoryCounts = {};
+  allBlogsForCounts.forEach((b) => {
+    if (b.category) {
+      categoryCounts[b.category] = (categoryCounts[b.category] || 0) + 1;
+    }
+  });
+
+  const activeFilterCount = (activeCategory !== "all" ? 1 : 0) + (sortBy !== "newest" ? 1 : 0);
 
   const sortedRaw = [...blogsList].sort((a, b) => {
     if (sortBy === "oldest") return (a.id || a._id) > (b.id || b._id) ? 1 : -1;
-    return 0;
+    if (sortBy === "popular") return (b.views || 0) - (a.views || 0);
+    return 0; // default newest
   });
 
   const formattedPosts = sortedRaw.map((b, i) => ({
@@ -113,15 +141,34 @@ export default function BlogGrid({ activeCategory, searchQuery }) {
     );
   };
 
+  const currentCategoryLabel = DEFAULT_CATEGORIES.find((c) => c.id === activeCategory)?.label || activeCategory;
+
   return (
     <section className="bi-grid-sec" id="bi-results">
       <div className="container">
         <div className="bi-sec-head">
-          <h2 className="bi-h2">
-            <span style={{ display: "inline-block", transform: "rotate(-1deg)" }}>همه‌ی</span>{" "}
-            <span style={{ display: "inline-block", transform: "rotate(1deg)", color: "var(--college-dark)" }}>مقاله‌ها</span>
-          </h2>
-          <div className="bi-sort-wrap" ref={ref}>
+          <div className="flex items-center gap-3">
+            <h2 className="bi-h2 m-0">
+              <span style={{ display: "inline-block", transform: "rotate(-1deg)" }}>همه‌ی</span>{" "}
+              <span style={{ display: "inline-block", transform: "rotate(1deg)", color: "var(--college-dark)" }}>مقاله‌ها</span>
+            </h2>
+            {activeCategory !== "all" && (
+              <span className="sm:hidden inline-flex items-center gap-1.5 px-2.5 py-1 bg-stone-100 border border-[#1f1e1d] text-xs font-bold rounded-lg shadow-xs">
+                <span>{currentCategoryLabel}</span>
+                <button
+                  type="button"
+                  onClick={() => setActiveCategory && setActiveCategory("all")}
+                  className="text-stone-500 hover:text-black font-black text-sm leading-none"
+                  aria-label="حذف فیلتر دسته‌بندی"
+                >
+                  ×
+                </button>
+              </span>
+            )}
+          </div>
+
+          {/* حالت دسکتاپ: دراپ‌داون مرتب‌سازی */}
+          <div className="hidden sm:flex bi-sort-wrap" ref={ref}>
             <span style={{ fontSize: 13, fontWeight: 700, color: "var(--ink-subtle)" }}>مرتب‌سازی:</span>
             <button className="bi-sort" onClick={() => setSortOpen((v) => !v)} aria-expanded={sortOpen}>
               {sortLabel} <span style={{ fontSize: 10 }}>▼</span>
@@ -144,7 +191,35 @@ export default function BlogGrid({ activeCategory, searchQuery }) {
               </ul>
             )}
           </div>
+
+          {/* حالت موبایل: دکمه مودال فیلترها به جای فیلد مرتب‌سازی */}
+          <div className="sm:hidden flex items-center gap-2">
+            <button
+              type="button"
+              className="dp-filter-btn"
+              onClick={() => setFilterModalOpen(true)}
+              aria-label="فیلترها"
+            >
+              <Filter size={14} />
+              <span>فیلترها</span>
+              {activeFilterCount > 0 && (
+                <span className="dp-filter-count">{toFa(activeFilterCount)}</span>
+              )}
+            </button>
+          </div>
         </div>
+
+        {/* مودال فیلتر مقالات (موبایل و دسکتاپ) */}
+        <BlogFilterModal
+          isOpen={filterModalOpen}
+          onClose={() => setFilterModalOpen(false)}
+          activeCategory={activeCategory}
+          setActiveCategory={setActiveCategory}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+          categoryCounts={categoryCounts}
+          totalCount={allBlogsForCounts.length}
+        />
 
         {loading ? (
           <div className="bi-blog-grid" aria-busy="true">

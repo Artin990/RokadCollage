@@ -45,7 +45,11 @@ export default function BlogIndex() {
       />
       <BlogFeatured featured={featured} />
       <BlogCategories active={activeCategory} setActive={setActiveCategory} />
-      <BlogGrid activeCategory={activeCategory} searchQuery={searchQuery} />
+      <BlogGrid
+        activeCategory={activeCategory}
+        setActiveCategory={setActiveCategory}
+        searchQuery={searchQuery}
+      />
       <BlogTrending />
     </>
   );
