@@ -1,6 +1,6 @@
 function getApiBaseUrl() {
-  if (typeof window === "undefined") {
-    return process.env.INTERNAL_API_URL || process.env.API_URL || "http://backend:5000/api";
+  if (typeof window === "undefined" && (process.env.INTERNAL_API_URL || process.env.API_URL)) {
+    return process.env.INTERNAL_API_URL || process.env.API_URL;
   }
   return process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 }
